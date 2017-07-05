@@ -1,0 +1,12 @@
+@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Roboto, sans-serif;
+}
+
+.app{
+    width: 100vw;
+    height: 100vh;
+}
