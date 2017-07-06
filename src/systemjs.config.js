@@ -34,6 +34,7 @@
       // other libraries
       'd3':                        'npm:d3/build/d3.js',
       'three':                     'npm:three/build/three.js',
+      'lodash':                    'npm:lodash/lodash.js',
       'rxjs':                      'npm:rxjs',
       'hammerjs':                  'npm:hammerjs/hammer.js',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'

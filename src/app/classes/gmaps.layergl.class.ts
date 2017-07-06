@@ -48,12 +48,8 @@ export class GMapsLayerGL
 
     addData()
     {
-        this.layer.addToScene();
-    }
-
-    clearData()
-    {
         this.layer.clearScene(); 
+        this.layer.addToScene();
     }
     
     private resize() 

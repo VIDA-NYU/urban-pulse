@@ -1,5 +1,5 @@
 // angular components
-import { Component, ViewChild, AfterViewInit, ElementRef, QueryList } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 
 // my services
 import { GMapsLayerGL } from '../../classes/gmaps.layergl.class';
@@ -8,23 +8,23 @@ import { GMapsLayerGL } from '../../classes/gmaps.layergl.class';
     selector: 'pulse-map',
     template:
     `
-    <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" [style.width]="mapWidth" style="margin: 18px 4px 4px 4px;">
+    <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" style="width: 98%;  margin: 18px 4px 4px 4px;">
         <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
     </md-select>
-    <div #mapTop [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
-    <div #mapBot [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
+    <div #mapTop [style.height]="mapHeight" style="margin: 4px;"></div>
+    <div #mapBot [style.height]="mapHeight" style="margin: 4px;"></div>
     `
 })
 export class MapComponent implements AfterViewInit {
-    @ViewChild('mapTop') mapARef: ElementRef;
-    @ViewChild('mapBot') mapBRef: ElementRef;
+
+    @ViewChild('mapTop') mapTopRef: ElementRef;
+    @ViewChild('mapBot') mapBotRef: ElementRef;
 
     private style: any;
     private mapTop: GMapsLayerGL;
     private mapBot: GMapsLayerGL;
 
-    private mapWidth: string = "42vw";
-    private mapHeight: string = "43vh";
+    private mapHeight: string = "42vh";
 
     private mapOptions: string[] = ["[Nyc Winter, Nyc Summer] (Flickr Data)", "[Nyc, Sf] (Flickr Data)"];
     private mapSelection: string;
@@ -38,9 +38,9 @@ export class MapComponent implements AfterViewInit {
         this._loadLayerGL();
     }
 
-    _createMap() {
+    private _createMap() {
         this.mapTop = new GMapsLayerGL();
-        this.mapTop.initMap(this.mapARef.nativeElement,
+        this.mapTop.initMap(this.mapTopRef.nativeElement,
             {
                 center: { lat: 40.7324607, lng: -73.9887512 },
                 scrollwheel: true,
@@ -52,7 +52,7 @@ export class MapComponent implements AfterViewInit {
             });
 
         this.mapBot = new GMapsLayerGL();
-        this.mapBot.initMap(this.mapBRef.nativeElement,
+        this.mapBot.initMap(this.mapBotRef.nativeElement,
             {
                 center: { lat: 40.7324607, lng: -73.9887512 },
                 scrollwheel: true,
@@ -64,21 +64,14 @@ export class MapComponent implements AfterViewInit {
             });
     }
 
-    _loadLayerGL() {
+    private _loadLayerGL() {
         if (this.mapTop) this.mapTop.initLayerGL();
         if (this.mapBot) this.mapBot.initLayerGL();
     }
 
-    _addData() {
-        this._clearData()
-
+    private _addData() {
         if (this.mapTop) this.mapTop.addData();
         if (this.mapBot) this.mapBot.addData();
-    }
-
-    _clearData() {
-        if (this.mapTop) this.mapTop.clearData();
-        if (this.mapBot) this.mapBot.clearData();
     }
 }
 

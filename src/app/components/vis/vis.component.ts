@@ -1,14 +1,37 @@
 // angular components
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 
-// third party libs
-import * as d3 from 'd3';
+// my services
+import { ScatterChart } from '../../classes/scatter.chart.class';
+import { TseriesChart } from '../../classes/tseries.chart.class';
 
 @Component({
   selector: 'pulse-vis',
-  templateUrl: './vis.component.html',
-  styleUrls: ['./vis.component.css'],
+  template: `
+  <div style="width: 98%;  margin: 30px 4px 8px 4px;">
+      {{chartsTitle}}
+  </div>  
+  <div #scatter [style.height]="mapHeight" style="margin: 4px;"></div>
+  <div #tseries [style.height]="mapHeight" style="margin: 4px;"></div>`
 })
-export class VisComponent  
-{
+export class VisComponent implements AfterViewInit {
+  @ViewChild('scatter') scatterRef: ElementRef;
+  @ViewChild('tseries') tseriesRef: ElementRef;
+
+  private chartsTitle: string = "Pulse Explorer";
+
+  private scatter: any;
+  private tseries: any;
+  private mapHeight: string = "42vh";
+
+  constructor() { }
+
+  ngAfterViewInit() {
+    this._createCharts();
+  }
+
+  private _createCharts() {
+    this.scatter = new ScatterChart(this.scatterRef);
+    this.tseries = new TseriesChart(this.tseriesRef);
+  }
 }
