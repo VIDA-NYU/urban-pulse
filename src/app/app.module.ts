@@ -1,10 +1,12 @@
 // angular components
 import 'hammerjs';
 
-import { NgModule }         from '@angular/core';
-import { BrowserModule }    from '@angular/platform-browser';
-import { MaterialModule }   from '@angular/material';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgModule }                from '@angular/core';
+import { FormsModule }             from '@angular/forms';
+import { BrowserModule }           from '@angular/platform-browser';
+import { MaterialModule }          from '@angular/material';
+import { FlexLayoutModule }        from '@angular/flex-layout';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // my components
 import { MapComponent }   from './components/map/map.component';
@@ -18,8 +20,10 @@ import { GMapsLayerGL } from './classes/gmaps.layergl.class'
   imports: 
   [
     BrowserModule, 
+    FormsModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    BrowserAnimationsModule
   ],
   declarations: 
   [ 

@@ -20,6 +20,8 @@ export class GMapsLayerGL
 
         // Adds event listener resize when the window changes size.
         window.addEventListener("resize", () => { this.resize(); });
+
+        return this;
     }
 
     initLayerGL()

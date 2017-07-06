@@ -6,17 +6,32 @@ import { GMapsLayerGL } from '../../classes/gmaps.layergl.class';
 
 @Component({
   selector: 'pulse-map',
-  template: '<div #map style="width:100vw; height:-webkit-calc(100vh - 68px)">loading...</div>'
+  template: 
+    `
+    <md-select placeholder="Data selection" [(ngModel)]="mapSelection" [style.width]="mapWidth" style="margin: 18px 4px 4px 4px;">
+        <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
+    </md-select>
+    <div #mapA [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
+    <div #mapB [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
+    `
 })
 export class MapComponent implements AfterViewInit 
 {
-  @ViewChild('map') mapRef: ElementRef;
+  @ViewChild('mapA') mapARef: ElementRef;
+  @ViewChild('mapB') mapBRef: ElementRef;
+  
   private style: any;
-  private gmapService: GMapsLayerGL
+  private mapA: GMapsLayerGL;
+  private mapB: GMapsLayerGL;
 
-  constructor(gmapService: GMapsLayerGL) 
-  { 
-    this.gmapService = gmapService;
+  private mapWidth: string = "42vw";
+  private mapHeight: string = "43vh";
+
+  private mapOptions: string[] = ["Nyc (Flicker)", "Nyc, Sf (Flicker)"];
+  private mapSelection: string;
+
+  constructor() 
+  {     
     this.style = getMapStyle();
   }
 
@@ -27,19 +42,34 @@ export class MapComponent implements AfterViewInit
   }
 
   _createMap()
-  {
-    this.gmapService.initMap(this.mapRef.nativeElement, 
+  {    
+    this.mapA = new GMapsLayerGL();
+    this.mapA.initMap(this.mapARef.nativeElement, 
     {
-      center: {lat: 40.7324607, lng:-73.9887512},
-      scrollwheel: true,
-      zoom: 14,
-      styles: this.style
+        center: { lat: 40.7324607, lng: -73.9887512 },
+        scrollwheel: true,
+        zoom: 14,
+        streetViewControl: false,
+        mapTypeControl: false,
+        styles: this.style
     });
-  }
+
+    this.mapB = new GMapsLayerGL();
+    this.mapB.initMap(this.mapBRef.nativeElement, 
+    {
+        center: { lat: 40.7324607, lng: -73.9887512 },
+        scrollwheel: true,
+        zoom: 14,
+        streetViewControl: false,
+        mapTypeControl: false,
+        styles: this.style
+    });
+}
 
   _loadLayerGL()
   {
-    this.gmapService.initLayerGL();
+    if(this.mapA) this.mapA.initLayerGL();
+    if(this.mapB) this.mapB.initLayerGL();
   }
 }
 
