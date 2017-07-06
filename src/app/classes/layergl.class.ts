@@ -35,7 +35,8 @@ export class LayerGL extends google.maps.OverlayView
 
         this.firstRun = true;
 
-        if (options.map) {
+        if (options.map) 
+        {
             this.setMap(options.map);
         }
     }
@@ -48,9 +49,10 @@ export class LayerGL extends google.maps.OverlayView
         this.camera.position.z = 1000;
         this.scene = new THREE.Scene();
 
-        this.renderer = new THREE.WebGLRenderer({
+        this.renderer = new THREE.WebGLRenderer(
+        {
             alpha: true,
-            clearColor: 0x000000,
+            clearColor: 0xff0000,
             clearAlpha: 0
         });
 
@@ -62,7 +64,8 @@ export class LayerGL extends google.maps.OverlayView
         this.getPanes().overlayLayer.appendChild(this.canvas);
         this.map = super.getMap();
 
-        this.changeHandler = google.maps.event.addListener(
+        this.changeHandler = google.maps.event.addListener
+        (
             this.map,
             'bounds_changed',
             this.draw
@@ -73,7 +76,7 @@ export class LayerGL extends google.maps.OverlayView
 
     onRemove()
     {
-        if (!this.map) { return; }
+        if (!this.map) return; 
 
         this.map = null;
         this.canvas.parentElement.removeChild(this.canvas);
@@ -87,11 +90,12 @@ export class LayerGL extends google.maps.OverlayView
 
     draw()
     {
-        if (!this.map) { return; }
+        if (!this.map) return;
 
         var bounds = (<google.maps.Map>this.map).getBounds();
 
-        var topLeft = new google.maps.LatLng(
+        var topLeft = new google.maps.LatLng
+        (
             bounds.getNorthEast().lat(),
             bounds.getSouthWest().lng()
         );
@@ -101,11 +105,8 @@ export class LayerGL extends google.maps.OverlayView
         var width = projection.getWorldWidth();
         var center = ( (<google.maps.Map>this.map).getCenter().lng() % 360 + 360 ) % 360;
 
-        if (
-            bounds.getSouthWest().lng() == -180 &&
-            bounds.getNorthEast().lng() == 180 &&
-            center < 180
-        ) {
+        if ( bounds.getSouthWest().lng() == -180 && bounds.getNorthEast().lng() == 180 && center < 180) 
+        {
             point.x -= width;
         }
 
@@ -113,12 +114,10 @@ export class LayerGL extends google.maps.OverlayView
             Math.round(point.x) + 'px,' +
             Math.round(point.y) + 'px)';
 
-        if (this.firstRun) {
+        if (this.firstRun) 
+        {
             this.firstRun = false;
-
-            if (this.callback) {
-                this.callback(this);
-            }
+            if (this.callback) this.callback(this);
         }
 
         this.update();
@@ -126,13 +125,13 @@ export class LayerGL extends google.maps.OverlayView
 
     resize()
     {
-        if (!this.map){ return; }
+        if (!this.map) return; 
 
         var div = (<google.maps.Map>this.map).getDiv();
         var width  = div.clientWidth;
         var height = div.clientHeight;
 
-        if (width == this.width && height == this.height){ return; }
+        if (width == this.width && height == this.height) return; 
 
         this.width  = width;
         this.height = height;
@@ -160,10 +159,12 @@ export class LayerGL extends google.maps.OverlayView
         scale = Math.pow(2, zoom);
         offset = projection.fromLatLngToPoint(topLeft);
 
-        if (
+        if 
+        (
             bounds.getCenter().lng() <
             bounds.getSouthWest().lng()
-        ) {
+        ) 
+        {
             offset.x -= 256;
         }
 
@@ -181,18 +182,21 @@ export class LayerGL extends google.maps.OverlayView
     render()
     {
         if (typeof this === "undefined") return;
+
+        // console.log(this);
         
         cancelAnimationFrame(this.animationFrame);
-        this.animationFrame = requestAnimationFrame(this.deferredRender);
+        this.animationFrame = requestAnimationFrame( () => this.deferredRender() );
     }
 
     deferredRender()
     {
-        if (typeof this === "undefined") {
-            return;
-        } else if (typeof this.options.render == "function"){
+        if (typeof this.options.render == "function")
+        {
             this.options.render();
-        } else {
+        } 
+        else 
+        {
             this.renderer.render( this.scene, this.camera );
         }        
     }
@@ -200,7 +204,6 @@ export class LayerGL extends google.maps.OverlayView
     add(geometry: Object3D)
     {    
         this.scene.add(geometry);
-        console.log(this.scene);
     }
 
     fromLatLngToVertex(latLng: google.maps.LatLng): Vector3

@@ -6,10 +6,6 @@ import * as THREE from 'three';
 // layergl
 import { LayerGL } from './layergl.class'
 
-const getScriptSrc = (callbackName: string) => {
-    return `https://maps.googleapis.com/maps/api/js?key=AIzaSyCP7UZDm9dXpxsDylKpchK6tfAFNGWk1tQ&callback=${callbackName}`
-}
-
 @Injectable()
 export class GMapsLayerGL 
 {
@@ -36,26 +32,31 @@ export class GMapsLayerGL
             var vertex = layer.fromLatLngToVertex(location);
             geometry.vertices.push(vertex);
 
-            var particleMaterial = new THREE.PointsMaterial( { color: 0xff8888 } );
+            var particleMaterial = new THREE.PointsMaterial( { color: 0xf00000, size: 100 } );
             var particles = new THREE.Points(geometry, particleMaterial);
             layer.add(particles);
         });
     }
 
-    setCenter(latLng: google.maps.LatLng) {
-        if (this.map != null && latLng != null) {
+    setCenter(latLng: google.maps.LatLng) 
+    {
+        if (this.map != null && latLng != null) 
+        {
             // Changes the center of the map to the given LatLng.
             this.map.panTo(latLng);
         }
     }
 
-    setZoom(zoom: number) {
-        if (this.map != null) {
+    setZoom(zoom: number) 
+    {
+        if (this.map != null) 
+        {
             this.map.setZoom(zoom);
         }
     }
     
-    private resize() {
+    private resize() 
+    {
         // Saves the center.
         let latLng: google.maps.LatLng = this.map.getCenter();
         // Triggers resize event.
