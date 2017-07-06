@@ -48,7 +48,7 @@ export class ScatterChart{
         this._updateCircles();
 
         // Adds event listener resize when the window changes size.
-        window.addEventListener("resize", () => { console.log("TODO: Chart resize"); });
+        window.addEventListener("resize", () => { this._resize() });
     }
 
     private _updateSvg(){
@@ -147,7 +147,7 @@ export class ScatterChart{
 
     private _updateCircles(){
         // transition
-        var t = d3.transition().duration(450);
+        var t = d3.transition(null).duration(450);
 
         var circles = this.cht.selectAll('circle')
             .data(this.data);
@@ -166,5 +166,30 @@ export class ScatterChart{
             .transition(t)
             .style("fill-opacity", 1)
             .style("stroke-opacity", 1);
+
+        // update
+        circles
+            .transition(t)
+            .attr("cx", (d:any) => { return this.xScale(+d.x); })
+            .attr("cy", (d:any) => { return this.yScale(+d.y); })
+            .attr("r" , (d:any) => { return this.rScale(+d.r); })
+            .style("stroke", "#555")
+            .style("fill", "#bfbfbf")
+
+        // exit selection
+        circles
+            .exit()
+            .transition(t)
+            .style("fill-opacity", 0)
+            .style("stroke-opacity", 0)
+            .remove();
+    }
+
+    private _resize(){
+        this._updateSvg();
+        this._updateChartGroup();
+
+        this._updateAxes();
+        this._updateCircles();        
     }
 }

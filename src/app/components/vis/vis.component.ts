@@ -8,7 +8,7 @@ import { TseriesChart } from '../../classes/tseries.chart.class';
 @Component({
   selector: 'pulse-vis',
   template: `
-  <div style="width: 98%;  margin: 30px 4px 8px 4px;">
+  <div style="width: 98%;  margin: 30px 4px 8px 30px;">
       {{chartsTitle}}
   </div>  
   <div #scatter [style.height]="mapHeight" style="margin: 4px;"></div>
