@@ -26,18 +26,7 @@ export class GMapsLayerGL
 
     initLayerGL()
     {
-        this.layer = new LayerGL({ map: this.map }, function (layer: LayerGL) 
-        {
-            var geometry = new THREE.Geometry();
-            var location = new google.maps.LatLng(40.7324607, -73.9887512);
-
-            var vertex = layer.fromLatLngToVertex(location);
-            geometry.vertices.push(vertex);
-
-            var particleMaterial = new THREE.PointsMaterial( { color: 0xf00000, size: 100 } );
-            var particles = new THREE.Points(geometry, particleMaterial);
-            layer.add(particles);
-        });
+        this.layer = new LayerGL( {map: this.map} );
     }
 
     setCenter(latLng: google.maps.LatLng) 
@@ -55,6 +44,16 @@ export class GMapsLayerGL
         {
             this.map.setZoom(zoom);
         }
+    }
+
+    addData()
+    {
+        this.layer.addToScene();
+    }
+
+    clearData()
+    {
+        this.layer.clearScene(); 
     }
     
     private resize() 

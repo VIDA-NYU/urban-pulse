@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 
 // import threejs types
-import { OrthographicCamera, Scene, WebGLRenderer, Object3D, Vector3 } from 'three';
+import { OrthographicCamera, Scene, WebGLRenderer, Geometry, Vector3 } from 'three';
 
 export class LayerGL extends google.maps.OverlayView 
 {
@@ -26,7 +26,7 @@ export class LayerGL extends google.maps.OverlayView
     private firstRun: boolean;
     private animationFrame: number;
 
-    constructor(options: any, callback: Function) 
+    constructor(options: any, callback?: Function) 
     {
         super();
 
@@ -201,9 +201,26 @@ export class LayerGL extends google.maps.OverlayView
         }        
     }
 
-    add(geometry: Object3D)
+    addToScene()
     {    
-        this.scene.add(geometry);
+        var geometry = new THREE.Geometry();
+        var location = new google.maps.LatLng(40.7324607 + Math.random()*0.002, -73.9887512 + Math.random()*0.002);
+
+        var vertex = this.fromLatLngToVertex(location);
+        geometry.vertices.push(vertex);
+
+        var particleMaterial = new THREE.PointsMaterial( { color: 0xf00000, size: 100 } );
+        var particles = new THREE.Points(geometry, particleMaterial);
+
+        this.scene.add(particles);
+        this.update();                
+    }
+
+    clearScene()
+    {
+        while(this.scene.children.length > 0) 
+            this.scene.remove(this.scene.children[0]);             
+        this.update();        
     }
 
     fromLatLngToVertex(latLng: google.maps.LatLng): Vector3

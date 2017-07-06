@@ -5,77 +5,85 @@ import { Component, ViewChild, AfterViewInit, ElementRef, QueryList } from '@ang
 import { GMapsLayerGL } from '../../classes/gmaps.layergl.class';
 
 @Component({
-  selector: 'pulse-map',
-  template: 
+    selector: 'pulse-map',
+    template:
     `
-    <md-select placeholder="Data selection" [(ngModel)]="mapSelection" [style.width]="mapWidth" style="margin: 18px 4px 4px 4px;">
+    <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" [style.width]="mapWidth" style="margin: 18px 4px 4px 4px;">
         <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
     </md-select>
-    <div #mapA [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
-    <div #mapB [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
+    <div #mapTop [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
+    <div #mapBot [style.width]="mapWidth" [style.height]="mapHeight" style="margin: 4px;"></div>
     `
 })
-export class MapComponent implements AfterViewInit 
-{
-  @ViewChild('mapA') mapARef: ElementRef;
-  @ViewChild('mapB') mapBRef: ElementRef;
-  
-  private style: any;
-  private mapA: GMapsLayerGL;
-  private mapB: GMapsLayerGL;
+export class MapComponent implements AfterViewInit {
+    @ViewChild('mapTop') mapARef: ElementRef;
+    @ViewChild('mapBot') mapBRef: ElementRef;
 
-  private mapWidth: string = "42vw";
-  private mapHeight: string = "43vh";
+    private style: any;
+    private mapTop: GMapsLayerGL;
+    private mapBot: GMapsLayerGL;
 
-  private mapOptions: string[] = ["Nyc (Flicker)", "Nyc, Sf (Flicker)"];
-  private mapSelection: string;
+    private mapWidth: string = "42vw";
+    private mapHeight: string = "43vh";
 
-  constructor() 
-  {     
-    this.style = getMapStyle();
-  }
+    private mapOptions: string[] = ["[Nyc Winter, Nyc Summer] (Flickr Data)", "[Nyc, Sf] (Flickr Data)"];
+    private mapSelection: string;
 
-  ngAfterViewInit() 
-  {
-    this._createMap();
-    this._loadLayerGL();
-  }
+    constructor() {
+        this.style = getMapStyle();
+    }
 
-  _createMap()
-  {    
-    this.mapA = new GMapsLayerGL();
-    this.mapA.initMap(this.mapARef.nativeElement, 
-    {
-        center: { lat: 40.7324607, lng: -73.9887512 },
-        scrollwheel: true,
-        zoom: 14,
-        streetViewControl: false,
-        mapTypeControl: false,
-        styles: this.style
-    });
+    ngAfterViewInit() {
+        this._createMap();
+        this._loadLayerGL();
+    }
 
-    this.mapB = new GMapsLayerGL();
-    this.mapB.initMap(this.mapBRef.nativeElement, 
-    {
-        center: { lat: 40.7324607, lng: -73.9887512 },
-        scrollwheel: true,
-        zoom: 14,
-        streetViewControl: false,
-        mapTypeControl: false,
-        styles: this.style
-    });
-}
+    _createMap() {
+        this.mapTop = new GMapsLayerGL();
+        this.mapTop.initMap(this.mapARef.nativeElement,
+            {
+                center: { lat: 40.7324607, lng: -73.9887512 },
+                scrollwheel: true,
+                zoom: 14,
+                streetViewControl: false,
+                mapTypeControl: false,
+                clickableIcons: false,
+                styles: this.style
+            });
 
-  _loadLayerGL()
-  {
-    if(this.mapA) this.mapA.initLayerGL();
-    if(this.mapB) this.mapB.initLayerGL();
-  }
+        this.mapBot = new GMapsLayerGL();
+        this.mapBot.initMap(this.mapBRef.nativeElement,
+            {
+                center: { lat: 40.7324607, lng: -73.9887512 },
+                scrollwheel: true,
+                zoom: 14,
+                streetViewControl: false,
+                mapTypeControl: false,
+                clickableIcons: false,
+                styles: this.style
+            });
+    }
+
+    _loadLayerGL() {
+        if (this.mapTop) this.mapTop.initLayerGL();
+        if (this.mapBot) this.mapBot.initLayerGL();
+    }
+
+    _addData() {
+        this._clearData()
+
+        if (this.mapTop) this.mapTop.addData();
+        if (this.mapBot) this.mapBot.addData();
+    }
+
+    _clearData() {
+        if (this.mapTop) this.mapTop.clearData();
+        if (this.mapBot) this.mapBot.clearData();
+    }
 }
 
 // map style definition
-const getMapStyle = () => 
-{
+const getMapStyle = () => {
     return [
         {
             "elementType": "geometry",
