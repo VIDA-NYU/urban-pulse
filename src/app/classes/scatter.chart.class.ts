@@ -8,10 +8,15 @@ import * as d3 from 'd3';
 import * as _ from 'lodash';
 
 export class ScatterChart{
-    // size setup
-    private margins = {top: 20, right: 20, bottom: 30, left: 50};
-    private chartWidth: 0;
-    private chartHeight: 0;    
+    // margins setup
+    private margins: any = {top: 20, right: 20, bottom: 30, left: 50};
+    
+    // entire chart size
+    private chartWidth: number = 0;
+    private chartHeight: number = 0;
+    // each matrix size
+    private elemWidth: number = 0;
+    private elemHeight: number = 0;
 
     // dom elements
     private div: any;
@@ -33,19 +38,28 @@ export class ScatterChart{
     private rScale: any;
 
     private data: any[];
-    private radius: number;
+    private radius: number; // TODO: Remove
+
+    private search: boolean;
     
     constructor(element: ElementRef){
         this.div = d3.select(element.nativeElement);
         this.data = [{x: 1, y: 2, r: 1}, {x: 2, y: 1, r: 3}, {x: 4, y: 4, r: 2}, 
                      {x: 5, y: 3, r: 1}, {x: 3, y: 2, r: 2}];
 
+        // is seach flag
+        this.search = false;
+
+        // create svg and attach a group
         this._updateSvg();
         this._updateChartGroup();
 
+        // create the scales
         this._prepareScales();
         this._updateAxes();
-        this._updateCircles();
+
+        // updates the scatter matrix
+        this._updateMatrix();
 
         // Adds event listener resize when the window changes size.
         window.addEventListener("resize", () => { this._resize() });
@@ -59,6 +73,12 @@ export class ScatterChart{
         this.chartHeight  = this.div.node().parentNode.getBoundingClientRect().height;
         this.chartHeight -= this.margins.top + this.margins.bottom;
         this.chartHeight *= 0.4;
+
+        // updates the matix size
+        if(this.search){
+            this.elemWidth  = this.chartWidth;
+            this.elemHeight = this.chartHeight;
+        }
 
         // creates the chart svg
         if(typeof this.svg === 'undefined')
@@ -145,7 +165,7 @@ export class ScatterChart{
             .call(this.yAxis);
         }
 
-    private _updateCircles(){
+    private _updateMatrix(){
         // transition
         var t = d3.transition(null).duration(450);
 
@@ -190,6 +210,6 @@ export class ScatterChart{
         this._updateChartGroup();
 
         this._updateAxes();
-        this._updateCircles();        
+        this._updateMatrix();        
     }
 }

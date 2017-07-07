@@ -22,7 +22,7 @@ export class VisComponent implements AfterViewInit {
 
   private scatter: any;
   private tseries: any;
-  private mapHeight: string = "42vh";
+  private mapHeight: string = "41%";
 
   constructor() { }
 

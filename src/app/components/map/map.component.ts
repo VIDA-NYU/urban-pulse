@@ -24,7 +24,7 @@ export class MapComponent implements AfterViewInit {
     private mapTop: GMapsLayerGL;
     private mapBot: GMapsLayerGL;
 
-    private mapHeight: string = "42vh";
+    private mapHeight: string = "41%";
 
     private mapOptions: string[] = ["[Nyc Winter, Nyc Summer] (Flickr Data)", "[Nyc, Sf] (Flickr Data)"];
     private mapSelection: string;
