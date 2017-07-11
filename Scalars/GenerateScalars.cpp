@@ -1,4 +1,6 @@
 #include <QCoreApplication>
+#include <QDebug>
+#include <QTimeZone>
 
 #include "ScalarFunction.hpp"
 
@@ -50,17 +52,57 @@ int main(int argc, char *argv[])
             outputFolder = args[i+1];
             validArgs ++;
         }
+
+        if(args[i] == "--space") {
+            int latIn = QString(args[i+1]).toInt();
+            int lonIn = QString(args[i+2]).toInt();
+            fn.setSpatialIndex(latIn, lonIn);
+            validArgs ++;
+        }
+
+        if(args[i] == "--time") {
+            int timeIn = QString(args[i+1]).toInt();
+            fn.setTemporalIndex(timeIn);
+            validArgs ++;
+        }
+
+        if(args[i] == "--timezone") {
+            fn.setTimeZone(args[i+1]);
+            validArgs ++;
+        }
+
+        if(args[i] == "--name") {
+            fn.setDataName(args[i+1]);
+            validArgs ++;
+        }
+
+        if(args[i] == "--help") {
+            QString hval = args[i+1];
+            if(hval == "timezone") {
+                QList<QByteArray> tz = QTimeZone::availableTimeZoneIds();
+                cerr << "The following time zones are available:" << endl;
+                for(int i = 0;i < tz.size();i ++) {
+                    cerr << "\t" << QString(tz[i]).toStdString() << endl;
+                }
+                exit(1);
+            }
+        }
     }
-    if(validArgs != 3) {
+    if(validArgs != 7) {
         cerr << "usage: " << QString(args[0]).toStdString() << " <options>" << endl;
         cerr << "options:" << endl;
+        cerr << "  --name \t name of the data set" << endl;
         cerr << "  --input \t input csv file" << endl;
-        cerr << "  --fn \t\t function to compute [default: 0]" << endl;
+        cerr << "  --space \t <i,j> where i and j are index of attributes corresponding to latitude and longitude" << endl;
+        cerr << "  --time \t index of time attribute. time is assumed to be in UTC and specified as unix epoch time" << endl;
         cerr << "  --output \t output folder" << endl;
         cerr << "  --bound \t bounding box of region to analyze. specified as latitude and longitude of the diagonal" << endl;
+        cerr << "  --timezone \t time zone of the analysis region. use flag --help timezone to see allowed values" << endl;
+        cerr << "  --fn \t\t function to compute [default: 0]" << endl;
         return -1;
     }
     fn.setFunction(fnType);
-
+    fn.generateFunctions(inputFile);
+    fn.writeOutput(outputFolder);
     return 0;
 }
