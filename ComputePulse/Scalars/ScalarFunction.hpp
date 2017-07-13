@@ -11,23 +11,6 @@
 
 namespace urbanpulse {
 
-template<class T>
-class Filter
-{
-public:
-    Filter(){}
-    Filter(TimeResolutions ignoreRes, QPair<T,T> aggRange, QString name = "") {
-        this->ignoreRes = ignoreRes;
-        this->aggRange = aggRange;
-        this->name = name;
-    }
-
-public:
-    TimeResolutions ignoreRes;
-    QString name;
-    QPair<T,T> aggRange;
-};
-
 struct FunctionVal {
     double sum;
     double count;
@@ -83,7 +66,7 @@ private:
     int fnType;
     QPointF lb, rt;
     int latIn, lonIn, timeIn;
-    double cellSize;
+    double cellSize, cellSizeInMeters;
     QTimeZone tz;
     QString fnName;
     QString dataName;

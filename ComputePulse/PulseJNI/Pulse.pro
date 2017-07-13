@@ -3,22 +3,24 @@ QT -= gui
 
 CONFIG += c++11
 
-TARGET = Scalars
+TARGET = Pulse
 CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
 HEADERS += \
-    ScalarFunction.hpp \
-    utils.hpp \
-    TopologicalFeatures.hpp
+    ../common/utils.hpp \
+    TopologicalFeatures.hpp \
+    Pulse.hpp
 
 SOURCES += \
-    GenerateScalars.cpp \
-    ScalarFunction.cpp \
-    utils.cpp \
-    TopologicalFeatures.cpp
+    ../common/utils.cpp \
+    TopologicalFeatures.cpp \
+    GeneratePulse.cpp \
+    Pulse.cpp
+
+INCLUDEPATH += ../common/
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

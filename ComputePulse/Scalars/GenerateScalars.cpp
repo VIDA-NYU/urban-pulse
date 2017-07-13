@@ -88,6 +88,10 @@ int main(int argc, char *argv[])
             }
         }
     }
+//    fn.setDataName("flickr");
+//    fn.createFeatures("sf");
+//    fn.combineFeatures("sf");
+
     if(validArgs != 7) {
         cerr << "usage: " << QString(args[0]).toStdString() << " <options>" << endl;
         cerr << "options:" << endl;

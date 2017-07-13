@@ -68,5 +68,28 @@ QString getString(TimeResolutions res) {
     }
 }
 
+double getCellSizeInMeters() {
+    return 50.0;
+}
+
+void getFilters(QVector<Filter<int>> &filters) {
+    filters.clear();
+
+    // filter by season
+    // ignore column MONTH when filtering by SEASON
+    filters << Filter<int>(MonthOfYear,QPair<int,int>(3,5), "-spring"); // spring
+    filters << Filter<int>(MonthOfYear,QPair<int,int>(6,8), "-summer"); // summer
+    filters << Filter<int>(MonthOfYear,QPair<int,int>(9,11), "-fall"); // fall
+    filters << Filter<int>(MonthOfYear,QPair<int,int>(0,2), "-winter"); // winter
+
+    // filter by hour
+    filters << Filter<int>(HourOfDay,QPair<int,int>(6,9), "-day");
+    filters << Filter<int>(HourOfDay,QPair<int,int>(9,6), "-night");
+
+    // filter by weekend
+    filters << Filter<int>(DayOfWeek,QPair<int,int>(0,4), "-week");
+    filters << Filter<int>(DayOfWeek,QPair<int,int>(5,6), "-weekend");
+}
+
 }
 

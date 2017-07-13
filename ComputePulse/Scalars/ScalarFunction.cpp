@@ -10,8 +10,10 @@ using namespace urbanpulse;
 using namespace std;
 
 ScalarFunction::ScalarFunction() {
-    this->initFilters();
+    getFilters(this->filters);
     filterFns.resize(filters.size());
+    cellSizeInMeters = getCellSizeInMeters();
+    cellSize = cellSizeInMeters / gres;
 }
 
 void ScalarFunction::setBounds(QPointF leftBottom, QPointF rightTop) {
@@ -28,7 +30,6 @@ void ScalarFunction::setBounds(QPointF leftBottom, QPointF rightTop) {
         rt.setY(y);
     }
     gres = getGroundResolution((leftBottom + rightTop) / 2);
-    cellSize = 50 / gres;
 
     resx = std::ceil((rt.x() - lb.x()) / cellSize);
     resy = std::ceil((rt.y() - lb.y()) / cellSize);
@@ -75,27 +76,6 @@ void ScalarFunction::setTemporalIndex(int timeIn) {
     this->timeIn = timeIn;
 }
 
-void ScalarFunction::initFilters() {
-
-
-    filters.clear();
-
-    // filter by season
-    // ignore column MONTH when filtering by SEASON
-    this->filters << Filter<int>(MonthOfYear,QPair<int,int>(3,5), "-spring"); // spring
-    this->filters << Filter<int>(MonthOfYear,QPair<int,int>(6,8), "-summer"); // summer
-    this->filters << Filter<int>(MonthOfYear,QPair<int,int>(9,11), "-fall"); // fall
-    this->filters << Filter<int>(MonthOfYear,QPair<int,int>(0,2), "-winter"); // winter
-
-    // filter by hour
-    this->filters << Filter<int>(HourOfDay,QPair<int,int>(6,9), "-day");
-    this->filters << Filter<int>(HourOfDay,QPair<int,int>(9,6), "-night");
-
-    // filter by weekend
-    this->filters << Filter<int>(DayOfWeek,QPair<int,int>(0,4), "-week");
-    this->filters << Filter<int>(DayOfWeek,QPair<int,int>(5,6), "-weekend");
-}
-
 void ScalarFunction::addWeightedCount(Function &fn, QPointF pt, double val) {
     // TODO: hard coding values used in paper. add use parameter?
     float radius = 500 / gres;
@@ -107,7 +87,7 @@ void ScalarFunction::addWeightedCount(Function &fn, QPointF pt, double val) {
     int cy = (pt.y() - lb.y()) / cellSize;
     for(int x = cx - ncells; x <= cx + ncells;x ++) {
         for(int y = cy - ncells; y <= cy + ncells;y ++) {
-            if(x < 0 || y < 0 || x >= resx || y >= resx) {
+            if(x < 0 || y < 0 || x >= resx || y >= resy) {
                 continue;
             }
             QPointF center = lb + QPointF(cellSize * (x + 0.5),cellSize * (y + 0.5));
@@ -139,7 +119,7 @@ void ScalarFunction::generateFunctions(QString inputFile) {
         if(line.size() == 0) {
             continue;
         }
-        if(ct % 1000 == 0) {
+        if(ct % 10000 == 0) {
             cerr << "\r" << "processed " << ct << " records";
         }
         ct ++;
@@ -243,7 +223,9 @@ void ScalarFunction::writeFunction(QString fileName, Function &fn) {
     op << resx << "," << resy << "\n";
     QPointF glb = world2geo(lb);
     QPointF grt = world2geo(rt);
-    op << qSetRealNumberPrecision(10) << glb.x() << "," << glb.y() << "," << grt.x() << "," << grt.y() << "\n\n";
+//    op << qSetRealNumberPrecision(10) << glb.x() << "," << glb.y() << "," << grt.x() << "," << grt.y() << "\n\n";
+    // Only for urban pulse desktop UI
+    op << qSetRealNumberPrecision(10) << grt.x() << "," << glb.y() << "," << glb.x() << "," << grt.y() << "\n\n";
 
     fn.write(op, (fnType == 0));
 
@@ -291,13 +273,13 @@ Function::Function(int resx, int resy) {
 }
 
 void Function::addVal(int x, int y, double val, double count) {
-    int in = x + y * resx;
+    int in = getCellId(x,y);
     vals[in].count += count;
     vals[in].sum += val;
 }
 
 FunctionVal Function::getVal(int x, int y) {
-    int in = x + y * resx;
+    int in = getCellId(x,y);
     return vals[in];
 }
 
@@ -306,11 +288,22 @@ int Function::getCellId(int x, int y) {
 }
 
 void Function::write(QTextStream &op, bool count) {
-    for(int i = 0;i < vals.size(); i++) {
-        if(count) {
-            op << qSetRealNumberPrecision(10) << vals[i].count << "\n";
-        } else {
-            op << qSetRealNumberPrecision(10) << (vals[i].sum / vals[i].count) << "\n";
+
+    for(int y = resy - 1;y >= 0;y --) {
+        for(int x = 0;x < resx;x ++) {
+            int in = getCellId(x,y);
+            if(count) {
+                op << qSetRealNumberPrecision(10) << vals[in].count << "\n";
+            } else {
+                op << qSetRealNumberPrecision(10) << (vals[in].sum / vals[in].count) << "\n";
+            }
         }
     }
+//    for(int i = 0;i < vals.size(); i++) {
+//        if(count) {
+//            op << qSetRealNumberPrecision(10) << vals[i].count << "\n";
+//        } else {
+//            op << qSetRealNumberPrecision(10) << (vals[i].sum / vals[i].count) << "\n";
+//        }
+//    }
 }
