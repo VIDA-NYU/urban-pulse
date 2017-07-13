@@ -39,19 +39,19 @@ int main(int argc, char *argv[])
             validArgs ++;
         }
 
-        if(args[i] == "--create") {
-            createFeatures = true;
-            validArgs ++;
-        }
+//        if(args[i] == "--create") {
+//            createFeatures = true;
+//            validArgs ++;
+//        }
 
-        if(args[i] == "--combine") {
-            createFeatures = false;
-            validArgs ++;
-        }
+//        if(args[i] == "--combine") {
+//            createFeatures = false;
+//            validArgs ++;
+//        }
 
     }
 
-    if(validArgs != 3) {
+    if(validArgs != 2) {
         cerr << "usage: " << QString(args[0]).toStdString() << " <options>" << endl;
         cerr << "options:" << endl;
         cerr << "  --name \t name of the data set" << endl;
@@ -59,10 +59,7 @@ int main(int argc, char *argv[])
         cerr << " --create | --combine\t first call create, then call combine" << endl;
         return -1;
     }
-    if(createFeatures) {
-        pulse.createFeatures();
-    } else {
-        pulse.combineFeatures();
-    }
+    pulse.createFeatures();
+    pulse.combineFeatures();
     return 0;
 }

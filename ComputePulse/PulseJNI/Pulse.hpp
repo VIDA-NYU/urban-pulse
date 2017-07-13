@@ -3,6 +3,7 @@
 
 #include <QString>
 
+#include "TopologicalFeatures.hpp"
 #include "utils.hpp"
 
 namespace urbanpulse {
@@ -23,6 +24,7 @@ private:
     QString dataName;
     double cellSizeInMeters;
     QVector<Filter<int>> filters;
+    TopologicalFeatures *topoFeatures;
 };
 
 }

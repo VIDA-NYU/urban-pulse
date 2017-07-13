@@ -1,6 +1,5 @@
 #include "Pulse.hpp"
 
-#include "TopologicalFeatures.hpp"
 #include "utils.hpp"
 
 #include <QDebug>
@@ -11,11 +10,11 @@ using namespace std;
 Pulse::Pulse() {
     cellSizeInMeters = getCellSizeInMeters();
     getFilters(this->filters);
+    topoFeatures = new TopologicalFeatures(".");
 }
 
 void Pulse::createFeatures() {
-    TopologicalFeatures topoFeatures("hope/it/works/test/UrbanPulse",".");
-
+    topoFeatures->useClass("hope/it/works/test/UrbanPulse");
     // without filter
     {
         QVector<QString> res;
@@ -26,7 +25,7 @@ void Pulse::createFeatures() {
         st << 0 << 0 << 0 << 0;
         ct << 1 << HourOfDay << DayOfWeek << MonthOfYear;
         qDebug() << res << st << ct << dataFolder << dataName << "" << (int)ceil(100/this->cellSizeInMeters);
-        topoFeatures.computePulses(res, st, ct, dataFolder, dataName, QString(""), (int)ceil(100/this->cellSizeInMeters));
+        topoFeatures->computePulses(res, st, ct, dataFolder, dataName, QString(""), (int)ceil(100/this->cellSizeInMeters));
         qDebug() << "done pulse for above!";
     }
 
@@ -60,7 +59,7 @@ void Pulse::createFeatures() {
             }
 
             qDebug() << res << st << ct << dataFolder << dataName << this->filters[i].name << (int)ceil(100/this->cellSizeInMeters);
-            topoFeatures.computePulses(res, st, ct, dataFolder, dataName, this->filters[i].name, (int)ceil(100/this->cellSizeInMeters));
+            topoFeatures->computePulses(res, st, ct, dataFolder, dataName, this->filters[i].name, (int)ceil(100/this->cellSizeInMeters));
             qDebug() << "done pulse for filter" << i << "of" << filters.size();
         }
     }
@@ -76,14 +75,14 @@ void Pulse::setDataName(const QString &name) {
 
 void Pulse::combineFeatures() {
 
-    TopologicalFeatures topoFeatures("hope/it/works/test/CombinedPulse",".");
+    topoFeatures->useClass("hope/it/works/test/CombinedPulse");
 
     // without filter
     {
         QVector<QString> res;
         res << getString(ALL) << getString(HourOfDay) << getString(DayOfWeek) << getString(MonthOfYear);
 
-        topoFeatures.combinePulses(res, dataFolder, dataName, QString(""));
+        topoFeatures->combinePulses(res, dataFolder, dataName, QString(""));
         qDebug() << "done combine pulse for above!";
     }
 
@@ -110,7 +109,7 @@ void Pulse::combineFeatures() {
                exit(1);
            }
 
-           topoFeatures.combinePulses(res, dataFolder, dataName, this->filters[i].name);
+           topoFeatures->combinePulses(res, dataFolder, dataName, this->filters[i].name);
            qDebug() << "done combine pulse for filter" << i << "of" << filters.size();
        }
    }

@@ -6,7 +6,7 @@
 // "hope/it/works/test/PersistenceDiagram"
 // "hope/it/works/test/UrbanPulse"
 // "hope/it/works/test/CombinedPulse"
-TopologicalFeatures::TopologicalFeatures(QString classPath, QString jarPath) {
+TopologicalFeatures::TopologicalFeatures(QString jarPath) {
     JavaVMInitArgs vm_args;
     vm_args.version = JNI_VERSION_1_8;
     vm_args.nOptions = 1;
@@ -23,7 +23,9 @@ TopologicalFeatures::TopologicalFeatures(QString classPath, QString jarPath) {
     jint res = JNI_CreateJavaVM(&vm, (void **)&env, &vm_args);
     assert(res != JNI_ERR);
     qDebug() << "successfully created jvm" << jarPath;
+}
 
+void TopologicalFeatures::useClass(QString classPath) {
     qDebug() << "finding class" << classPath;
     clazz = env->FindClass(classPath.toStdString().c_str());
     if(clazz == NULL) {

@@ -14,7 +14,8 @@ public:
     enum NormType{LInfinity, Persistence};
 
 public:
-    TopologicalFeatures(QString classPath, QString jarPath);
+    TopologicalFeatures(QString jarPath);
+    void useClass(QString classPath);
 
     bool combinePulses(QVector<QString> resolution, QString cityName, QString dataName, QString filter);
     bool computePulses(QVector<QString> resolution, QVector<int> st, QVector<int> ct, QString cityName, QString dataName, QString filter, int radius);
