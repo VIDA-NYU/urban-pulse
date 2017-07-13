@@ -3,9 +3,6 @@
 #include <QDebug>
 #include <cassert>
 
-// "hope/it/works/test/PersistenceDiagram"
-// "hope/it/works/test/UrbanPulse"
-// "hope/it/works/test/CombinedPulse"
 TopologicalFeatures::TopologicalFeatures(QString jarPath) {
     JavaVMInitArgs vm_args;
     vm_args.version = JNI_VERSION_1_8;
@@ -13,7 +10,7 @@ TopologicalFeatures::TopologicalFeatures(QString jarPath) {
     vm_args.ignoreUnrecognized = JNI_TRUE;
     JavaVMOption* options = new JavaVMOption[1];
 
-    std::string stdstr = QString("-Djava.class.path=" + jarPath + "/topoFeatures.jar:"+ jarPath + "/javaml-0.1.7.jar").toStdString();
+    std::string stdstr = QString("-Djava.class.path=" + jarPath + "/topoFeatures.jar").toStdString();
     options[0].optionString = (char *) stdstr.c_str();
 //    options[1].optionString = "-Xdebug";
 //    options[2].optionString = "-agentlib:jdwp=transport=dt_socket,server=y,address=9836,suspend=n";
@@ -39,8 +36,7 @@ void TopologicalFeatures::useClass(QString classPath) {
 }
 
 // helper functions to call array of string in jni
-static jobjectArray make_string_row(JNIEnv *env, QVector<QString> elements)
-{
+static jobjectArray make_string_row(JNIEnv *env, QVector<QString> elements) {
     jclass stringClass = env->FindClass("java/lang/String");
     jobjectArray row = env->NewObjectArray(elements.size(), stringClass, 0);
     jsize i;
@@ -51,19 +47,7 @@ static jobjectArray make_string_row(JNIEnv *env, QVector<QString> elements)
     return row;
 }
 
-static void make_int_row(JNIEnv *env, QVector<int> values, jintArray *iar, jint *args)
-{
-    *iar = (env->NewIntArray(values.size()));
-    args = new jint[values.size()];
-    for(int i=0; i<values.size(); ++i)
-        args[i] = values[i];
-
-    env->SetIntArrayRegion(*iar, 0, values.size(), args);
-}
-
-
-bool TopologicalFeatures::computePulses(QVector<QString> resolution, QVector<int> st, QVector<int> ct, QString cityName, QString dataName, QString filter, int radius)
-{
+bool TopologicalFeatures::computePulses(QVector<QString> resolution, QVector<int> st, QVector<int> ct, QString cityName, QString dataName, QString filter, int radius) {
     jobjectArray jresolution = make_string_row(env, resolution);
     jintArray jst = env->NewIntArray(st.size());
     jintArray jct = env->NewIntArray(ct.size());
@@ -84,13 +68,11 @@ bool TopologicalFeatures::computePulses(QVector<QString> resolution, QVector<int
     jint jradius = radius;
 
     jmethodID computeMethod = env->GetMethodID(clazz, "computePulses","([Ljava/lang/String;[I[ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z");
-//    jmethodID computeMethod = env->GetMethodID(clazz, "test","()Z"); // test
     if(computeMethod == NULL) {
         qDebug() << "method not found!";
         assert(false);
     }
     jboolean err = env->CallBooleanMethod(obj,computeMethod,jresolution, jst, jct, jcityname, jdataname, jfilter, jradius);
-//    jboolean err = env->CallBooleanMethod(obj, computeMethod); // test
     qDebug() << "done" << err;
 
     env->ReleaseIntArrayElements(jst, argsst, 0);
@@ -100,15 +82,14 @@ bool TopologicalFeatures::computePulses(QVector<QString> resolution, QVector<int
     return true;
 }
 
-bool TopologicalFeatures::combinePulses(QVector<QString> resolution, QString cityName, QString dataName, QString filter)
-{
+bool TopologicalFeatures::combinePulses(QVector<QString> resolution, QString cityName, QString dataName, QString filter) {
     jobjectArray jresolution = make_string_row(env, resolution);
     jstring jcityname = env->NewStringUTF(cityName.toStdString().c_str());
     jstring jdataname = env->NewStringUTF(dataName.toStdString().c_str());
     jstring jfilter = env->NewStringUTF(filter.toStdString().c_str());
 
-    qDebug() << "calling singleData";
-    jmethodID computeMethod = env->GetMethodID(clazz, "singleData","([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z");
+    qDebug() << "calling combinePulses";
+    jmethodID computeMethod = env->GetMethodID(clazz, "combinePulses","([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z");
     if(computeMethod == NULL) {
         qDebug() << "method not found!";
         assert(false);

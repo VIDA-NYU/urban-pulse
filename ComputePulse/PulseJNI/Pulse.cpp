@@ -14,7 +14,7 @@ Pulse::Pulse() {
 }
 
 void Pulse::createFeatures() {
-    topoFeatures->useClass("hope/it/works/test/UrbanPulse");
+    topoFeatures->useClass("hope/it/works/pulse/UrbanPulse");
     // without filter
     {
         QVector<QString> res;
@@ -75,7 +75,7 @@ void Pulse::setDataName(const QString &name) {
 
 void Pulse::combineFeatures() {
 
-    topoFeatures->useClass("hope/it/works/test/CombinedPulse");
+    topoFeatures->useClass("hope/it/works/pulse/CombinedPulse");
 
     // without filter
     {
