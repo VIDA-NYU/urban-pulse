@@ -13,7 +13,6 @@ ScalarFunction::ScalarFunction() {
     getFilters(this->filters);
     filterFns.resize(filters.size());
     cellSizeInMeters = getCellSizeInMeters();
-    cellSize = cellSizeInMeters / gres;
 }
 
 void ScalarFunction::setBounds(QPointF leftBottom, QPointF rightTop) {
@@ -30,6 +29,7 @@ void ScalarFunction::setBounds(QPointF leftBottom, QPointF rightTop) {
         rt.setY(y);
     }
     gres = getGroundResolution((leftBottom + rightTop) / 2);
+    cellSize = cellSizeInMeters / gres;
 
     resx = std::ceil((rt.x() - lb.x()) / cellSize);
     resy = std::ceil((rt.y() - lb.y()) / cellSize);
