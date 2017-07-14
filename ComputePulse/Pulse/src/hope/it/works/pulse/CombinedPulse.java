@@ -320,11 +320,124 @@ public class CombinedPulse {
 		}
 	}
 	
+	void printFeaturesJSON(String file) {
+		try {			
+			
+			int no = features.length;
+			
+			String json = "{\"features\": [";
+			ArrayList<Double> locs = new ArrayList<>();
+			DecimalFormat dec = new DecimalFormat("#0.000000000");
+			for(int i = 0; i < no; i++) {
+				json += "{";
+				json += "\"rank\": "+dec.format(features[i].rank)+", ";
+				json += "\"numRes\": "+features[i].res.length+", ";
+				
+				HashSet<Integer> set = new HashSet<>();
+				for(int j = 0;j < features[i].pulseId.length;j ++) {
+					int pid = features[i].pulseId[j];
+					Pulse p = pulse[j][pid];
+					for (int l = 0; l < p.vertices.length; l++) {
+						int v = p.vertices.get(l);
+						set.add(v);
+					}
+				}
+				
+				locs.clear();
+				boolean first = true;
+				json += "\"gridIndex\": [";
+				for(int v: set) {
+					int xin = v % xres;
+					int yin = v % yres;
+					double x = lbx + xin * (rtx - lbx) / xres;
+					double y = lby + yin * (rty - lby) / yres;
+					locs.add(y);
+					locs.add(x);
+					if(first) {
+						json += v;
+						first = false;
+					} else {
+						json += ", " + v;
+					}
+				}
+				json += "], ";
+				
+				json += "\"latLng\": [";
+				for(int j = 0;j < locs.size();j ++) {
+					if(j == 0) {
+						json += dec.format(locs.get(j));
+					} else {
+						json += ", " + dec.format(locs.get(j));
+					}
+				}
+				json += "], ";
+				
+				json += "\"resolutions\": {";
+				for(int j = 0;j < features[i].res.length;j ++) {
+					json += "\""+UrbanPulse.resolution[j]+"\": {";
+					json += "\"isMaxima\": " + features[i].res[j] + ", ";
+					json += "\"maxRank\": " + dec.format(features[i].maxRank[j]) + ", ";
+					json += "\"fnRank\": " + dec.format(features[i].fnRank[j]) + ", ";
+					json += "\"sigRank\": " + dec.format(features[i].sigRank[j]) + ", ";
+					
+					
+					int pid = features[i].pulseId[j];
+					Pulse p = pulse[j][pid];
+					json += "\"maxTime\": [";
+					for(int k = 0;k < p.maxTime.length;k ++) {
+						json += p.maxTime[k];
+						if(k < p.maxTime.length - 1) json += ", ";
+					}
+					json += "], ";
+					
+					json += "\"sigMaxTime\": [";
+					for(int k = 0;k < p.sigMaxTime.length;k ++) {
+						json += p.sigMaxTime[k];
+						if(k < p.sigMaxTime.length - 1) json += ", ";
+					}
+					json += "], ";
+					
+					json += "\"fn\": [";
+					for(int k = 0;k < p.vals.length;k ++) {
+						json += dec.format(p.vals[k]);
+						if(k < p.vals.length - 1) json += ", ";
+					}
+					json += "], ";
+					
+					json += "\"scalars\": [";
+					for(int k = 0;k < p.scalars.length;k ++) {
+						json += dec.format(p.scalars[k]);
+						if(k < p.scalars.length - 1) json += ", ";
+					}
+					json += "]}";
+					
+					if(j < features[i].res.length - 1) json += ", ";
+				}
+				
+				json += "}}";
+				
+				if(i < no - 1) json += ", ";
+			}
+			json += "]}";
+			
+			
+			PrintStream pr = new PrintStream(file);
+			
+			pr.print(json);
+			pr.close();
+						
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean combinePulses(String[] resolution, String dataFolder, String dataName, String filter) {
 		UrbanPulse.resolution = resolution;
 		CombinedPulse com = new CombinedPulse(dataFolder, dataName);
 		com.readPulse(resolution, filter);
-		com.printFeatures(dataFolder + dataName + filter + "-features.txt");
+		// com.printFeatures(dataFolder + dataName + filter + "-features.txt");
+		com.printFeaturesJSON(dataFolder + dataName + filter + "-features.json");
 		return true;
 	}
 }
