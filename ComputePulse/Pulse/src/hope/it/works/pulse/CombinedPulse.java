@@ -331,7 +331,6 @@ public class CombinedPulse {
 			for(int i = 0; i < no; i++) {
 				json += "{";
 				json += "\"rank\": "+dec.format(features[i].rank)+", ";
-				json += "\"numRes\": "+features[i].res.length+", ";
 				
 				HashSet<Integer> set = new HashSet<>();
 				for(int j = 0;j < features[i].pulseId.length;j ++) {
@@ -363,11 +362,11 @@ public class CombinedPulse {
 				json += "], ";
 				
 				json += "\"latLng\": [";
-				for(int j = 0;j < locs.size();j ++) {
+				for(int j = 0;j < locs.size();j += 2) {
 					if(j == 0) {
-						json += dec.format(locs.get(j));
+						json += "["+dec.format(locs.get(j))+", "+dec.format(locs.get(j+1))+"]";
 					} else {
-						json += ", " + dec.format(locs.get(j));
+						json += ", ["+dec.format(locs.get(j))+", "+dec.format(locs.get(j+1))+"]";
 					}
 				}
 				json += "], ";
