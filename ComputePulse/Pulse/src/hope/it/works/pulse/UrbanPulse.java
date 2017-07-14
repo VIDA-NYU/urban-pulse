@@ -37,6 +37,7 @@ public class UrbanPulse {
 	float[][] fnVals;
 	float[][] scalars;
 	int xres, yres;
+	double lbx, lby, rtx, rty;
 	Location[] sigLocs;
 	DisjointSets dj;
 	MyIntList[] locs;
@@ -255,8 +256,13 @@ public class UrbanPulse {
 					input = new OffGraph();
 					input.initMesh(xres, yres);
 				}
-				// ignore next two lines
-				reader.readLine();
+				// bounding box;
+				line = Utilities.getLine(reader, ",");
+				lby = Double.parseDouble(line[0]);
+				lbx = Double.parseDouble(line[1]);
+				rty = Double.parseDouble(line[2]);
+				rtx = Double.parseDouble(line[3]);
+				// ignore next line
 				reader.readLine();
 
 				for (int j = 0; j < nv; j++) {
@@ -342,6 +348,8 @@ public class UrbanPulse {
 			int pulseSize = end - st;
 			pr.println(localPulses.size() + "," + pulseSize);
 			DecimalFormat dec = new DecimalFormat("#0.000000000");
+			pr.println(xres + "," + yres);
+			pr.println(dec.format(lbx) + "," + dec.format(lby) + "," + dec.format(rtx) + "," + dec.format(rty));
 			for (Pulse ts : localPulses) {
 				pr.println(ts.x + "," + ts.y + "," + ts.maxct + "," + ts.sigct);
 				for (int i = 0; i < ts.vertices.length; i++) {
@@ -426,8 +434,7 @@ public class UrbanPulse {
 		pulse.computePulse(files, radius);
 		System.out.println("finished computing pulse");
 		for (int res = 0; res < resolution.length; res++) {
-			pulse.printTimeSeries(resolution[res] + filter, index.get(res),
-					index.get(res + 1));
+			pulse.printTimeSeries(resolution[res] + filter, index.get(res), index.get(res + 1));
 		}
 
 		return true;

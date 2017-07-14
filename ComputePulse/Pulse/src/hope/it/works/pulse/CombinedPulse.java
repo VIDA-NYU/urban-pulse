@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,7 +80,9 @@ public class CombinedPulse {
 	public String dataName;
 	public Pulse [][] pulse;
 	Feature [] features;
-	
+	int xres, yres;
+	double lbx, lby, rtx, rty;
+
 	public CombinedPulse(String dataFolder, String dataName) {
 		this.dataFolder = dataFolder;
 		this.dataName = dataName;
@@ -95,6 +98,16 @@ public class CombinedPulse {
 			String [] line = Utilities.getLine(reader, ",");
 			int nt = Integer.parseInt(line[0]);
 			int length = Integer.parseInt(line[1]);
+			
+			line = Utilities.getLine(reader, ",");
+			xres = Integer.parseInt(line[0]);
+			yres = Integer.parseInt(line[1]);
+			
+			line = Utilities.getLine(reader, ",");
+			lbx = Double.parseDouble(line[0]);
+			lby = Double.parseDouble(line[1]);
+			rtx = Double.parseDouble(line[2]);
+			rty = Double.parseDouble(line[3]);
 			
 			Pulse [] pulse = new Pulse[nt];
 			
@@ -238,6 +251,7 @@ public class CombinedPulse {
 			int no = features.length;
 			pr.println(no);
 			DecimalFormat dec = new DecimalFormat("#0.000000000");
+			ArrayList<Double> locs = new ArrayList<>();
 			for(int i = 0;i < no;i ++) {
 				pr.println(features[i].city + "," + dec.format(features[i].rank) + "," + features[i].res.length);
 				HashSet<Integer> set = new HashSet<>();
@@ -249,13 +263,28 @@ public class CombinedPulse {
 						set.add(v);
 					}
 				}
-				boolean first = true; 
+				boolean first = true;
+				locs.clear();
 				for(int v: set) {
+					int xin = v % xres;
+					int yin = v % yres;
+					double x = lbx + xin * (rtx - lbx) / xres;
+					double y = lby + yin * (rty - lby) / yres;
+					locs.add(y);
+					locs.add(x);
 					if(first) {
 						pr.print(v);
 						first = false;
 					} else {
 						pr.print("," + v);
+					}
+				}
+				pr.println();
+				for(int j = 0;j < locs.size();j ++) {
+					if(j == 0) {
+						pr.print(dec.format(locs.get(j)));
+					} else {
+						pr.print("," + dec.format(locs.get(j)));
 					}
 				}
 				pr.println();

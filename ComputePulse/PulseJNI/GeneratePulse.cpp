@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     int validArgs = 0;
     Pulse pulse;
     QString dataFolder;
-    bool createFeatures = false;
     for(int i = 0;i < args.size();i ++) {
         if(args[i] == "--data") {
             dataFolder = args[i+1];
@@ -38,17 +37,6 @@ int main(int argc, char *argv[])
             pulse.setDataName(args[i+1]);
             validArgs ++;
         }
-
-//        if(args[i] == "--create") {
-//            createFeatures = true;
-//            validArgs ++;
-//        }
-
-//        if(args[i] == "--combine") {
-//            createFeatures = false;
-//            validArgs ++;
-//        }
-
     }
 
     if(validArgs != 2) {
