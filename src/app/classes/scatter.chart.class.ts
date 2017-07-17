@@ -14,6 +14,8 @@ export class ScatterChart{
     // margins setup
     private margins: any = {top: 20, right: 20, bottom: 30, left: 50};
     
+    private element: any;
+
     // entire chart size
     private chartWidth: number = 0;
     private chartHeight: number = 0;
@@ -46,6 +48,7 @@ export class ScatterChart{
     constructor(element: ElementRef, private dataService : DataService){
         dataService.getFeatures().subscribe((json:any)=>{ 
 
+            this.element = element;
             // sort features
             var features = json.features.sort(function(x: any, y: any) {
                 return d3.ascending(x.rank, y.rank);
@@ -77,21 +80,20 @@ export class ScatterChart{
                     return {x: x, y: y};
                 });
             });
-
             
 
-            this._buildChart(element);
+            this._buildChart();
 
             // Adds event listener resize when the window changes size.
             window.addEventListener("resize", () => { this._resize() });
         });
     }
 
-    private _buildChart(element : ElementRef) {
+    private _buildChart() {
         var that = this;
         var isSearch = false;
 
-        this.div = d3.select(element.nativeElement);
+        this.div = d3.select(this.element.nativeElement);
 
         this.chartWidth  = this.div.node().getBoundingClientRect().width;
         this.chartWidth -= this.margins.left + this.margins.right;
@@ -118,7 +120,9 @@ export class ScatterChart{
             .tickSize(-this.chartWidth * this.timeRes.length, 0)
             .tickFormat(yFormat);
 
-        this.svg = this.div.append("svg")
+        this.div.select('svg').remove();
+
+        this.svg = this.div.append('svg')
             .attr("width",  this.chartWidth)
             .attr("height", this.chartHeight)
             .append("g")
@@ -175,129 +179,17 @@ export class ScatterChart{
                     .data(data);
 
                 circles.enter().append("circle")
-                        .attr("cx", function(d) { return that.xScale(d.x); })
-                        .attr("cy", function(d) { return that.yScale(d.y); })
+                        .attr("cx", function(d: any) { return that.xScale(d.x); })
+                        .attr("cy", function(d: any) { return that.yScale(d.y); })
                         .attr("r", 4)
-                        .style("fill", function(d) { return "blue"; });
+                        .style("fill", function(d: any) { return "blue"; });
 
                 circles.exit().remove();
             });
 
     }
 
-    private _updateSvg(){
-        // computes the chart width
-        this.chartWidth  = this.div.node().getBoundingClientRect().width;
-        this.chartWidth -= this.margins.left + this.margins.right;
-        this.chartHeight  = this.div.node().getBoundingClientRect().height;
-        this.chartHeight -= this.margins.top + this.margins.bottom;
-
-        // creates the chart svg
-        if(typeof this.svg === 'undefined')
-            this.svg = this.div.append('svg');
-
-        // updates the chart svg
-        this.svg
-            .attr('width', this.chartWidth + this.margins.left + this.margins.right)
-            .attr('height', this.chartHeight + this.margins.top  + this.margins.bottom);
-    }
-
-    private _updateChartGroup(){
-        // creates the chart group
-        if(typeof this.cht === 'undefined')
-            this.cht = this.svg.append('g');
-
-        // set properties
-        this.cht
-            .attr('width', this.chartWidth)
-            .attr('height', this.chartHeight)
-            .attr('transform', 'translate('+ this.margins.left +','+ this.margins.top +')' );
-    }
-
-    private _updateAxes(){
-
-        // build scales
-        this.xScale = d3.scaleLinear().domain(this.xRange).range([0,this.chartWidth]);
-        this.yScale = d3.scaleLinear().domain(this.yRange).range([this.chartHeight,0]);
-
-        // radius size
-        var radius = 4.0;
-
-        // build axes
-        if(typeof this.axiX === 'undefined') this.axiX = this.svg.append('g');
-        if(typeof this.axiY === 'undefined') this.axiY = this.svg.append('g');
-
-        this.axiX
-            .data(this.timeRes)
-            .enter()
-            .append('g')
-            .attr('class', 'xAxis')
-            .attr('transform', function(d,i) {
-                console.log(d,i);
-                return 'translate('+ (_this.margins.left-0.5*radius) +','+ (_this.margins.top + _this.chartHeight) +')'
-            });
-
-        this.axiY
-            .attr('class', 'yAxis')
-            .attr('transform', 'translate('+ (this.margins.left-0.5*radius) +','+ this.margins.top  +')');
-
-        this.xAxis = d3.axisBottom(this.xScale);
-        this.yAxis = d3.axisLeft(this.yScale);
-
-        this.axiX
-            .attr("class", "axisCustom")
-            .call(this.xAxis);
-
-        this.axiY
-            .attr("class", "axisCustom")
-            .call(this.yAxis);
-        }
-
-    private _updateMatrix(){
-        // transition
-        var t = d3.transition(null).duration(450);
-
-        var circles = this.cht.selectAll('circle')
-            .data(this.data);
-
-        // enter
-        circles
-            .enter()
-            .append("circle")
-            .attr("cx", (d:any) => { return this.xScale(+d.x); })
-            .attr("cy", (d:any) => { return this.yScale(+d.y); })
-            .attr("r" , 4.0)
-            .style("stroke", "#555")
-            .style("fill", "#bfbfbf")
-            .style("fill-opacity", 0)
-            .style("stroke-opacity", 0)
-            .transition(t)
-            .style("fill-opacity", 1)
-            .style("stroke-opacity", 1);
-
-        // update
-        circles
-            .transition(t)
-            .attr("cx", (d:any) => { return this.xScale(+d.x); })
-            .attr("cy", (d:any) => { return this.yScale(+d.y); })
-            .attr("r" , 1.0)
-            .style("stroke", "#555")
-            .style("fill", "#bfbfbf")
-
-        // exit selection
-        circles
-            .exit()
-            .transition(t)
-            .style("fill-opacity", 0)
-            .style("stroke-opacity", 0)
-            .remove();
-    }
-
     private _resize(){
-        this._updateSvg();
-        this._updateChartGroup();
-
-        this._updateAxes();
-        this._updateMatrix();        
+        this._buildChart();    
     }
 }

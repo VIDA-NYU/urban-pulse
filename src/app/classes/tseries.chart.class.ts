@@ -7,16 +7,26 @@ import * as d3 from 'd3';
 // lodash
 import * as _ from 'lodash';
 
+// my services
+import { DataService } from './data.class';
+
 export class TseriesChart{
-    // size setup
-    private margins = {top: 20, right: 20, bottom: 30, left: 50};
-    private chartWidth: 0;
-    private chartHeight: 0;    
+    // margins setup
+    private margins: any = {top: 20, right: 20, bottom: 30, left: 50};
+    
+    private element: any;
+
+    // entire chart size
+    private chartWidth: number = 0;
+    private chartHeight: number = 0;
+    // each matrix size
+    private elemWidth: number = 0;
+    private elemHeight: number = 0;
 
     // dom elements
-    private div:  any;
-    private svg:  any;
-    private cht:  any;
+    private div: any;
+    private svg: any;
+    private cht: any;
     private axiX: any;
     private axiY: any;
         
@@ -26,170 +36,151 @@ export class TseriesChart{
     
     private xRange: any;
     private yRange: any;
-    private rRange: any;
 
     private xScale: any;
     private yScale: any;
-    private rScale: any;
 
-    private data: any[];
-    private radius: number;
+    private res: string = "MONTH";
+    private data: any;
+    private timeRes: any[];
+    
+    constructor(element: ElementRef, private dataService : DataService){
+        dataService.getFeatures().subscribe((json:any)=>{ 
 
-    constructor(element: ElementRef){
-        this.div = d3.select(element.nativeElement);
-        this.data = [{x: 1, y: 2, r: 1}, {x: 2, y: 1, r: 3}, {x: 4, y: 4, r: 2}, 
-                     {x: 5, y: 3, r: 1}, {x: 3, y: 2, r: 2}];
+            // this.element = element;
+            // // sort features
+            // var features = json.features.sort(function(x: any, y: any) {
+            //     return d3.ascending(x.rank, y.rank);
+            // });
+            // this.timeRes = Object.keys(features[features.length-1]["resolutions"]);
 
-        this._updateSvg();
-        this._updateChartGroup();
+            // // remove ALL key
+            // this.timeRes.splice(this.timeRes.indexOf("ALL"),1);
 
-        this._prepareScales();
-        this._updateAxes();
-        this._updateCircles();
+            // this.data = features;
+            // features.map(function(f:any) {
+            //     var fnRank = f.resolutions[res].fnRank;
+            //     var maxRank = f.resolutions[res].fnRank;
+            //     var sigRank = f.resolutions[res].fnRank;
+            //     var x = Math.sqrt(maxRank*maxRank + fnRank*fnRank + sigRank*sigRank);
+            //     var y = f.rank;
 
-        // Adds event listener resize when the window changes size.
-        window.addEventListener("resize", () => { this._resize() });
+            //     that.xRange[0] = Math.min(that.xRange[0], x);
+            //     that.xRange[1] = Math.max(that.xRange[1], x);
+
+            //     that.yRange[0] = Math.min(that.yRange[0], y);
+            //     that.yRange[1] = Math.max(that.yRange[1], y);
+            // }
+
+            // this._buildChart();
+
+            // // Adds event listener resize when the window changes size.
+            // window.addEventListener("resize", () => { this._resize() });
+        });
     }
 
-    private _updateSvg(){
-        // computes the chart width
-        this.chartWidth  = this.div.node().parentNode.getBoundingClientRect().width;
+    private _buildChart() {
+        var that = this;
+        var isSearch = false;
+
+        this.div = d3.select(this.element.nativeElement);
+        this.div.select('svg').remove();
+
+        this.chartWidth  = this.div.node().getBoundingClientRect().width;
         this.chartWidth -= this.margins.left + this.margins.right;
-
-        this.chartHeight  = this.div.node().parentNode.getBoundingClientRect().height;
+        this.chartHeight  = this.div.node().getBoundingClientRect().height;
         this.chartHeight -= this.margins.top + this.margins.bottom;
-        this.chartHeight *= 0.4;
 
-        // creates the chart svg
-        if(typeof this.svg === 'undefined')
-            this.svg = this.div.append('svg');
+        // scale
+        this.xScale = d3.scaleLinear().domain(this.xRange).range([0,this.chartWidth / 3]);
+        this.yScale = d3.scaleLinear().domain(this.yRange).range([this.chartHeight,0]);
 
-        // updates the chart svg
-        this.svg
-            .attr( 'width', this.chartWidth + this.margins.left + this.margins.right)
-            .attr('height', this.chartHeight + this.margins.top  + this.margins.bottom);
-    }
-
-    private _updateChartGroup(){
-        // creates the chart group
-        if(typeof this.cht === 'undefined')
-            this.cht = this.svg.append('g');
-
-        // set properties
-        this.cht
-            .attr('width', this.chartWidth)
-            .attr('height', this.chartHeight)
-            .attr('transform', 'translate('+ this.margins.left +','+ this.margins.top +')' );
-    }
-
-    private _prepareScales(){
-        // scales parameters
-        var xVals = _.map(this.data, function(d){
-            return d.x;
-        });
-
-        var yVals = _.map(this.data, function(d){
-            return d.y;
-        });
-
-        var rVals = _.map(this.data, function(d){
-            return d.r;
-        });
-
-        xVals = xVals.sort();
-        yVals = yVals.sort();
-        rVals = rVals.sort();
-        
-        this.xRange = [xVals[0], xVals[xVals.length-1]];
-        this.yRange = [yVals[0], yVals[yVals.length-1]];
-        this.rRange = [rVals[0], rVals[rVals.length-1]];
-
-        console.log(this.xRange, this.yRange, this.rRange)
-    }
-
-    private _updateAxes(){
-
-        // build scales
-        this.xScale = d3.scaleLinear().domain(this.xRange).range([0,this.chartWidth]);
-        this.yScale = d3.scaleLinear().domain(this.yRange).range([0,this.chartHeight]);
-
-        // radius size
-        var dy = this.yScale(this.yRange[1]) - this.yScale(this.yRange[0]);
-        var dx = this.xScale(this.xRange[1]) - this.xScale(this.xRange[0]);
-        this.radius = 0.03*Math.min(dx, dy);
-
-        // radius scale
-        this.rScale = d3.scaleLinear().domain(this.rRange).range([5,this.radius+5]).clamp(true);
-
-        // build axes
-        if(typeof this.axiX === 'undefined') this.axiX = this.svg.append('g');
-        if(typeof this.axiY === 'undefined') this.axiY = this.svg.append('g');
-
-        this.axiX
-            .attr('class', 'xAxis')
-            .attr('transform', 'translate('+ (this.margins.left-0.5*this.radius) +','+ (this.margins.top + this.chartHeight) +')');
-
-        this.axiY
-            .attr('class', 'yAxis')
-            .attr('transform', 'translate('+ (this.margins.left-0.5*this.radius) +','+ this.margins.top  +')');
-
+        // axis
         this.xAxis = d3.axisBottom(this.xScale);
         this.yAxis = d3.axisLeft(this.yScale);
 
-        this.axiX
-            .attr("class", "axisCustom")
-            .call(this.xAxis);
+        var numTicks = isSearch?5:5;
+        this.xAxis
+            .ticks(numTicks)
+            .tickSize( this.chartHeight )
+            .tickFormat(d3.format(".1f"));
 
-        this.axiY
-            .attr("class", "axisCustom")
-            .call(this.yAxis);
-        }
+        var yFormat = !isSearch?d3.format(".1f"):d3.format("f");
+        this.yAxis
+            .ticks(numTicks)
+            .tickSize(-this.chartWidth * this.timeRes.length, 0)
+            .tickFormat(yFormat);
 
-    private _updateCircles(){
-        // transition
-        var t = d3.transition(null).duration(450);
+        
 
-        var circles = this.cht.selectAll('circle')
-            .data(this.data);
+        this.svg = this.div.append('svg')
+            .attr("width",  this.chartWidth)
+            .attr("height", this.chartHeight)
+            .append("g")
+            .attr("transform", "translate(" + this.margins.left + "," + this.margins.top + ")");
 
-        // enter
-        circles
+        this.svg.selectAll(".x.axis")
+            .data(this.timeRes)
+            .enter().append("g")
+            .attr("class", "x axis")
+            .attr("transform", function(d: any, i: any) {
+                var pos = isSearch?0:i;
+                return "translate(" + (pos * that.chartWidth / that.timeRes.length) + "," + 0 + ")";
+            })
+            .each(function(d: any) {
+                that.xScale.domain(that.xRange);
+                d3.select(this).call(that.xAxis);
+            });
+
+        this.svg.selectAll(".y.axis")
+            .data(["func"])
             .enter()
-            .append("circle")
-            .attr("cx", (d:any) => { return this.xScale(+d.x); })
-            .attr("cy", (d:any) => { return this.yScale(+d.y); })
-            .attr("r" , (d:any) => { return this.rScale(+d.r); })
-            .style("stroke", "#555")
-            .style("fill", "#bfbfbf")
-            .style("fill-opacity", 0)
-            .style("stroke-opacity", 0)
-            .transition(t)
-            .style("fill-opacity", 1)
-            .style("stroke-opacity", 1);
+            .append("g")
+            .attr("class", "y axis")
+            .attr("transform", function(d: any, i: any) {
+                var pos = isSearch?0:i;
+                return "translate("+ (pos*(that.chartWidth / that.timeRes.length)) +", 0)";
+            })
+            .each(function() {
+                that.yScale.domain(that.yRange);
+                d3.select(this).call(that.yAxis);
+            });
 
-        // update
-        circles
-            .transition(t)
-            .attr("cx", (d:any) => { return this.xScale(+d.x); })
-            .attr("cy", (d:any) => { return this.yScale(+d.y); })
-            .attr("r" , (d:any) => { return this.rScale(+d.r); })
-            .style("stroke", "#555")
-            .style("fill", "#bfbfbf")
+        this.svg.selectAll('.cell')
+            .data(this.timeRes)
+            .enter()
+            .append('g')
+            .attr('class', 'cell')
+            .attr('transform', function(d: any, i: any) {
+                var pos = isSearch?0:i;
+                return "translate(" + (pos*(that.chartWidth / that.timeRes.length)) + ", 0)";
+            })
+            .each(function(d: any) {
+                var cell = d3.select(this);
+                var data = that.data[d];
 
-        // exit selection
-        circles
-            .exit()
-            .transition(t)
-            .style("fill-opacity", 0)
-            .style("stroke-opacity", 0)
-            .remove();
+                cell.append("rect")
+                    .attr("class", "frame")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .attr("width",  that.chartWidth / that.timeRes.length)
+                    .attr("height", that.chartHeight );
+
+                var circles = cell.selectAll("circle")
+                    .data(data);
+
+                circles.enter().append("circle")
+                        .attr("cx", function(d: any) { return that.xScale(d.x); })
+                        .attr("cy", function(d: any) { return that.yScale(d.y); })
+                        .attr("r", 4)
+                        .style("fill", function(d: any) { return "blue"; });
+
+                circles.exit().remove();
+            });
+
     }
 
     private _resize(){
-        this._updateSvg();
-        this._updateChartGroup();
-
-        this._updateAxes();
-        this._updateCircles();        
+        this._buildChart();    
     }
 }

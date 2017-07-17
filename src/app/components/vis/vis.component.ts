@@ -14,14 +14,17 @@ import { DataService } from '../../classes/data.class';
   </md-toolbar>
   <div class="scatterRow">
     <div #scatter class="scatter"></div>
+    <div #tseries class="tseries"></div>
   </div>`
 })
 export class VisComponent implements AfterViewInit {
   @ViewChild('scatter') scatterRef: ElementRef;
+  @ViewChild('tseries') tseriesRef: ElementRef;
 
   private chartsTitle: string = "Pulse Explorer";
 
   private scatter: any;
+  private tseries: any;
 
   constructor(private dataService : DataService) { }
 
@@ -31,6 +34,6 @@ export class VisComponent implements AfterViewInit {
 
   private _createCharts() {
     this.scatter = new ScatterChart(this.scatterRef, this.dataService);
-    // this.tseries = new TseriesChart(this.tseriesRef);
+    this.tseries = new TseriesChart(this.tseriesRef, this.dataService);
   }
 }
