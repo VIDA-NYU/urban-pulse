@@ -27,6 +27,7 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       '@angular/animations': 'npm:@angular/animations/bundles/animations.umd.js',
       '@angular/flex-layout': 'npm:@angular/flex-layout/bundles/flex-layout.umd.js',
+      '@angular/cdk': 'npm:@angular/cdk/bundles/cdk.umd.js',
 
       // angular material
       '@angular/material': 'npm:@angular/material/bundles/material.umd.js',

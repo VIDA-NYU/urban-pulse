@@ -1,12 +1,111 @@
 @import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
 
 body {
-    padding: 0;
-    margin: 5;
+    padding: 0px;
+    margin: 0px;
     font-family: Roboto, sans-serif;
+}
+
+md-toolbar {
+ 	min-height: 32px !important;
+}
+
+md-toolbar md-toolbar-row {
+ 	height: 32px !important;
+ 	font-size: 16px;
 }
 
 .app{
     width: 100vw;
     height: 100vh;
+    overflow-y: hidden;
+}
+
+.mapColumn {
+	top: 32px;
+	bottom: 0px;
+	width: 40%;
+	position: absolute;
+}
+
+.map {
+	width: 100%;
+	height: 50%;
+	margin: 0px;
+}
+
+.visColumn {
+	top: 32px;
+	bottom: 0px;
+	left: 40%;
+	width: 60%;
+	position: absolute;
+}
+
+.scatterRow {
+	width: 100%;
+	height: 30%;
+}
+
+.scatter {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	float: left;
+}
+
+.scatter svg {
+  font: 10px sans-serif;
+  padding: 10px;
+}
+
+.scatter .axis,
+.scatter .frame {
+  shape-rendering: crispEdges;
+}
+
+.scatter .axis line {
+  stroke: #ddd;
+}
+
+.scatter .axis path {
+  display: none;
+}
+
+.scatter .cell text {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.scatter .frame {
+  fill: none;
+  stroke: #aaa;
+}
+
+.scatter .title {
+  font: 12px sans-serif;
+}
+
+.scatter circle {
+  fill-opacity: .7;
+}
+
+.scatter circle.hidden {
+  fill: #ccc !important;
+}
+
+.scatter .extent {
+  fill: #000;
+  fill-opacity: .125;
+  stroke: #fff;
+}
+
+.scatter circle.hover {
+  stroke: #333;
+  stroke-width: 3px;
+}
+
+.scatter circle.selected{
+  stroke: #DB4C4C;
+  stroke-width: 3px;
 }

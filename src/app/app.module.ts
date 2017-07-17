@@ -3,6 +3,7 @@ import 'hammerjs';
 
 import { NgModule }                from '@angular/core';
 import { FormsModule }             from '@angular/forms';
+import { HttpModule }              from '@angular/http';
 import { FlexLayoutModule }        from '@angular/flex-layout';
 import { BrowserModule }           from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,12 +18,14 @@ import { MainComponent }  from './components/main/main.component';
 
 // my services
 import { GMapsLayerGL } from './classes/gmaps.layergl.class'
+import { DataService }  from './classes/data.class';
 
 @NgModule({
   imports: 
   [
     BrowserModule, 
     FormsModule,
+    HttpModule,
     MaterialModule,
     FlexLayoutModule,
     BrowserAnimationsModule
@@ -31,11 +34,12 @@ import { GMapsLayerGL } from './classes/gmaps.layergl.class'
   [ 
     MapComponent,
     VisComponent,
-    MainComponent, 
+    MainComponent
   ],
   providers:
   [
-    GMapsLayerGL
+    GMapsLayerGL,
+    DataService
   ],
   bootstrap: [ MainComponent ]
 })

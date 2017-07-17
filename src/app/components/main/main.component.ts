@@ -7,13 +7,13 @@ import { MapComponent } from '../map/map.component'
 @Component({
   selector: 'urban-pulse',
   template: `
-  <md-toolbar style="height: 5vh;" color="primary">
-    {{appTitle}}
-  </md-toolbar>
-  <section class="app flex-container" layout="column" fxLayoutAlign="start stretch">
-      <pulse-map style='width: 39vw'></pulse-map>
-      <pulse-vis style='width: 59vw'></pulse-vis>
-  </section>`
+  <div class="app">
+      <md-toolbar>
+        {{appTitle}}
+      </md-toolbar>
+      <pulse-map class="mapColumn"></pulse-map>
+      <pulse-vis class="visColumn"></pulse-vis>
+  </div>`
 })
 export class MainComponent {
   // app title
