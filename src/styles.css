@@ -107,5 +107,5 @@ md-toolbar md-toolbar-row {
 
 .scatter circle.selected{
   stroke: #DB4C4C;
-  stroke-width: 3px;
+  stroke-width: 1px;
 }

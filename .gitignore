@@ -8,3 +8,5 @@ src/app/components/*/*.js
 src/app/components/*/*.map
 src/app/classes/*.js
 src/app/classes/*.map
+
+src/data/

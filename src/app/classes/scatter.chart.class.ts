@@ -17,12 +17,12 @@ export class ScatterChart
     private spaceBetween: number = 10;
 
     // entire chart size
-    private chartWidth: number = 0;
-    private chartHeight: number = 0;
+    private chartWidth: number;
+    private chartHeight: number;
     
     // each matrix size
-    private elemWidth: number = 0;
-    private elemHeight: number = 0;
+    private elemWidth: number;
+    private elemHeight: number;
 
     // html element
     private element: any;
@@ -36,16 +36,24 @@ export class ScatterChart
     private xAxis: any;
     private yAxis: any;
 
+    // range objects
     private xRange: any;
     private yRange: any;
 
+    // scale objects
     private xScale: any;
     private yScale: any;
 
+    // brush object
+    private brush: any;
+    private brushCell: any;
+
+    // dataset
     private data: any;
     private timeRes: any[];
+    
+    // chart parameters
     private nCharts: number;
-
     private isSearch: boolean = false;
 
     constructor(element: ElementRef, private dataService: DataService) 
@@ -74,10 +82,13 @@ export class ScatterChart
         // dom elements
         this._buildDomElems();
         // build the axis
-        this._buildAxis()
+        this._buildAxis();
 
         // creates the chart
-        this._buildChart();        
+        this._buildChart();
+
+        // build brush
+        this._buildBrush();
     }
 
     private _buildDomElems()
@@ -309,5 +320,65 @@ export class ScatterChart
 
         // exit
         cells.exit().remove();
+    }
+
+    private _buildBrush()
+    {
+        // this scope
+        var that = this;
+
+        // brush object
+        this.brush = d3.brush()
+        .extent([[0, 0], [this.elemWidth, this.elemHeight]]);
+
+        // on start
+        this.brush.on("start", function() 
+        {
+            if(that.brushCell !== this)
+            {
+                d3.select(that.brushCell).call(that.brush.move, null);
+                that.brushCell = this;
+            }
+        });
+
+        // on move
+        this.brush.on("brush", function() 
+        {
+            // brush selection
+            var selection = d3.event.selection;
+            if(!selection) return;
+            
+            // selected circles
+            that.cht.selectAll("circle")
+                .classed("selected", function(d: any)
+                {
+                    return (selection[0][0] < that.xScale(d.x) && selection[1][0] > that.xScale(d.x)) &&
+                           (selection[0][1] < that.yScale(d.y) && selection[1][1] > that.yScale(d.y));
+                });
+            
+                // unselected circles
+            that.cht.selectAll("circle")
+                .attr('opacity', function()
+                {
+                    var sel = d3.select(this).classed('selected');
+                    return sel ? 1.0 : 0.2;
+                })
+        });
+        
+        // on move
+        this.brush.on("end", function() 
+        {
+            // clear selection
+            if(!d3.event.selection)
+            {
+                that.cht.selectAll("circle")
+                    .classed("selected", false)
+                    .attr('opacity', 1.0);
+            }
+        });
+
+        // call on each cell
+        var cells = this.cht.selectAll('.cell')
+            .call(this.brush);
     }
 }
