@@ -14,8 +14,11 @@ import { DataService } from '../../classes/data.class';
   </md-toolbar>
   <div class="scatterRow">
     <div #scatter class="scatter"></div>
+  </div>
+  <div class="tseriesRow">
     <div #tseries class="tseries"></div>
-  </div>`
+  </div>
+  `
 })
 export class VisComponent implements AfterViewInit {
   @ViewChild('scatter') scatterRef: ElementRef;
