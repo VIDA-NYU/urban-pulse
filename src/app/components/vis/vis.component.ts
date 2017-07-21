@@ -10,18 +10,25 @@ import { DataService } from '../../classes/data.class';
   selector: 'pulse-vis',
   template: `
   <md-toolbar>
-    {{chartsTitle}}
+    {{explorerTitle}}
   </md-toolbar>
   <div class="scatterRow">
     <div #scatter class="scatter"></div>
+  </div>
+  <md-toolbar>
+    {{beatsTitle}}
+  </md-toolbar>
+  <div class="tseriesRow">
     <div #tseries class="tseries"></div>
-  </div>`
+  </div>
+  `
 })
 export class VisComponent implements AfterViewInit {
   @ViewChild('scatter') scatterRef: ElementRef;
   @ViewChild('tseries') tseriesRef: ElementRef;
 
-  private chartsTitle: string = "Pulse Explorer";
+  private explorerTitle: string = "Pulse Explorer";
+  private beatsTitle: string = "Pulse Beats";
 
   private scatter: any;
   private tseries: any;
