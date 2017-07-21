@@ -43,7 +43,7 @@ export class ScatterChart
     // scale objects
     private xScale: any;
     private yScale: any;
-
+    
     // brush object
     private brush: any;
     private brushCell: any;
@@ -56,9 +56,16 @@ export class ScatterChart
     private nCharts: number;
     private isSearch: boolean = false;
 
+    // data service
+    private dataSvc: any;
+
     constructor(element: ElementRef, private dataService: DataService) 
     {
-        dataService.getFeatures().subscribe((json: any) => 
+        // data service reference
+        this.dataSvc = dataService;
+
+        // get the data
+        this.dataSvc.getFeatures().subscribe((json: any) => 
         {
             // html element reference 
             this.element = element;
@@ -144,7 +151,7 @@ export class ScatterChart
 
         // mapping
         this.timeRes.forEach(function (res: string) {
-            that.data[res] = features.map(function (f: any) 
+            that.data[res] = features.map(function (f: any, index:number) 
             {
                 // current resolution
                 var resolution = res;
@@ -163,7 +170,7 @@ export class ScatterChart
                 that.yRange[0] = Math.min(that.yRange[0], y);
                 that.yRange[1] = Math.max(that.yRange[1], y);
 
-                return { x: x, y: y };
+                return { id: index, x: x, y: y };
             });
         });
     }
@@ -349,19 +356,34 @@ export class ScatterChart
             if(!selection) return;
             
             // selected circles
-            that.cht.selectAll("circle")
+            d3.select(this).selectAll("circle")
                 .classed("selected", function(d: any)
                 {
-                    return (selection[0][0] < that.xScale(d.x) && selection[1][0] > that.xScale(d.x)) &&
-                           (selection[0][1] < that.yScale(d.y) && selection[1][1] > that.yScale(d.y));
+                    if( (selection[0][0] <= that.xScale(d.x) && selection[1][0] >= that.xScale(d.x)) &&
+                        (selection[0][1] <= that.yScale(d.y) && selection[1][1] >= that.yScale(d.y)) )
+                    {
+                        that.dataSvc.addSelection(d);
+                        return true;
+                    }
+                    else
+                    {
+                        that.dataSvc.delSelection(d);                        
+                        return false;
+                    }
                 });
             
-                // unselected circles
+            // unselected circles
             that.cht.selectAll("circle")
-                .attr('opacity', function()
+                .attr('opacity', function(d: any)
                 {
-                    var sel = d3.select(this).classed('selected');
-                    return sel ? 1.0 : 0.2;
+                    if( that.dataSvc.findSelection(d) ){
+                        d3.select(this).classed('selected', true);
+                        return 1.0;                            
+                    }
+                    else{
+                        d3.select(this).classed('selected', false);
+                        return 0.2;
+                    }
                 })
         });
         
@@ -374,6 +396,8 @@ export class ScatterChart
                 that.cht.selectAll("circle")
                     .classed("selected", false)
                     .attr('opacity', 1.0);
+
+                that.dataSvc.clearSelection();
             }
         });
 
