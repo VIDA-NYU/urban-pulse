@@ -15,6 +15,9 @@ export class TseriesChart{
     private margins: any = {top: 20, right: 50, bottom: 30, left: 20};
     private height: number = 60;
     private padding: number = 50;
+
+    private colorCircles = d3.scaleOrdinal().range(['#FFFFFF','#C7E9C0','#006D2C']);
+    private colorLines = d3.scaleOrdinal(d3.schemeCategory10);
     
     private element: any;
 
@@ -47,15 +50,19 @@ export class TseriesChart{
     private series: string = 'scalars';
     private res: string = 'HOUR';
     private data: any;
+    private cities: any;
     private timeRes: any[];
     
     constructor(element: ElementRef, private dataService : DataService){
+
+        this.cities = dataService.getCities();
+
         dataService.getFeatures().subscribe((json:any)=>{ 
 
             this.element = element;
             // sort features
             var features = json.features.sort(function (x: any, y: any) {
-                return d3.ascending(x.rank, y.rank);
+                return d3.descending(x.rank, y.rank);
             });
             this.timeRes = Object.keys(features[features.length-1]["resolutions"]);
             this.data = features;
@@ -208,9 +215,23 @@ export class TseriesChart{
         this.chtPlot.attr("width", this.elemWidth).attr("transform", "translate(" + this.margins.left + "," + 0 + ")");     
     }
 
+    private _getBeatTypes(feature) {
+        var beats = [];
+        var maxTime = feature.resolutions[this.res]["maxTime"];
+        var sigMaxTime = feature.resolutions[this.res]["sigMaxTime"];
+        for(var i=0; i<maxTime.length; i++) {
+            var b = (maxTime[i]?(sigMaxTime[i]?2:1):0);
+            beats.push(b);
+        }
+        return beats;
+    }
+
     private _plot() {
 
         var that = this;
+
+        this.colorLines.domain(this.cities);
+        this.colorCircles.domain([0,1,2]);
 
         var line = d3.line()
             .curve(d3.curveLinear)
@@ -248,7 +269,7 @@ export class TseriesChart{
 
 
         var circles = enter.append("g").selectAll(".circle")
-            .data( function(d: any){ return d.resolutions[that.res]["maxTime"];} );
+            .data( function(d: any){ return that._getBeatTypes(d);} );
 
         circles.enter()
             .append("circle")
@@ -258,17 +279,17 @@ export class TseriesChart{
             })
             .attr("cy", this.height + 20)
             .attr("r", 8)
-            .attr("fill", function(d: any) { return "white" /*pulse.pulsePlot.colorDots(d);*/ });
+            .attr("fill", function(d: any) { return that.colorCircles(d); });
 
-        circles.attr("cx", function(d: any, i: any){
+        panels.selectAll(".circle")
+            .attr("cx", function(d: any, i: any){
                 return that.xScale(i+1);
             })
             .attr("cy", this.height + 20)
             .attr("r", 8)
-            .attr("fill", function(d: any) { return "white" /*pulse.pulsePlot.colorDots(d);*/ });
+            .attr("fill", function(d: any) { return that.colorCircles(d); });
 
         circles.exit().remove();
-
 
     }
 

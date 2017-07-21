@@ -32,4 +32,8 @@ export class DataService {
     clearSelection() {
         this.selected = [];
     }
+
+    getCities() {
+    	return ['nyc', 'nyc'];
+    }
 }
