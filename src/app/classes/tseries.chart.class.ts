@@ -215,7 +215,7 @@ export class TseriesChart{
         this.chtPlot.attr("width", this.elemWidth).attr("transform", "translate(" + this.margins.left + "," + 0 + ")");     
     }
 
-    private _getBeatTypes(feature) {
+    private _getBeatTypes(feature: any) {
         var beats = [];
         var maxTime = feature.resolutions[this.res]["maxTime"];
         var sigMaxTime = feature.resolutions[this.res]["sigMaxTime"];
@@ -231,7 +231,7 @@ export class TseriesChart{
         var that = this;
 
         this.colorLines.domain(this.cities);
-        this.colorCircles.domain([0,1,2]);
+        this.colorCircles.domain(<any>[0,1,2]);
 
         var line = d3.line()
             .curve(d3.curveLinear)
