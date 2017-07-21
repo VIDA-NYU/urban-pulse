@@ -9,6 +9,7 @@ import * as _ from 'lodash';
 
 // my services
 import { DataService } from './data.class';
+import { InteractionService } from './interaction.class';
 
 export class ScatterChart 
 {
@@ -57,15 +58,15 @@ export class ScatterChart
     private isSearch: boolean = false;
 
     // data service
-    private dataSvc: any;
+    private interSvc: any;
 
-    constructor(element: ElementRef, private dataService: DataService) 
+    constructor(element: ElementRef, private dataService: DataService, private interactionService: InteractionService) 
     {
-        // data service reference
-        this.dataSvc = dataService;
+        // interaction service
+        this.interSvc = interactionService;
 
         // get the data
-        this.dataSvc.getFeatures().subscribe((json: any) => 
+        dataService.getFeatures().subscribe((json: any) => 
         {
             // html element reference 
             this.element = element;
@@ -78,7 +79,7 @@ export class ScatterChart
         });
 
         // Adds event listener resize when the window changes size.
-        window.addEventListener("resize", () => { this.updateChart() });            
+        window.addEventListener("resize", () => { this.updateChart() });
     }
 
     updateChart()
@@ -362,12 +363,12 @@ export class ScatterChart
                     if( (selection[0][0] <= that.xScale(d.x) && selection[1][0] >= that.xScale(d.x)) &&
                         (selection[0][1] <= that.yScale(d.y) && selection[1][1] >= that.yScale(d.y)) )
                     {
-                        that.dataSvc.addSelection(d);
+                        that.interSvc.addSelection(d);
                         return true;
                     }
                     else
                     {
-                        that.dataSvc.delSelection(d);                        
+                        that.interSvc.delSelection(d);                        
                         return false;
                     }
                 });
@@ -376,7 +377,7 @@ export class ScatterChart
             that.cht.selectAll("circle")
                 .attr('opacity', function(d: any)
                 {
-                    if( that.dataSvc.findSelection(d) ){
+                    if( that.interSvc.findSelection(d) ){
                         d3.select(this).classed('selected', true);
                         return 1.0;                            
                     }
@@ -397,7 +398,7 @@ export class ScatterChart
                     .classed("selected", false)
                     .attr('opacity', 1.0);
 
-                that.dataSvc.clearSelection();
+                that.interSvc.clearSelection();
             }
         });
 

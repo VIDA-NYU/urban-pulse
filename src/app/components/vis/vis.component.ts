@@ -5,6 +5,7 @@ import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { ScatterChart } from '../../classes/scatter.chart.class';
 import { TseriesChart } from '../../classes/tseries.chart.class';
 import { DataService } from '../../classes/data.class';
+import { InteractionService } from '../../classes/interaction.class';
 
 @Component({
   selector: 'pulse-vis',
@@ -33,14 +34,14 @@ export class VisComponent implements AfterViewInit {
   private scatter: any;
   private tseries: any;
 
-  constructor(private dataService : DataService) { }
+  constructor(private dataService : DataService, private interactionService: InteractionService) { }
 
   ngAfterViewInit() {
     this._createCharts();
   }
 
   private _createCharts() {
-    this.scatter = new ScatterChart(this.scatterRef, this.dataService);
     this.tseries = new TseriesChart(this.tseriesRef, this.dataService);
+    this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService);
   }
 }

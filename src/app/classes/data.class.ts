@@ -1,35 +1,50 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
+// observables
+import { Observable } from 'rxjs/Observable';
+
+// RXJS Imports
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/map';
+
 // lodash
 import * as _ from 'lodash';
 
 @Injectable()
-export class DataService {
-
-    private data : any;
-    private selected: any = [];
+export class DataService
+{
+    private data: any = null;
+    private obs: Observable<any>;
 
     constructor(private http: Http) { }
-    
+
     getFeatures() {
-        return this.http.get('./data/nyc/flickr-features.json').map((res:any) => res.json());
-    }
+        if(this.data){
+            return Observable.of(this.data);
+        }
+        else if(this.obs){
+            return this.obs;
+        }
+        else 
+        {
+            // Otherwise get the data
+            this.obs = this.http.get('./data/nyc/flickr-features.json')
+            .map( response => {
+                // Clear the observable
+                this.obs = null;
 
-    addSelection(elem: any) {
-        if( !_.find(this.selected, x => x['id'] === elem['id']) )
-            this.selected.push(elem);
-    }
+                // Otherwise set the data
+                this.data = response.json();
 
-    delSelection(elem: any) {
-        _.remove(this.selected, x => x['id'] === elem['id'] );
-    }
+                // And return the response
+                return this.data
+            })
+            .share();
 
-    findSelection(elem: any) {
-        return _.find(this.selected, x => x['id'] === elem['id']);
-    }
-
-    clearSelection() {
-        this.selected = [];
+            // Return the observable to be subscribed to
+            return this.obs;
+        }
     }
 }

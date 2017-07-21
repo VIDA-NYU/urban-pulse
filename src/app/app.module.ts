@@ -19,6 +19,7 @@ import { MainComponent }  from './components/main/main.component';
 // my services
 import { GMapsLayerGL } from './classes/gmaps.layergl.class'
 import { DataService }  from './classes/data.class';
+import { InteractionService } from './classes/interaction.class'
 
 @NgModule({
   imports: 
@@ -39,7 +40,8 @@ import { DataService }  from './classes/data.class';
   providers:
   [
     GMapsLayerGL,
-    DataService
+    DataService,
+    InteractionService
   ],
   bootstrap: [ MainComponent ]
 })
