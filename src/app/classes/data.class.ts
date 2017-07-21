@@ -47,4 +47,8 @@ export class DataService
             return this.obs;
         }
     }
+
+    getCities() {
+    	return ['nyc', 'nyc'];
+    }
 }
