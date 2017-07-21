@@ -20,6 +20,18 @@ export class DataService
 
     constructor(private http: Http) { }
 
+    getScalar() {
+        return this.http.get('./data/nyc/flickr_ALL_0-day.scalars').map((res:any) => {
+            var textByLine = res.text().split('\n');
+            var json = {};
+            json['gridSize'] = textByLine[0].split(',').map(function(x: string){return parseInt(x)});
+            json['latLng'] = textByLine[1].split(',').map(function(x: string){return parseFloat(x)});
+            json['values'] = textByLine.slice(3).map(function(x: string){return parseFloat(x)});
+            return json;
+        });
+    }
+
+
     getFeatures() {
         if(this.data){
             return Observable.of(this.data);
