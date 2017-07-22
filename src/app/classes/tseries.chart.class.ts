@@ -464,19 +464,24 @@ export class TseriesChart
 
         // circles join
         var circles = enter
-            .append("g")
             .selectAll(".circle")
             .data( function(d: any){ return that._getBeatTypes(d);} );
 
-            // circles enter
+        // circles enter
         var cEnter = circles
             .enter()
             .append("circle")
-            .attr("class", "circle");
+            .attr("class", "circle")
+            .attr("cx", function(d: any, i: any){
+                return that.xScale(i+1);
+            })
+            .attr("cy", this.height + 20)
+            .attr("r", 8)
+            .attr("fill", function(d: any) { return that.colorCircles(d); });
 
-        // circles merge
-        circles
-            .merge(cEnter)            
+        // circles update
+        panels
+            .selectAll('.circle')            
             .attr("cx", function(d: any, i: any){
                 return that.xScale(i+1);
             })
