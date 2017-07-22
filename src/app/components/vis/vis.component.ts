@@ -5,7 +5,7 @@ import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { ScatterChart } from '../../classes/scatter.chart.class';
 import { TseriesChart } from '../../classes/tseries.chart.class';
 import { DataService } from '../../classes/data.class';
-import { FilterService } from '../../classes/interaction.class';
+import { FilterService } from '../../classes/filter.class';
 
 @Component({
   selector: 'pulse-vis',

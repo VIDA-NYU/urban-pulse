@@ -19,7 +19,7 @@ import { MainComponent }  from './components/main/main.component';
 // my services
 import { GMapsLayerGL } from './classes/gmaps.layergl.class'
 import { DataService }  from './classes/data.class';
-import { FilterService } from './classes/interaction.class'
+import { FilterService } from './classes/filter.class'
 
 @NgModule({
   imports: 

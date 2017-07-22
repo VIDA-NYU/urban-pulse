@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 
 // my services
 import { DataService } from './data.class';
-import { FilterService } from './interaction.class';
+import { FilterService } from './filter.class';
 
 export class TseriesChart
 {
