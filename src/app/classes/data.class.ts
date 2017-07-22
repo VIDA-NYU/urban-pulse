@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
+// import d3js
+import * as d3 from 'd3';
+
 // observables
 import { Observable } from 'rxjs/Observable';
 
@@ -27,6 +30,7 @@ export class DataService
             json['gridSize'] = textByLine[0].split(',').map(function(x: string){return parseInt(x)});
             json['latLng'] = textByLine[1].split(',').map(function(x: string){return parseFloat(x)});
             json['values'] = textByLine.slice(3).map(function(x: string){return parseFloat(x)});
+            json['range'] = [d3.min(json['values']), d3.max(json['values'])];
             return json;
         });
     }

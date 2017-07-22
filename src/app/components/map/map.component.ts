@@ -2,7 +2,8 @@
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 
 // my services
-import { GMapsLayerGL } from '../../classes/gmaps.layergl.class';
+import { GMapsLayer } from '../../classes/gmaps.class';
+import { DataService } from '../../classes/data.class';
 
     // <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" style="width: 98%;  margin: 18px 4px 4px 4px;">
     //     <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
@@ -21,56 +22,46 @@ export class MapComponent implements AfterViewInit {
     @ViewChild('map1') mapTopRef: ElementRef;
     @ViewChild('map2') mapBotRef: ElementRef;
 
-    private style: any;
-    private map1: GMapsLayerGL;
-    private map2: GMapsLayerGL;
+    private map1: GMapsLayer;
+    private map2: GMapsLayer;
 
     private mapOptions: string[] = ["[Nyc Winter, Nyc Summer] (Flickr Data)", "[Nyc, Sf] (Flickr Data)"];
     private mapSelection: string;
+    private gmapsOptions: any = 
+        {
+            center: { lat: 40.7324607, lng: -73.9887512 },
+            scrollwheel: true,
+            zoom: 14,
+            streetViewControl: false,
+            mapTypeControl: false,
+            clickableIcons: false,
+            styles: getMapStyle()
+        }
 
-    constructor() {
-        this.style = getMapStyle();
+    constructor(private dataService : DataService) {
+
     }
 
     ngAfterViewInit() {
         this._createMap();
-        this._loadLayerGL();
+        this._loadLayer();
     }
 
     private _createMap() {
-        this.map1 = new GMapsLayerGL();
-        this.map1.initMap(this.mapTopRef.nativeElement,
-            {
-                center: { lat: 40.7324607, lng: -73.9887512 },
-                scrollwheel: true,
-                zoom: 14,
-                streetViewControl: false,
-                mapTypeControl: false,
-                clickableIcons: false,
-                styles: this.style
-            });
+        this.map1 = new GMapsLayer();
+        this.map1.initMap(this.mapTopRef.nativeElement, this.gmapsOptions);
 
-        this.map2 = new GMapsLayerGL();
-        this.map2.initMap(this.mapBotRef.nativeElement,
-            {
-                center: { lat: 40.7324607, lng: -73.9887512 },
-                scrollwheel: true,
-                zoom: 14,
-                streetViewControl: false,
-                mapTypeControl: false,
-                clickableIcons: false,
-                styles: this.style
-            });
+        this.map2 = new GMapsLayer();
+        this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions);
     }
 
-    private _loadLayerGL() {
-        if (this.map1) this.map1.initLayerGL();
-        if (this.map2) this.map2.initLayerGL();
-    }
+    private _loadLayer() {
 
-    private _addData() {
-        if (this.map1) this.map1.addData();
-        if (this.map2) this.map2.addData();
+        this.dataService.getScalar().subscribe((json: any) => 
+        {
+            if (this.map1) this.map1.setData(json);
+            if (this.map2) this.map2.setData(json);
+        });
     }
 }
 
