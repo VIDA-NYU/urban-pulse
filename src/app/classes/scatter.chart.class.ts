@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 
 // my services
 import { DataService } from './data.class';
-import { InteractionService } from './interaction.class';
+import { FilterService } from './interaction.class';
 
 export class ScatterChart 
 {
@@ -58,12 +58,12 @@ export class ScatterChart
     private isSearch: boolean = false;
 
     // data service
-    private interSvc: any;
+    private filterSvc: any;
 
-    constructor(element: ElementRef, private dataService: DataService, private interactionService: InteractionService) 
+    constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
     {
         // interaction service
-        this.interSvc = interactionService;
+        this.filterSvc = filterService;
 
         // get the data
         dataService.getFeatures().subscribe((json: any) => 
@@ -363,12 +363,12 @@ export class ScatterChart
                     if( (selection[0][0] <= that.xScale(d.x) && selection[1][0] >= that.xScale(d.x)) &&
                         (selection[0][1] <= that.yScale(d.y) && selection[1][1] >= that.yScale(d.y)) )
                     {
-                        that.interSvc.addSelection(d);
+                        that.filterSvc.addSelection(d);
                         return true;
                     }
                     else
                     {
-                        that.interSvc.delSelection(d);                        
+                        that.filterSvc.delSelection(d);                        
                         return false;
                     }
                 });
@@ -377,7 +377,7 @@ export class ScatterChart
             that.cht.selectAll("circle")
                 .attr('opacity', function(d: any)
                 {
-                    if( that.interSvc.findSelection(d) ){
+                    if( that.filterSvc.findSelection(d) ){
                         d3.select(this).classed('selected', true);
                         return 1.0;                            
                     }
@@ -398,7 +398,7 @@ export class ScatterChart
                     .classed("selected", false)
                     .attr('opacity', 1.0);
 
-                that.interSvc.clearSelection();
+                that.filterSvc.clearSelection();
             }
         });
 

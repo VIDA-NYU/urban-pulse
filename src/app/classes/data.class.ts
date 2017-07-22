@@ -30,8 +30,7 @@ export class DataService
             return json;
         });
     }
-
-
+    
     getFeatures() {
         if(this.data){
             return Observable.of(this.data);
