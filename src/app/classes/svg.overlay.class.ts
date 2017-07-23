@@ -20,7 +20,7 @@ export class SvgOverlay extends google.maps.OverlayView
     }
 
     // returns meters per pixel at zoom level
-    getScale(lat, zoom){
+    getScale(lat: number, zoom: number){
         return 156543.03392 * Math.cos(lat * Math.PI / 180) / Math.pow(2, zoom);
     }
 
@@ -40,15 +40,15 @@ export class SvgOverlay extends google.maps.OverlayView
         google.maps.event.addListener(this.map, 'zoom_changed', function() {
 
             d3.select(that.div).selectAll('circle')
-                .attr('r', function(d){
+                .attr('r', function(d: any){
                     let scale = that.getScale(d[0], that.map.getZoom());
                     return that.size / scale;
                 })
-                .attr("cx", function(d){
+                .attr("cx", function(d: any){
                     let scale = that.getScale(d[0], that.map.getZoom());
                     return 2 * that.size / scale;
                 })
-                .attr("cy", function(d){
+                .attr("cy", function(d: any){
                     let scale = that.getScale(d[0], that.map.getZoom());
                     return 2 * that.size / scale;
                 })
@@ -65,10 +65,10 @@ export class SvgOverlay extends google.maps.OverlayView
 
     }
 
-    setData(json: any)
+    setData(values: any)
     {
-        for(let i=0; i<json['features'].length; i++) {
-            var latlngs = json['features'][i]['latLng'];
+        for(let i=0; i<values.length; i++) {
+            var latlngs = values[i]['latLng'];
             this.data = this.data.concat(latlngs);
         }
         this.draw();
@@ -102,15 +102,15 @@ export class SvgOverlay extends google.maps.OverlayView
             .style('position', 'absolute');
 
         marker.append('circle')
-            .attr('r', function(d){
+            .attr('r', function(d: any){
                 let scale = that.getScale(d[0], that.map.getZoom());
                 return that.size / scale;
             })
-            .attr("cx", function(d){
+            .attr("cx", function(d: any){
                 let scale = that.getScale(d[0], that.map.getZoom());
                 return 2 * that.size / scale;
             })
-            .attr("cy", function(d){
+            .attr("cy", function(d: any){
                 let scale = that.getScale(d[0], that.map.getZoom());
                 return 2 * that.size / scale;
             });

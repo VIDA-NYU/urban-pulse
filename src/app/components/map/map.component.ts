@@ -38,11 +38,10 @@ export class MapComponent implements AfterViewInit {
             styles: getMapStyle()
         }
 
-    constructor(private dataService : DataService) {
+    constructor(private dataService : DataService) {}
 
-    }
-
-    ngAfterViewInit() {
+    ngAfterViewInit() 
+    {
         this._createMap();
         this._loadLayer();
     }
@@ -55,8 +54,8 @@ export class MapComponent implements AfterViewInit {
         this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions);
     }
 
-    private _loadLayer() {
-
+    private _loadLayer() 
+    {
         this.dataService.getScalar().subscribe((json: any) => 
         {
             if (this.map1) this.map1.setScalarData(json);
@@ -72,7 +71,8 @@ export class MapComponent implements AfterViewInit {
 }
 
 // map style definition
-const getMapStyle = () => {
+const getMapStyle = function() 
+{
     return [
         {
             "elementType": "geometry",

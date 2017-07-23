@@ -110,72 +110,72 @@ md-toolbar md-toolbar-row {
   stroke-width: 1px;
 }
 
-.tseriesRow {
+.pulsesRow {
 	width: 100%;
-	height: 70%;
+	height: 60%;
 }
 
-.tseries {
+.pulses {
 	width: 100%;
 	height: 100%;
 	margin: 0px;
 	float: left;
 }
 
-.tseries {
+.pulses {
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-.tseries #timeSelector{
+.pulses #timeSelector{
     height: 37px;
 }
 
-.tseries svg {
+.pulses svg {
   font: 10px sans-serif;
   padding: 10px;
 }
 
-.tseries .axis,
-.tseries .frame {
+.pulses .axis,
+.pulses .frame {
   /*shape-rendering: crispEdges;*/
 }
 
-.tseries .axis line {
+.pulses .axis line {
   stroke: #ddd;
 }
 
-.tseries .axis path {
+.pulses .axis path {
   display: none;
 }
 
-.tseries .line {
+.pulses .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
 }
 
-.tseries .circle{
+.pulses .circle{
   stroke: #ddd;
   stroke-width: 1.0px;
 }
 
-.tseries .focus circle {
+.pulses .focus circle {
   fill: #ddd;
   stroke: #555;
 }
 
-.tseries .bg {
+.pulses .bg {
     fill: "#fff";
     stroke: "#fff";
     opacity: 0;
 }
 
-.tseries .flabel {
+.pulses .flabel {
   cursor: pointer; cursor: hand;
 }
 
-.tseries .flabel rect{
+.pulses .flabel rect{
     fill: #eee;
     stroke: #ddd;
     stroke-width: 1px;
@@ -183,41 +183,41 @@ md-toolbar md-toolbar-row {
     opacity: 0.8;
 }
 
-.tseries .flabel text {
+.pulses .flabel text {
   font: 12px sans-serif;
   z-index: 12;
 }
 
-.tseries .flabel .hover {
+.pulses .flabel .hover {
   stroke: #333;
   stroke-width: 2px;
   opacity:0.8
 }
 
-.tseries .flabel .selected{
+.pulses .flabel .selected{
   stroke: #DB4C4C;
   stroke-width: 2px;
   opacity:0.8
 }
 
-.tseries .tick{
+.pulses .tick{
     cursor: pointer; cursor: hand;
 }
 
-.tseries .ftype{
+.pulses .ftype{
     stroke: #ddd;
     stroke-width: 1.0px;
     fill: #fff;
 }
 
-.tseries .min{
+.pulses .min{
   fill: #c7e9c0;
 }
 
-.tseries .max{
+.pulses .max{
   fill: #41ab5d;
 }
 
-.tseries .sax{
+.pulses .sax{
   fill: #006d2c;
 }

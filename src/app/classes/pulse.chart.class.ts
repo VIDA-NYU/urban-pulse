@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import { DataService } from './data.class';
 import { FilterService } from './filter.class';
 
-export class TseriesChart
+export class PulseChart
 {
     // margins setup
     private margins: any = {top: 20, right: 40, bottom: 30, left: 20};
@@ -64,7 +64,7 @@ export class TseriesChart
     private data: any;
     private timeRes: any[];
 
-    // chart paramenters
+    // chart parameters
     private series: string = 'scalars';
     private res: string = 'HOUR';
     private cities: any;
@@ -86,15 +86,25 @@ export class TseriesChart
             // html element reference
             this.element = element;
 
+            // get time keys
+            this.timeRes = dataService.getResolutions();
+        
             // format data
             this._buildData(json);
             
             // update the chart
             this.updateChart();
         });
-
+        
         // filter service subscriptions
-        this.filterSvc.getSelectionChangeEmitter().subscribe( (item: any) => console.log(item) );        
+        this.filterSvc.getSelectionChangeEmitter().subscribe( (sel: any) => 
+        {
+            // show all data 
+            if(typeof sel === "undefined") sel = dataService.getData();
+
+            this._buildData(sel);
+            this.updateChart();
+        } );
 
         // Adds event listener resize when the window changes size.
         window.addEventListener("resize", () => { this.updateChart() });
@@ -253,25 +263,20 @@ export class TseriesChart
         this.chtPlot.attr("width", this.elemWidth).attr("transform", "translate(" + this.margins.left + "," + 0 + ")");     
     }    
 
-    private _buildData(json: any)
+    private _buildData(feat: any)
     {
         // this scope
         var that = this;
 
-        // sort features
-        var features = json.features.sort(function (x: any, y: any) {
-            return d3.descending(x.rank, y.rank);
-        });
-
-        // get time keys
-        this.timeRes = Object.keys(features[features.length-1]["resolutions"]);
-        
         // build data
-        this.data = features;
+        this.data = feat;
     }
 
     private _buildRange() 
     {
+        // no data available
+        if(this.data.length == 0) return;
+
         // this scope
         var that = this;
 
@@ -289,6 +294,9 @@ export class TseriesChart
 
     private _buildXAxis() 
     {
+        // no data available
+        if(this.data.length == 0) return;
+
         // this scope
         var that = this;
 

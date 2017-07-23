@@ -71,6 +71,9 @@ export class ScatterChart
             // html element reference 
             this.element = element;
 
+            // get time keys
+            this.timeRes = dataService.getResolutions();
+        
             // format data
             this._buildData(json);
             
@@ -128,20 +131,10 @@ export class ScatterChart
         this.cht.attr("transform", "translate(" + this.margins.left + "," + this.margins.top + ")");        
     }
 
-    private _buildData(json: any) 
+    private _buildData(feat: any) 
     {
         // this scope
         var that = this;
-
-        // sort features
-        var features = json.features.sort(function (x: any, y: any) {
-            return d3.ascending(x.rank, y.rank);
-        });
-
-        // get time keys
-        this.timeRes = Object.keys(features[features.length - 1]["resolutions"]);
-        // remove ALL key
-        this.timeRes.splice(this.timeRes.indexOf("ALL"), 1);
 
         // build data
         this.data = {};
@@ -152,10 +145,11 @@ export class ScatterChart
 
         // mapping
         this.timeRes.forEach(function (res: string) {
-            that.data[res] = features.map(function (f: any, index:number) 
+            that.data[res] = feat.map(function (f: any) 
             {
                 // current resolution
                 var resolution = res;
+
                 // rank computation
                 var fnRank  = f.resolutions[resolution].fnRank;
                 var maxRank = f.resolutions[resolution].fnRank;
@@ -165,13 +159,20 @@ export class ScatterChart
                 var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
                 var y = f.rank;
 
+                // update x range
                 that.xRange[0] = Math.min(that.xRange[0], x);
                 that.xRange[1] = Math.max(that.xRange[1], x);
 
+                // update y range
                 that.yRange[0] = Math.min(that.yRange[0], y);
                 that.yRange[1] = Math.max(that.yRange[1], y);
 
-                return { id: index, x: x, y: y };
+                // updates the feature
+                var obj = _.cloneDeep(f);
+                obj['x'] = x;
+                obj['y'] = y;
+
+                return obj;
             });
         });
     }
@@ -400,6 +401,8 @@ export class ScatterChart
 
                 that.filterSvc.clearSelection();
             }
+
+            that.filterSvc.emitSelection();
         });
 
         // call on each cell

@@ -1,9 +1,11 @@
 // angular components
 import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 
-// my services
+// my charts
+import { PulseChart } from '../../classes/pulse.chart.class';
 import { ScatterChart } from '../../classes/scatter.chart.class';
-import { TseriesChart } from '../../classes/tseries.chart.class';
+
+// my services
 import { DataService } from '../../classes/data.class';
 import { FilterService } from '../../classes/filter.class';
 
@@ -19,29 +21,31 @@ import { FilterService } from '../../classes/filter.class';
   <md-toolbar>
     {{beatsTitle}}
   </md-toolbar>
-  <div class="tseriesRow">
-    <div #tseries class="tseries"></div>
+  <div class="pulsesRow">
+    <div #pulses class="pulses"></div>
   </div>
   `
 })
 export class VisComponent implements AfterViewInit {
   @ViewChild('scatter') scatterRef: ElementRef;
-  @ViewChild('tseries') tseriesRef: ElementRef;
+  @ViewChild('pulses') pulsesRef: ElementRef;
 
   private explorerTitle: string = "Pulse Explorer";
   private beatsTitle: string = "Pulse Beats";
 
   private scatter: any;
-  private tseries: any;
+  private pulses: any;
 
   constructor(private dataService : DataService, private interactionService: FilterService) { }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() 
+  {
     this._createCharts();
   }
 
-  private _createCharts() {
+  private _createCharts() 
+  {
     this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService);
-    this.tseries = new TseriesChart(this.tseriesRef, this.dataService, this.interactionService);
+    this.pulses = new PulseChart(this.pulsesRef, this.dataService, this.interactionService);
   }
 }
