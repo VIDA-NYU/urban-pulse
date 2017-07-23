@@ -23,7 +23,6 @@ export class GMapsLayer
             if(that.bounds != undefined) {
                 that.projection = that.overlay.getProjection();
 
-                console.log(that.bounds);
                 let sw = that.projection.fromLatLngToDivPixel(that.bounds.getSouthWest());
                 let ne = that.projection.fromLatLngToDivPixel(that.bounds.getNorthEast());
                 that.div.style.left = sw.x + 'px';
@@ -38,7 +37,6 @@ export class GMapsLayer
             if(that.bounds != undefined) {
                 that.projection = that.overlay.getProjection();
 
-                console.log(that.bounds);
                 let sw = that.projection.fromLatLngToDivPixel(that.bounds.getSouthWest());
                 let ne = that.projection.fromLatLngToDivPixel(that.bounds.getNorthEast());
                 that.div.style.left = sw.x + 'px';
@@ -86,7 +84,6 @@ export class GMapsLayer
         let values = json['values'];
         let range = json['range'];
         let buffer = new Uint8ClampedArray(width * height * 4);
-        console.log(json);
 
         for(let x = 0; x < width; x++) {
             for(let y = 0; y < height; y++) {
@@ -123,8 +120,6 @@ export class GMapsLayer
         this.div.appendChild(img);  
         var panes = this.overlay.getPanes();
         panes.overlayLayer.appendChild(this.div);
-
-        console.log(this.div);
     }
     
     private resize() 

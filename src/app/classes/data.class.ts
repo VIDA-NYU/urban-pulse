@@ -18,12 +18,17 @@ import * as _ from 'lodash';
 @Injectable()
 export class DataService
 {
+    // data
     private data: any = null;
+    private res:  any = null;
+
+    // observable
     private obs: Observable<any>;
 
     constructor(private http: Http) { }
 
-    getScalar() {
+    getScalar() 
+    {
         return this.http.get('./data/nyc/flickr_ALL_0-day.scalars').map((res:any) => {
             var textByLine = res.text().split('\n');
             var json = {};
@@ -35,7 +40,8 @@ export class DataService
         });
     }
     
-    getFeatures() {
+    getFeatures() 
+    {
         if(this.data){
             return Observable.of(this.data);
         }
@@ -51,7 +57,23 @@ export class DataService
                 this.obs = null;
 
                 // Otherwise set the data
-                this.data = response.json();
+                var feat = response.json().features;
+
+                // sort features
+                var features = feat.sort(function (x: any, y: any) {
+                    return d3.descending(x.rank, y.rank);
+                });
+
+                // resolutions
+                this.res = Object.keys(features[features.length - 1]["resolutions"]);
+                this.res.splice(this.res.indexOf("ALL"), 1);
+                
+                // adds the feature id
+                this.data = features.map(function(f: any, index: number)
+                {
+                    f.id = index;
+                    return f;
+                });
 
                 // And return the response
                 return this.data
@@ -63,7 +85,18 @@ export class DataService
         }
     }
 
-    getCities() {
+    getData()
+    {
+        return this.data;
+    }
+
+    getResolutions()
+    {
+        return this.res;
+    }
+
+    getCities() 
+    {
     	return ['nyc', 'nyc'];
     }
 }

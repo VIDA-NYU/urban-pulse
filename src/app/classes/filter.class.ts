@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 
+// import d3js
+import * as d3 from 'd3';
+
 // lodash
 import * as _ from 'lodash';
 
@@ -16,25 +19,35 @@ export class FilterService
         return this.selectionChange;
     }
 
-    addSelection(elem: any) {
+    addSelection(elem: any) 
+    {
+        if(typeof this.selected === "undefined") this.selected = [];
+
         if( !_.find(this.selected, x => x['id'] === elem['id']) )
             this.selected.push(elem);
-
-        this.selectionChange.emit(this.selected);
     }
     
-    delSelection(elem: any) {
+    delSelection(elem: any) 
+    {
+        if(typeof this.selected === "undefined") this.selected = [];
+
         _.remove(this.selected, x => x['id'] === elem['id'] );
-
-        this.selectionChange.emit(this.selected);
     }
     
-    findSelection(elem: any) {
+    findSelection(elem: any) 
+    {
+        if(typeof this.selected === "undefined") this.selected = [];
+        
         return _.find(this.selected, x => x['id'] === elem['id']);
     }
     
-    clearSelection() {
-        this.selected = [];
-        this.selectionChange.emit(this.selected);
-    }    
+    clearSelection() 
+    {
+        this.selected = undefined;
+    }
+
+    emitSelection()
+    {
+        this.selectionChange.emit(this.selected);        
+    }
 }
