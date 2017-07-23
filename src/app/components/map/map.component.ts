@@ -59,8 +59,14 @@ export class MapComponent implements AfterViewInit {
 
         this.dataService.getScalar().subscribe((json: any) => 
         {
-            if (this.map1) this.map1.setData(json);
-            if (this.map2) this.map2.setData(json);
+            if (this.map1) this.map1.setScalarData(json);
+            if (this.map2) this.map2.setScalarData(json);
+        });
+
+        this.dataService.getFeatures().subscribe((json: any) => 
+        {
+            if (this.map1) this.map1.setFeaturesData(json);
+            if (this.map2) this.map2.setFeaturesData(json);
         });
     }
 }
