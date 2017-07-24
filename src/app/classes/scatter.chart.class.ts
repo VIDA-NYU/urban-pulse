@@ -72,7 +72,7 @@ export class ScatterChart
             this.element = element;
 
             // get time keys
-            this.timeRes = dataService.getResolutions();
+            this.timeRes = dataService.getTimeRes();
         
             // format data
             this._buildData(json);
@@ -92,12 +92,14 @@ export class ScatterChart
 
         // dom elements
         this._buildDomElems();
+        
+        // update ranges
+        this._buildRange();        
         // build the axis
         this._buildAxis();
 
         // creates the chart
         this._buildChart();
-
         // build brush
         this._buildBrush();
     }
@@ -133,32 +135,32 @@ export class ScatterChart
 
     private _buildData(feat: any) 
     {
+        // build data
+        this.data = feat;
+    }
+
+    private _buildRange() 
+    {
+        // no data available
+        if(this.data.length == 0) return;
+
         // this scope
         var that = this;
 
-        // build data
-        this.data = {};
-
+        // ranges definition
         // ranges definition
         this.xRange = [Infinity, -Infinity];
         this.yRange = [Infinity, -Infinity];
 
         // mapping
-        this.timeRes.forEach(function (res: string) {
-            that.data[res] = feat.map(function (f: any) 
+        this.data.forEach(function (f: any) 
+        {
+            // for each resolution
+            that.timeRes.forEach(function(tRes: string)
             {
-                // current resolution
-                var resolution = res;
-
-                // rank computation
-                var fnRank  = f.resolutions[resolution].fnRank;
-                var maxRank = f.resolutions[resolution].fnRank;
-                var sigRank = f.resolutions[resolution].fnRank;
-                
-                // x and y values for the scatter plot
-                var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
-                var y = f.rank;
-
+                // add plot coords
+                var x = f.resolutions[tRes].x;
+                var y = f.resolutions[tRes].y;
                 // update x range
                 that.xRange[0] = Math.min(that.xRange[0], x);
                 that.xRange[1] = Math.max(that.xRange[1], x);
@@ -166,14 +168,7 @@ export class ScatterChart
                 // update y range
                 that.yRange[0] = Math.min(that.yRange[0], y);
                 that.yRange[1] = Math.max(that.yRange[1], y);
-
-                // updates the feature
-                var obj = _.cloneDeep(f);
-                obj['x'] = x;
-                obj['y'] = y;
-
-                return obj;
-            });
+            })
         });
     }
 
@@ -283,7 +278,10 @@ export class ScatterChart
             {
                 // get cell and data
                 var cell = d3.select(this);
-                var data = that.data[d];
+                // current data
+                var data = that.data;
+                // current resolution
+                var tRes = d;
                 
                 // matrix frame join
                 var frames = cell.selectAll('.frame')
@@ -318,8 +316,8 @@ export class ScatterChart
                 // merge
                 circles
                     .merge(circlesEnter)                
-                    .attr("cx", function (d: any) { return that.xScale(d.x); })
-                    .attr("cy", function (d: any) { return that.yScale(d.y); })
+                    .attr("cx", function (d: any) { return that.xScale(d.resolutions[tRes].x); })
+                    .attr("cy", function (d: any) { return that.yScale(d.resolutions[tRes].y); })
                     .attr("r", 4)
                     .style("fill", function (d: any) { return "blue"; });
 
@@ -357,12 +355,17 @@ export class ScatterChart
             var selection = d3.event.selection;
             if(!selection) return;
             
+            // current chart
+            var elem = d3.select(this);
+            // current resolution
+            var tRes = <string>elem.datum();
+
             // selected circles
             d3.select(this).selectAll("circle")
                 .classed("selected", function(d: any)
                 {
-                    if( (selection[0][0] <= that.xScale(d.x) && selection[1][0] >= that.xScale(d.x)) &&
-                        (selection[0][1] <= that.yScale(d.y) && selection[1][1] >= that.yScale(d.y)) )
+                    if( (selection[0][0] <= that.xScale(d.resolutions[tRes].x) && selection[1][0] >= that.xScale(d.resolutions[tRes].x)) &&
+                        (selection[0][1] <= that.yScale(d.resolutions[tRes].y) && selection[1][1] >= that.yScale(d.resolutions[tRes].y)) )
                     {
                         that.filterSvc.addSelection(d);
                         return true;

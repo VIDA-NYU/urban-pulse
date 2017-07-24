@@ -87,7 +87,7 @@ export class PulseChart
             this.element = element;
 
             // get time keys
-            this.timeRes = dataService.getResolutions();
+            this.timeRes = dataService.getTimeRes();
         
             // format data
             this._buildData(json);
@@ -265,9 +265,6 @@ export class PulseChart
 
     private _buildData(feat: any)
     {
-        // this scope
-        var that = this;
-
         // build data
         this.data = feat;
     }

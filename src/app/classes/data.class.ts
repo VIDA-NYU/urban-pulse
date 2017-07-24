@@ -20,7 +20,8 @@ export class DataService
 {
     // data
     private data: any = null;
-    private res:  any = null;
+    private timeRes: any = null;
+    private cities: any = ['nyc', 'nyc'];
 
     // observable
     private obs: Observable<any>;
@@ -42,6 +43,9 @@ export class DataService
     
     getFeatures() 
     {
+        // this scope
+        var that = this;
+
         if(this.data){
             return Observable.of(this.data);
         }
@@ -60,18 +64,37 @@ export class DataService
                 var feat = response.json().features;
 
                 // sort features
-                var features = feat.sort(function (x: any, y: any) {
+                feat = feat.sort(function (x: any, y: any) {
                     return d3.descending(x.rank, y.rank);
                 });
 
                 // resolutions
-                this.res = Object.keys(features[features.length - 1]["resolutions"]);
-                this.res.splice(this.res.indexOf("ALL"), 1);
+                this.timeRes = Object.keys(feat[feat.length - 1]["resolutions"]);
+                this.timeRes.splice(this.timeRes.indexOf("ALL"), 1);
                 
                 // adds the feature id
-                this.data = features.map(function(f: any, index: number)
+                this.data = feat.map(function(f: any, index: number)
                 {
+                    // feature id
                     f.id = index;
+
+                    // for each resolution
+                    that.timeRes.forEach(function(tRes: string)
+                    {
+                        // rank computation
+                        var fnRank  = f.resolutions[tRes].fnRank;
+                        var maxRank = f.resolutions[tRes].maxRank;
+                        var sigRank = f.resolutions[tRes].sigRank;
+                        
+                        // x and y values for the scatter plot
+                        var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
+                        var y = f.rank;
+
+                        // add plot coords
+                        f.resolutions[tRes].x = x;
+                        f.resolutions[tRes].y = y;
+                    })
+
                     return f;
                 });
 
@@ -90,13 +113,13 @@ export class DataService
         return this.data;
     }
 
-    getResolutions()
+    getTimeRes()
     {
-        return this.res;
+        return this.timeRes;
     }
 
     getCities() 
     {
-    	return ['nyc', 'nyc'];
+    	return this.cities;
     }
 }
