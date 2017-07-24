@@ -21,6 +21,10 @@ md-toolbar md-toolbar-row {
     overflow-y: hidden;
 }
 
+.hFill{
+  flex: 1 1 auto;
+}
+
 .mapColumn {
 	top: 32px;
 	bottom: 0px;
@@ -213,12 +217,8 @@ md-toolbar md-toolbar-row {
     fill: #fff;
 }
 
-.pulses .min{
-  fill: #c7e9c0;
-}
-
 .pulses .max{
-  fill: #41ab5d;
+  fill: #c7e9c0;
 }
 
 .pulses .sax{

@@ -20,6 +20,12 @@ import { FilterService } from '../../classes/filter.class';
   </div>
   <md-toolbar>
     {{beatsTitle}}
+    <span class="hFill"></span>
+    <md-radio-group [(ngModel)]="currentRes" (ngModelChange)="onResChange()">
+      <md-radio-button value="HOUR">Hour</md-radio-button>
+      <md-radio-button value="DAYOFWEEK">DayOfWeek</md-radio-button>
+      <md-radio-button value="MONTH">Month</md-radio-button>
+      </md-radio-group>
   </md-toolbar>
   <div class="pulsesRow">
     <div #pulses class="pulses"></div>
@@ -32,6 +38,7 @@ export class VisComponent implements AfterViewInit {
 
   private explorerTitle: string = "Pulse Explorer";
   private beatsTitle: string = "Pulse Beats";
+  private currentRes: string = "HOUR";
 
   private scatter: any;
   private pulses: any;
@@ -43,9 +50,16 @@ export class VisComponent implements AfterViewInit {
     this._createCharts();
   }
 
+  onResChange()
+  {
+    this.pulses.changeResolution(this.currentRes);
+  }
+
   private _createCharts() 
   {
     this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService);
-    this.pulses = new PulseChart(this.pulsesRef, this.dataService, this.interactionService);
+    this.pulses = new PulseChart(this.pulsesRef, this.dataService, this.interactionService, this.currentRes);
   }
+
+
 }

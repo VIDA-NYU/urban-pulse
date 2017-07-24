@@ -367,12 +367,12 @@ export class ScatterChart
                     if( (selection[0][0] <= that.xScale(d.resolutions[tRes].x) && selection[1][0] >= that.xScale(d.resolutions[tRes].x)) &&
                         (selection[0][1] <= that.yScale(d.resolutions[tRes].y) && selection[1][1] >= that.yScale(d.resolutions[tRes].y)) )
                     {
-                        that.filterSvc.addSelection(d);
+                        that.filterSvc.addToScatterSelection(d);
                         return true;
                     }
                     else
                     {
-                        that.filterSvc.delSelection(d);                        
+                        that.filterSvc.delFromScatterSelection(d);                        
                         return false;
                     }
                 });
@@ -381,7 +381,7 @@ export class ScatterChart
             that.cht.selectAll("circle")
                 .attr('opacity', function(d: any)
                 {
-                    if( that.filterSvc.findSelection(d) ){
+                    if( that.filterSvc.findOnScatterSelection(d) ){
                         d3.select(this).classed('selected', true);
                         return 1.0;                            
                     }
@@ -402,10 +402,10 @@ export class ScatterChart
                     .classed("selected", false)
                     .attr('opacity', 1.0);
 
-                that.filterSvc.clearSelection();
+                that.filterSvc.clearScatterSelection();
             }
 
-            that.filterSvc.emitSelection();
+            that.filterSvc.emitScatterSelectionChanged();
         });
 
         // call on each cell

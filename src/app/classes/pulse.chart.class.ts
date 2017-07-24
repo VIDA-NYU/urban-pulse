@@ -66,19 +66,21 @@ export class PulseChart
 
     // chart parameters
     private series: string = 'scalars';
-    private res: string = 'HOUR';
+    private res: string;
     private cities: any;
     
     // filter service
     private filterSvc: any;
     
-    constructor(element: ElementRef, private dataService : DataService, private filterService: FilterService)
+    constructor(element: ElementRef, private dataService : DataService, private filterService: FilterService, currentRes: string)
     {
         // filter service
         this.filterSvc = filterService;
 
         // get current cities
         this.cities = dataService.getCities();
+        // selected resolution
+        this.res = currentRes;
 
         // get the data
         dataService.getFeatures().subscribe((json:any)=>
@@ -97,7 +99,7 @@ export class PulseChart
         });
         
         // filter service subscriptions
-        this.filterSvc.getSelectionChangeEmitter().subscribe( (sel: any) => 
+        this.filterSvc.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
         {
             // show all data 
             if(typeof sel === "undefined") sel = dataService.getData();
@@ -120,6 +122,7 @@ export class PulseChart
         
         // update ranges
         this._buildRange();
+        this._buildColorScales();
         
         // update the axis
         this._buildXAxis();
@@ -222,7 +225,13 @@ export class PulseChart
 
         //         circles.exit().remove();
         //     });
-    }    
+    }
+
+    changeResolution(tRes: string)
+    {
+        this.res = tRes;
+        this.updateChart();
+    }
 
     private _buildDomElems()
     {
@@ -346,36 +355,32 @@ export class PulseChart
 
         // callback
         this.chtTime.selectAll(".tick")
-            .on("click", function(d: any){
-                // var self = d3.select(this).select("circle");
+            .on("click", function(d: any)
+            {
+                var self = d3.select(this).select("circle");
 
-                // var minClass = self.classed("min");
-                // var maxClass = self.classed("max");
-                // var saxClass = self.classed("sax");
+                var maxClass = self.classed("max");
+                var saxClass = self.classed("sax");
 
-                // var cls = -1;
-                // if(!minClass && !maxClass && !saxClass){
-                //     self.classed("min", true);
-                //     cls =  0;
-                // }
-                // else if(minClass && !maxClass && !saxClass){
-                //     self.classed("min", false);
-                //     self.classed("max", true);
-                //     cls =  1;
-                // }
-                // else if(!minClass && maxClass && !saxClass){
-                //     self.classed("max", false);
-                //     self.classed("sax", true);
-                //     cls =  2;
-                // }
-                // else if(!minClass && !maxClass && saxClass){
-                //     self.classed("sax", false);
-                //     cls = -1;
-                // }
+                var cls = -1;
+                if(!maxClass && !saxClass){
+                    self.classed("max", true);
+                    self.classed("sax", false);
+                    cls =  0;
+                }
+                else if(maxClass && !saxClass){
+                    self.classed("max", false);
+                    self.classed("sax", true);
+                    cls =  1;
+                }
+                else {
+                    self.classed("max", false);
+                    self.classed("sax", false);
+                    cls = -1;
+                }
 
                 // pulse.pulsePlot.timeSelect(d-1,cls);
             });
-
     }
 
     private _buildYAxis() 
@@ -402,14 +407,17 @@ export class PulseChart
             .tickFormat(yFormat);
     }
 
+    _buildColorScales()
+    {
+        // color scales
+        this.colorLines.domain(this.cities);
+        this.colorCircles.domain(<any>[0,1,2]);
+    }
+
     private _buildChart() 
     {
         // this scope
         var that = this;
-
-        // color scales
-        this.colorLines.domain(this.cities);
-        this.colorCircles.domain(<any>[0,1,2]);
 
         // line generator
         var line = d3.line()
@@ -419,6 +427,8 @@ export class PulseChart
 
         // updates the chart hight based on data size
         this.chtPlot.attr("height", this.data.length?(this.data.length+1)*(this.height + this.padding):10 );
+
+        //-------
 
         // panels join
         var panels = this.chtPlot
@@ -441,6 +451,8 @@ export class PulseChart
         // panels remove
         panels.exit().remove();
 
+        //---------
+
         // updates the lines
         panels
             .select(".feature")
@@ -457,10 +469,12 @@ export class PulseChart
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
             .style("stroke", function(d: any) { return "orange" });
 
+        // ---------
+
         // updates the y axis
         panels
             .select(".y.axis")
-            .call(this.yAxis);
+            .call(this.yAxis);        
 
         // appends the y axis
         enter
@@ -469,13 +483,46 @@ export class PulseChart
             .attr("transform", function() { return "translate(0,0)"; })
             .call(this.yAxis);
 
-        // circles join
-        var circles = enter
+        // ---------
+
+        // enter panels: circles join
+        var eCircles = enter
+            .selectAll(".circle")
+            .data( function(d: any){ return that._getBeatTypes(d);} );
+
+        // enter panels: circles enter
+        var eCirclesEnter = eCircles
+            .enter()
+            .append("circle")
+            .attr("class", "circle")
+            .attr("cx", function(d: any, i: any){
+                return that.xScale(i+1);
+            })
+            .attr("cy", this.height + 20)
+            .attr("r", 8)
+            .attr("fill", function(d: any) { return that.colorCircles(d); });
+
+        // enter panels: circles update
+        eCircles
+            .attr("cx", function(d: any, i: any){
+                return that.xScale(i+1);
+            })
+            .attr("cy", this.height + 20)
+            .attr("r", 8)
+            .attr("fill", function(d: any) { return that.colorCircles(d); });
+        
+        // enter panels: remove circles
+        eCircles.exit().remove();
+        
+        // --------
+
+        // update panels: circles join
+        var pCircles = panels
             .selectAll(".circle")
             .data( function(d: any){ return that._getBeatTypes(d);} );
 
         // circles enter
-        var cEnter = circles
+        var pCirclesEnter = pCircles
             .enter()
             .append("circle")
             .attr("class", "circle")
@@ -487,8 +534,7 @@ export class PulseChart
             .attr("fill", function(d: any) { return that.colorCircles(d); });
 
         // circles update
-        panels
-            .selectAll('.circle')            
+        pCircles
             .attr("cx", function(d: any, i: any){
                 return that.xScale(i+1);
             })
@@ -497,7 +543,7 @@ export class PulseChart
             .attr("fill", function(d: any) { return that.colorCircles(d); });
 
         // remove circles
-        circles.exit().remove();
+        pCircles.exit().remove();
     }
 
     private _getBeatTypes(feature: any) 

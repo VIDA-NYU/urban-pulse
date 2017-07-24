@@ -10,44 +10,84 @@ import * as _ from 'lodash';
 @Injectable()
 export class FilterService
 {
-    private selected: any = [];
-    private selectionChange: EventEmitter<any> = new EventEmitter();
+    // scatter selection and emitter
+    private scatterSelection: any = [];
+    private scatterSelectionChange: EventEmitter<any> = new EventEmitter();
 
+    // pulse time selection and emitter
+    private pulseTimeSelection: any = [];
+    private pulseTimeSelectionChange: EventEmitter<any> = new EventEmitter();
+
+    // constructor
     constructor() {}
 
-    getSelectionChangeEmitter() {
-        return this.selectionChange;
+    // Scatter plot brush ---------
+
+    getScatterSelectionChangeEmitter() {
+        return this.scatterSelectionChange;
     }
 
-    addSelection(elem: any) 
+    addToScatterSelection(elem: any) 
     {
-        if(typeof this.selected === "undefined") this.selected = [];
+        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
 
-        if( !_.find(this.selected, x => x['id'] === elem['id']) )
-            this.selected.push(elem);
-    }
-    
-    delSelection(elem: any) 
-    {
-        if(typeof this.selected === "undefined") this.selected = [];
-
-        _.remove(this.selected, x => x['id'] === elem['id'] );
+        if( !_.find(this.scatterSelection, x => x['id'] === elem['id']) )
+            this.scatterSelection.push(elem);
     }
     
-    findSelection(elem: any) 
+    delFromScatterSelection(elem: any) 
     {
-        if(typeof this.selected === "undefined") this.selected = [];
+        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
+
+        _.remove(this.scatterSelection, x => x['id'] === elem['id'] );
+    }
+    
+    findOnScatterSelection(elem: any) 
+    {
+        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
         
-        return _.find(this.selected, x => x['id'] === elem['id']);
+        return _.find(this.scatterSelection, x => x['id'] === elem['id']);
     }
     
-    clearSelection() 
+    clearScatterSelection() 
     {
-        this.selected = undefined;
+        this.scatterSelection = undefined;
     }
 
-    emitSelection()
+    emitScatterSelectionChanged()
     {
-        this.selectionChange.emit(this.selected);        
+        this.scatterSelectionChange.emit(this.scatterSelection);        
     }
+
+    //-----------------------------
+    // Pulse time selector --------
+
+    getPulseTimeSelectionChangeEmitter()
+    {
+        return this.pulseTimeSelectionChange;
+    }
+
+    addToPulseTimeSelection(time: any) 
+    {
+    }
+
+    delFromPulseTimeSelection(time: any) 
+    {
+    }
+
+    findOnPulseTimeSelection(time: any) 
+    {
+    }
+
+    clearPulseTimeSelection()
+    {
+
+    }
+
+    emitPulseTimeSelectionChanged()
+    {
+        this.pulseTimeSelectionChange.emit([]);
+    }
+    
+    //-----------------------------
 }
