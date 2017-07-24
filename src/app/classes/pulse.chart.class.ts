@@ -69,7 +69,7 @@ export class PulseChart
     private res: string = 'HOUR';
     private cities: any;
     
-    // data service
+    // filter service
     private filterSvc: any;
     
     constructor(element: ElementRef, private dataService : DataService, private filterService: FilterService)
@@ -239,11 +239,13 @@ export class PulseChart
         
         // create the svg if not defined
         if(typeof this.svgTime === "undefined") {
-            this.svgTime = this.div.append('svg');
+            this.svgTime = this.div.append('div').append('svg');
         }
 
         if(typeof this.svgPlot === "undefined") {
-            this.svgPlot = this.div.append('svg');
+            this.svgPlot = this.div.append('div')
+                .classed("yScroll", true)
+                .append('svg');
         }
 
         // update the sizes

@@ -57,7 +57,7 @@ export class ScatterChart
     private nCharts: number;
     private isSearch: boolean = false;
 
-    // data service
+    // filter service
     private filterSvc: any;
 
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
