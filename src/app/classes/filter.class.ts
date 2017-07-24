@@ -21,6 +21,25 @@ export class FilterService
     // constructor
     constructor() {}
 
+    private combineFilters()
+    {
+        var result = this.scatterSelection.slice();
+
+        this.pulseTimeSelection.forEach( (constraint: any) => 
+        {
+            result = _.filter(result, (x: any) => 
+            {
+                var maxTime = x.resolutions[constraint['res']]["maxTime"];
+                var sigMaxTime = x.resolutions[constraint['res']]["sigMaxTime"];
+                var type = (maxTime[constraint['val']]?(sigMaxTime[constraint['val']]?2:1):0);
+    
+                return type === constraint['type'];
+            })
+        });
+
+        return result;
+    }
+
     // Scatter plot brush ---------
 
     getScatterSelectionChangeEmitter() {
@@ -29,34 +48,29 @@ export class FilterService
 
     addToScatterSelection(elem: any) 
     {
-        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
-
         if( !_.find(this.scatterSelection, x => x['id'] === elem['id']) )
             this.scatterSelection.push(elem);
     }
     
     delFromScatterSelection(elem: any) 
     {
-        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
-
         _.remove(this.scatterSelection, x => x['id'] === elem['id'] );
     }
     
     findOnScatterSelection(elem: any) 
-    {
-        if(typeof this.scatterSelection === "undefined") this.scatterSelection = [];
-        
+    {        
         return _.find(this.scatterSelection, x => x['id'] === elem['id']);
     }
     
-    clearScatterSelection() 
+    clearScatterSelection(data: any)
     {
-        this.scatterSelection = undefined;
+        this.scatterSelection = data.slice();
     }
 
     emitScatterSelectionChanged()
     {
-        this.scatterSelectionChange.emit(this.scatterSelection);        
+        var finalSelection = this.combineFilters();
+        this.scatterSelectionChange.emit(finalSelection);        
     }
 
     //-----------------------------
@@ -67,27 +81,31 @@ export class FilterService
         return this.pulseTimeSelectionChange;
     }
 
-    addToPulseTimeSelection(time: any) 
-    {
+    addToPulseTimeSelection(tSel: any) 
+    {        
+        if( !_.find(this.pulseTimeSelection, x => { return x['val'] === tSel['val'] && x['res'] === tSel['res'] && x['type'] === tSel['type']; }) )
+            this.pulseTimeSelection.push(tSel);
+        }
+
+    delFromPulseTimeSelection(tSel: any) 
+    {        
+        _.remove(this.pulseTimeSelection, x => { return x['val'] === tSel['val'] && x['res'] === tSel['res'] && x['type'] === tSel['type']; });
     }
 
-    delFromPulseTimeSelection(time: any) 
-    {
-    }
-
-    findOnPulseTimeSelection(time: any) 
-    {
+    findOnPulseTimeSelection(tSel: any) 
+    {        
+        return _.find(this.pulseTimeSelection, x => { return x['val'] === tSel['val'] && x['res'] === tSel['res'] && x['type'] === tSel['type']; });
     }
 
     clearPulseTimeSelection()
     {
-
+        this.pulseTimeSelection = [];
     }
 
     emitPulseTimeSelectionChanged()
     {
-        this.pulseTimeSelectionChange.emit([]);
+        var finalSelection = this.combineFilters();
+        this.pulseTimeSelectionChange.emit(finalSelection);
     }
-    
     //-----------------------------
 }

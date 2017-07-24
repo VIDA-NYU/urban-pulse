@@ -137,6 +137,9 @@ export class ScatterChart
     {
         // build data
         this.data = feat;
+
+        // clear selection
+        this.filterSvc.clearScatterSelection(this.data);
     }
 
     private _buildRange() 
@@ -402,7 +405,7 @@ export class ScatterChart
                     .classed("selected", false)
                     .attr('opacity', 1.0);
 
-                that.filterSvc.clearScatterSelection();
+                that.filterSvc.clearScatterSelection(that.data);
             }
 
             that.filterSvc.emitScatterSelectionChanged();

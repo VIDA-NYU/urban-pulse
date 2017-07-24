@@ -63,6 +63,7 @@ export class PulseChart
     // dataset
     private data: any;
     private timeRes: any[];
+    private resetTimeFilter: boolean = false;
 
     // chart parameters
     private series: string = 'scalars';
@@ -100,6 +101,15 @@ export class PulseChart
         
         // filter service subscriptions
         this.filterSvc.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
+        {
+            // show all data 
+            if(typeof sel === "undefined") sel = dataService.getData();
+
+            this._buildData(sel);
+            this.updateChart();
+        } );
+
+        this.filterSvc.getPulseTimeSelectionChangeEmitter().subscribe( (sel: any) => 
         {
             // show all data 
             if(typeof sel === "undefined") sel = dataService.getData();
@@ -230,7 +240,13 @@ export class PulseChart
     changeResolution(tRes: string)
     {
         this.res = tRes;
-        this.updateChart();
+
+        this.resetTimeFilter = true;
+
+        this.filterSvc.clearPulseTimeSelection();
+        this.filterSvc.emitPulseTimeSelectionChanged();
+
+        this.resetTimeFilter = false;
     }
 
     private _buildDomElems()
@@ -345,13 +361,26 @@ export class PulseChart
         axis.exit().remove();
 
         // add
-        this.chtTime.selectAll("circle").remove();
         this.chtTime.selectAll(".tick")
-            .append("circle")
-            .attr("class","ftype")
-            .attr("cx","0")
-            .attr("cy","5")
-            .attr("r",8);
+            .each(function()
+            {
+                var tick = d3.select(this);
+                var circle = tick.select("circle");
+
+                if(circle.empty())
+                {
+                    tick.append("circle")
+                        .attr("class","ftype")
+                        .attr("cx","0")
+                        .attr("cy","5")
+                        .attr("r",8);        
+                }
+                else if(that.resetTimeFilter)
+                {
+                    circle.classed("max", false);
+                    circle.classed("sax", false);
+                }
+            });
 
         // callback
         this.chtTime.selectAll(".tick")
@@ -362,24 +391,35 @@ export class PulseChart
                 var maxClass = self.classed("max");
                 var saxClass = self.classed("sax");
 
-                var cls = -1;
-                if(!maxClass && !saxClass){
+                var max = {'val': d-1, 'res': that.res, 'type': 1};
+                var sax = {'val': d-1, 'res': that.res, 'type': 2};
+
+                if(!maxClass && !saxClass)
+                {
                     self.classed("max", true);
                     self.classed("sax", false);
-                    cls =  0;
+
+                    that.filterSvc.delFromPulseTimeSelection(sax);
+                    that.filterSvc.addToPulseTimeSelection(max);
                 }
-                else if(maxClass && !saxClass){
+                else if(maxClass && !saxClass)
+                {
                     self.classed("max", false);
                     self.classed("sax", true);
-                    cls =  1;
+
+                    that.filterSvc.delFromPulseTimeSelection(max);
+                    that.filterSvc.addToPulseTimeSelection(sax);
                 }
-                else {
+                else 
+                {
                     self.classed("max", false);
                     self.classed("sax", false);
-                    cls = -1;
+
+                    that.filterSvc.delFromPulseTimeSelection(max);
+                    that.filterSvc.delFromPulseTimeSelection(sax);
                 }
 
-                // pulse.pulsePlot.timeSelect(d-1,cls);
+                that.filterSvc.emitPulseTimeSelectionChanged();
             });
     }
 
