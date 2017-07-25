@@ -408,27 +408,27 @@ export class PulseChart
                     self.classed("max", true);
                     self.classed("sax", false);
 
-                    that.filterSvc.delFromPulseTimeSelection(sax);
-                    that.filterSvc.addToPulseTimeSelection(max);
+                    that.filterService.delFromPulseTimeSelection(sax);
+                    that.filterService.addToPulseTimeSelection(max);
                 }
                 else if(maxClass && !saxClass)
                 {
                     self.classed("max", false);
                     self.classed("sax", true);
 
-                    that.filterSvc.delFromPulseTimeSelection(max);
-                    that.filterSvc.addToPulseTimeSelection(sax);
+                    that.filterService.delFromPulseTimeSelection(max);
+                    that.filterService.addToPulseTimeSelection(sax);
                 }
                 else 
                 {
                     self.classed("max", false);
                     self.classed("sax", false);
 
-                    that.filterSvc.delFromPulseTimeSelection(max);
-                    that.filterSvc.delFromPulseTimeSelection(sax);
+                    that.filterService.delFromPulseTimeSelection(max);
+                    that.filterService.delFromPulseTimeSelection(sax);
                 }
 
-                that.filterSvc.emitPulseTimeSelectionChanged();
+                that.filterService.emitPulseTimeSelectionChanged();
             });
     }
 

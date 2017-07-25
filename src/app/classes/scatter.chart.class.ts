@@ -45,6 +45,9 @@ export class ScatterChart
     private xScale: any;
     private yScale: any;
     
+    // color scales
+    private colorPoints = d3.scaleOrdinal(d3.schemeCategory10);    
+
     // brush object
     private brush: any;
     private brushCell: any;
@@ -56,9 +59,13 @@ export class ScatterChart
     // chart parameters
     private nCharts: number;
     private isSearch: boolean = false;
-
+    private cities: any;
+    
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
     {
+        // get current cities
+        this.cities = dataService.getCities();
+
         // get the data
         this.dataService.getFeatures().subscribe((json: any) => 
         {
@@ -95,6 +102,9 @@ export class ScatterChart
         
         // update ranges
         this._buildRange();        
+        // color scales
+        this._buildColorScales();
+
         // build the axis
         this._buildAxis();
 
@@ -254,6 +264,12 @@ export class ScatterChart
         yaxis.exit().remove();
     }
 
+    _buildColorScales()
+    {
+        // color scales
+        this.colorPoints.domain(this.cities);
+    }
+    
     private _buildChart()
     {
         // this scope
@@ -321,7 +337,7 @@ export class ScatterChart
                     .attr("cx", function (d: any) { return that.xScale(d.resolutions[tRes].x); })
                     .attr("cy", function (d: any) { return that.yScale(d.resolutions[tRes].y); })
                     .attr("r", 4)
-                    .style("fill", function (d: any) { return "blue"; });
+                    .style("fill", function (d: any) { return that.colorPoints(d); });
 
                 // exit
                 circles.exit().remove();
