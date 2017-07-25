@@ -100,8 +100,8 @@ export class SvgOverlay extends google.maps.OverlayView
             // console.log(this, d);
 
             return d3.select(this)
-                .style("left", (p.x - 0.5*that.size/scale) + "px")
-                .style("top", (p.y - 0.5*that.size/scale) + "px");
+                .style("left", (p.x - 2.0*that.size/scale) + "px")
+                .style("top", (p.y - 2.0*that.size/scale) + "px");
         }
 
         let marker = d3.select(this.div).selectAll('svg')

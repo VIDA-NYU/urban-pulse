@@ -95,6 +95,7 @@ export class GMapsLayer
         let that = this;
         let shape = e.overlay;
         that.selectedShape = shape;
+        that.filterService.clearMapSelection();
         that.drawing.setDrawingMode(null);
 
         let selectedFeatures = [];
