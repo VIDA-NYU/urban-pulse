@@ -25,7 +25,7 @@ export class FilterService
     // constructor
     constructor() {}
 
-    private combineFilters()
+    private combinePulseFilters()
     {
         var result = this.scatterSelection.slice();
 
@@ -41,6 +41,16 @@ export class FilterService
             })
         });
 
+        return result;
+    }
+
+    private processScatterData()
+    {
+        var scatter = this.scatterSelection.slice();
+        var map = this.mapSelection.slice();
+
+        var result = ( map.length === 0 ) ? scatter : map;
+        
         return result;
     }
 
@@ -73,11 +83,12 @@ export class FilterService
 
     emitScatterSelectionChanged()
     {
-        var finalSelection = this.combineFilters();
+        var finalSelection = this.combinePulseFilters();
         this.scatterSelectionChange.emit(finalSelection);        
     }
 
     //-----------------------------
+    
     // Pulse time selector --------
 
     getPulseTimeSelectionChangeEmitter()
@@ -108,44 +119,45 @@ export class FilterService
 
     emitPulseTimeSelectionChanged()
     {
-        var finalSelection = this.combineFilters();
+        var finalSelection = this.combinePulseFilters();
         this.pulseTimeSelectionChange.emit(finalSelection);
     }
     
+    //-----------------------------
+
     // Map brush ---------
+
     getMapSelectionChangeEmitter() {
-        return this.scatterSelectionChange;
+        return this.mapSelectionChange;
     }
 
     addToMapSelection(elem: any) 
     {
-        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
-
         if( !_.find(this.mapSelection, x => x['id'] === elem['id']) )
             this.mapSelection.push(elem);
     }
     
-    delFromMapSelection(elem: any) 
+    delFromMapSelection(elem: any)
     {
-        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
-
         _.remove(this.mapSelection, x => x['id'] === elem['id'] );
     }
     
     findOnMapSelection(elem: any) 
-    {
-        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
-        
+    {        
         return _.find(this.mapSelection, x => x['id'] === elem['id']);
     }
     
     clearMapSelection() 
     {
-        this.mapSelection = undefined;
+        this.mapSelection = [];
     }
 
     emitMapSelectionChanged()
     {
-        this.scatterSelectionChange.emit(this.mapSelection);        
+        var res =  this.processScatterData();
+
+        this.mapSelectionChange.emit(res);
     }
+
+    //-----------------------------    
 }

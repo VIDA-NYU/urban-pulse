@@ -22,7 +22,8 @@ import { ParametersService } from '../../classes/params.class'
       <pulse-vis class="visColumn"></pulse-vis>
   </div>`
 })
-export class MainComponent {
+export class MainComponent 
+{
   // app title
   appTitle: string = "Urban Pulse (Web Version)";
   

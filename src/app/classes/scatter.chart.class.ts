@@ -57,16 +57,10 @@ export class ScatterChart
     private nCharts: number;
     private isSearch: boolean = false;
 
-    // filter service
-    private filterSvc: any;
-
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
     {
-        // interaction service
-        this.filterSvc = filterService;
-
         // get the data
-        dataService.getFeatures().subscribe((json: any) => 
+        this.dataService.getFeatures().subscribe((json: any) => 
         {
             // html element reference 
             this.element = element;
@@ -78,6 +72,12 @@ export class ScatterChart
             this._buildData(json);
             
             // update the chart
+            this.updateChart();
+        });
+
+        this.filterService.getMapSelectionChangeEmitter().subscribe( (data: any)=>
+        {
+            this._buildData(data);
             this.updateChart();
         });
 
@@ -137,9 +137,8 @@ export class ScatterChart
     {
         // build data
         this.data = feat;
-
         // clear selection
-        this.filterSvc.clearScatterSelection(this.data);
+        this.filterService.clearScatterSelection(this.data);
     }
 
     private _buildRange() 
@@ -370,12 +369,12 @@ export class ScatterChart
                     if( (selection[0][0] <= that.xScale(d.resolutions[tRes].x) && selection[1][0] >= that.xScale(d.resolutions[tRes].x)) &&
                         (selection[0][1] <= that.yScale(d.resolutions[tRes].y) && selection[1][1] >= that.yScale(d.resolutions[tRes].y)) )
                     {
-                        that.filterSvc.addToScatterSelection(d);
+                        that.filterService.addToScatterSelection(d);
                         return true;
                     }
                     else
                     {
-                        that.filterSvc.delFromScatterSelection(d);                        
+                        that.filterService.delFromScatterSelection(d);                        
                         return false;
                     }
                 });
@@ -384,7 +383,7 @@ export class ScatterChart
             that.cht.selectAll("circle")
                 .attr('opacity', function(d: any)
                 {
-                    if( that.filterSvc.findOnScatterSelection(d) ){
+                    if( that.filterService.findOnScatterSelection(d) ){
                         d3.select(this).classed('selected', true);
                         return 1.0;                            
                     }
@@ -405,10 +404,10 @@ export class ScatterChart
                     .classed("selected", false)
                     .attr('opacity', 1.0);
 
-                that.filterSvc.clearScatterSelection(that.data);
+                that.filterService.clearScatterSelection(that.data);
             }
 
-            that.filterSvc.emitScatterSelectionChanged();
+            that.filterService.emitScatterSelectionChanged();
         });
 
         // call on each cell
