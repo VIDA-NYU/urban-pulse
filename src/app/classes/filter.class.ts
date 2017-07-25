@@ -18,6 +18,10 @@ export class FilterService
     private pulseTimeSelection: any = [];
     private pulseTimeSelectionChange: EventEmitter<any> = new EventEmitter();
 
+    // map selection and emitter
+    private mapSelection: any = [];
+    private mapSelectionChange: EventEmitter<any> = new EventEmitter();
+
     // constructor
     constructor() {}
 
@@ -107,5 +111,41 @@ export class FilterService
         var finalSelection = this.combineFilters();
         this.pulseTimeSelectionChange.emit(finalSelection);
     }
-    //-----------------------------
+    
+    // Map brush ---------
+    getMapSelectionChangeEmitter() {
+        return this.scatterSelectionChange;
+    }
+
+    addToMapSelection(elem: any) 
+    {
+        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
+
+        if( !_.find(this.mapSelection, x => x['id'] === elem['id']) )
+            this.mapSelection.push(elem);
+    }
+    
+    delFromMapSelection(elem: any) 
+    {
+        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
+
+        _.remove(this.mapSelection, x => x['id'] === elem['id'] );
+    }
+    
+    findOnMapSelection(elem: any) 
+    {
+        if(typeof this.mapSelection === "undefined") this.mapSelection = [];
+        
+        return _.find(this.mapSelection, x => x['id'] === elem['id']);
+    }
+    
+    clearMapSelection() 
+    {
+        this.mapSelection = undefined;
+    }
+
+    emitMapSelectionChanged()
+    {
+        this.scatterSelectionChange.emit(this.mapSelection);        
+    }
 }

@@ -8,6 +8,7 @@ export class SvgOverlay extends google.maps.OverlayView
     private bounds: google.maps.LatLngBounds;
     private div: any;
     private data: any[];
+    private latlngs: any[];
     private size: number = 100; // size in meters
 
     constructor(map: google.maps.Map) 
@@ -17,6 +18,7 @@ export class SvgOverlay extends google.maps.OverlayView
         this.setMap(this.map);
 
         this.data = [];
+        this.latlngs = [];
     }
 
     // returns meters per pixel at zoom level
@@ -62,16 +64,23 @@ export class SvgOverlay extends google.maps.OverlayView
 
         this.div.parentNode.removeChild(this.div);
         this.data = [];
+        this.latlngs = [];
 
     }
 
-    setData(values: any)
+    setData(data: any)
     {
-        for(let i=0; i<values.length; i++) {
-            var latlngs = values[i]['latLng'];
-            this.data = this.data.concat(latlngs);
+        this.data = data;
+        for(let i=0; i<this.data.length; i++) {
+            var latlngs = this.data[i]['latLng'];
+            this.latlngs = this.latlngs.concat(latlngs);
         }
         this.draw();
+    }
+
+    getData()
+    {
+        return this.data;
     }
 
     draw()
@@ -85,13 +94,18 @@ export class SvgOverlay extends google.maps.OverlayView
         function transform(d: any) {
             let p = projection.fromLatLngToDivPixel(new google.maps.LatLng(d[0], d[1]));
             let scale = that.getScale(d[0], that.map.getZoom());
+            let width = parseInt(d3.select(this).style('width'));
+            let height = parseInt(d3.select(this).style('height'));
+
+            // console.log(this, d);
+
             return d3.select(this)
-                .style("left", (p.x - 2*that.size/scale) + "px")
-                .style("top", (p.y - 2*that.size/scale) + "px");
+                .style("left", (p.x - 0.5*that.size/scale) + "px")
+                .style("top", (p.y - 0.5*that.size/scale) + "px");
         }
 
         let marker = d3.select(this.div).selectAll('svg')
-            .data(this.data)
+            .data(this.latlngs)
             .each(transform)
             .enter()
             .append('svg')
