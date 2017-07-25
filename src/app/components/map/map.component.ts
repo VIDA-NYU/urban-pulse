@@ -4,6 +4,7 @@ import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 // my services
 import { GMapsLayer } from '../../classes/gmaps.class';
 import { DataService } from '../../classes/data.class';
+import { FilterService } from '../../classes/filter.class';
 
     // <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" style="width: 98%;  margin: 18px 4px 4px 4px;">
     //     <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
@@ -38,7 +39,7 @@ export class MapComponent implements AfterViewInit {
             styles: getMapStyle()
         }
 
-    constructor(private dataService : DataService) {}
+    constructor(private dataService : DataService, private filterService : FilterService) {}
 
     ngAfterViewInit() 
     {
@@ -47,10 +48,10 @@ export class MapComponent implements AfterViewInit {
     }
 
     private _createMap() {
-        this.map1 = new GMapsLayer();
+        this.map1 = new GMapsLayer(this.dataService, this.filterService);
         this.map1.initMap(this.mapTopRef.nativeElement, this.gmapsOptions);
 
-        this.map2 = new GMapsLayer();
+        this.map2 = new GMapsLayer(this.dataService, this.filterService);
         this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions);
     }
 
