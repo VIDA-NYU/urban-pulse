@@ -71,13 +71,8 @@ export class PulseChart
     private res: string;
     private cities: any;
     
-    // filter service
-    private filterSvc: any;
-    
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService)
     {
-        // filter service
-        this.filterSvc = filterService;
         // get current cities
         this.cities = dataService.getCities();
         // get current resolution
@@ -100,7 +95,7 @@ export class PulseChart
         });
         
         // filter service subscriptions
-        this.filterSvc.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
+        this.filterService.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
         {
             // show all data 
             if(typeof sel === "undefined") sel = dataService.getData();
@@ -109,7 +104,7 @@ export class PulseChart
             this.updateChart();
         } );
 
-        this.filterSvc.getPulseTimeSelectionChangeEmitter().subscribe( (sel: any) => 
+        this.filterService.getPulseTimeSelectionChangeEmitter().subscribe( (sel: any) => 
         {
             // show all data 
             if(typeof sel === "undefined") sel = dataService.getData();
@@ -118,7 +113,16 @@ export class PulseChart
             this.updateChart();
         } );
 
-        paramsService.getTimeResChangeEmitter().subscribe( (res: any) => 
+        this.filterService.getMapSelectionChangeEmitter().subscribe( (sel: any)=>
+        {
+            // show all data 
+            if(typeof sel === "undefined") sel = dataService.getData();
+
+            this._buildData(sel);
+            this.updateChart();
+        });
+
+        this.paramsService.getTimeResChangeEmitter().subscribe( (res: any) => 
         {
             this.changeResolution(res);
         } );
@@ -248,8 +252,8 @@ export class PulseChart
 
         this.resetTimeFilter = true;
 
-        this.filterSvc.clearPulseTimeSelection();
-        this.filterSvc.emitPulseTimeSelectionChanged();
+        this.filterService.clearPulseTimeSelection();
+        this.filterService.emitPulseTimeSelectionChanged();
 
         this.resetTimeFilter = false;
     }

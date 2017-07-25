@@ -53,29 +53,46 @@ export class GMapsLayer
             let shape = e.overlay;
             that.filter(e);
 
-            google.maps.event.addListener(shape, 'rightclick', function(e: any) {
+            google.maps.event.addListener(shape, 'rightclick', function(e: any) 
+            {
                 shape.setMap(null);
                 that.filterService.clearMapSelection();
+                
+                // clear update data
+                that.filterService.clearScatterSelection(that.dataService.getData());
+                // clear 
+                that.filterService.emitMapSelectionChanged();
             });
 
-            if(e.type == 'rectangle') {
+            google.maps.event.addListener(shape, 'drag', function() {
+                shape.isDragging = true ;
+            });
+
+            if(e.type == 'rectangle') 
+            {                
                 google.maps.event.addListener(shape, 'bounds_changed', function() {
+                    if(shape.isDragging) return;
                     that.filter(e);
                 });
-                google.maps.event.addListener(shape, 'drag', function() {
+                google.maps.event.addListener(shape, 'dragend', function() {
                     that.filter(e);
+                    shape.isDragging = false;
                 });
             }
-            else if(e.type == 'polygon') {
+            else if(e.type == 'polygon') 
+            {
                 let path = shape.getPath();
                 google.maps.event.addListener(path, 'set_at', function() {
+                    if(shape.isDragging) return;
                     that.filter(e);
                 });
                 google.maps.event.addListener(path, 'insert_at', function() {
+                    if(shape.isDragging) return;
                     that.filter(e);
                 });
-                google.maps.event.addListener(shape, 'drag', function() {
+                google.maps.event.addListener(shape, 'dragend', function() {
                     that.filter(e);
+                    shape.isDragging = false;
                 });
             }
 
@@ -100,9 +117,14 @@ export class GMapsLayer
 
         let selectedFeatures = [];
         let features = that.pulseOverlay.getData();
-        for(let i=0; i<features.length; i++) {
+        
+        that.filterService.clearMapSelection();
+        
+        for(let i=0; i<features.length; i++) 
+        {
             let latlngs = features[i]['latLng'];
-            for(let j=0; j<latlngs.length; j++) {
+            for(let j=0; j<latlngs.length; j++) 
+            {
                 let lat = latlngs[j][0];
                 let lon = latlngs[j][1];
                 let ll = new google.maps.LatLng(lat,lon)
@@ -120,6 +142,8 @@ export class GMapsLayer
                 }
             }      
         }
+
+        that.filterService.emitMapSelectionChanged();
     }
 
     setCenter(latLng: google.maps.LatLng) 
