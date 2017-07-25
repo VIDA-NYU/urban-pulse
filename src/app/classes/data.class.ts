@@ -20,7 +20,7 @@ export class DataService
 {
     // data
     private data: any = null;
-    private cities: any = ['nyc', 'nyc'];
+    private cities: any = ['map1', 'map2'];
     private resolutions: any = null;
     
     // observable
@@ -73,10 +73,41 @@ export class DataService
                 this.resolutions.splice(this.resolutions.indexOf("ALL"), 1);
                 
                 // adds the feature id
-                this.data = feat.map(function(f: any, index: number)
+                var data01 = feat.slice(); 
+                data01 = data01.map(function(f: any, index: number)
                 {
                     // feature id
                     f.id = index;
+                    // map
+                    f.map = 'map1';
+                    
+                    // for each resolution
+                    that.resolutions.forEach(function(tRes: string)
+                    {
+                        // rank computation
+                        var fnRank  = f.resolutions[tRes].fnRank;
+                        var maxRank = f.resolutions[tRes].maxRank;
+                        var sigRank = f.resolutions[tRes].sigRank;
+                        
+                        // x and y values for the scatter plot
+                        var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
+                        var y = f.rank;
+
+                        // add plot coords
+                        f.resolutions[tRes].x = x;
+                        f.resolutions[tRes].y = y;
+                    })
+
+                    return f;
+                });
+
+                var data02 = feat.slice(); 
+                data02 = data02.map(function(f: any, index: number)
+                {
+                    // feature id
+                    f.id = data01.length + index;
+                    // map
+                    f.map = 'map2';
 
                     // for each resolution
                     that.resolutions.forEach(function(tRes: string)
@@ -97,6 +128,8 @@ export class DataService
 
                     return f;
                 });
+
+                this.data = data01.concat(data02);
 
                 // And return the response
                 return this.data

@@ -63,9 +63,6 @@ export class ScatterChart
     
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
     {
-        // get current cities
-        this.cities = dataService.getCities();
-
         // get the data
         this.dataService.getFeatures().subscribe((json: any) => 
         {
@@ -74,6 +71,8 @@ export class ScatterChart
 
             // get time keys
             this.timeRes = dataService.getResolution();
+            // get current cities
+            this.cities = dataService.getCities();
         
             // format data
             this._buildData(json);

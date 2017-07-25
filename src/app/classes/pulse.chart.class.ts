@@ -73,8 +73,6 @@ export class PulseChart
     
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService)
     {
-        // get current cities
-        this.cities = dataService.getCities();
         // get current resolution
         this.res = paramsService.getTimeRes();
 
@@ -86,6 +84,8 @@ export class PulseChart
 
             // get time keys
             this.timeRes = dataService.getResolution();
+            // get current cities
+            this.cities = dataService.getCities();
         
             // format data
             this._buildData(json);
@@ -97,27 +97,18 @@ export class PulseChart
         // filter service subscriptions
         this.filterService.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
         {
-            // show all data 
-            if(typeof sel === "undefined") sel = dataService.getData();
-
             this._buildData(sel);
             this.updateChart();
         } );
 
         this.filterService.getPulseTimeSelectionChangeEmitter().subscribe( (sel: any) => 
         {
-            // show all data 
-            if(typeof sel === "undefined") sel = dataService.getData();
-
             this._buildData(sel);
             this.updateChart();
         } );
 
         this.filterService.getMapSelectionChangeEmitter().subscribe( (sel: any)=>
         {
-            // show all data 
-            if(typeof sel === "undefined") sel = dataService.getData();
-
             this._buildData(sel);
             this.updateChart();
         });
@@ -149,101 +140,6 @@ export class PulseChart
         
         // creates the chart
         this._buildChart();
-
-        // this.div = d3.select(this.element.nativeElement);
-        // this.div.select('svg').remove();
-
-        // this.chartWidth  = this.div.node().getBoundingClientRect().width;
-        // this.chartWidth -= this.margins.left + this.margins.right;
-        // this.chartHeight  = this.div.node().getBoundingClientRect().height;
-        // this.chartHeight -= this.margins.top + this.margins.bottom;
-
-        // // scale
-        // this.xScale = d3.scaleLinear().domain(this.xRange).range([0,this.chartWidth / 3]);
-        // this.yScale = d3.scaleLinear().domain(this.yRange).range([this.chartHeight,0]);
-
-        // // axis
-        // this.xAxis = d3.axisBottom(this.xScale);
-        // this.yAxis = d3.axisLeft(this.yScale);
-
-        // var numTicks = isSearch?5:5;
-        // this.xAxis
-        //     .ticks(numTicks)
-        //     .tickSize( this.chartHeight )
-        //     .tickFormat(d3.format(".1f"));
-
-        // var yFormat = !isSearch?d3.format(".1f"):d3.format("f");
-        // this.yAxis
-        //     .ticks(numTicks)
-        //     .tickSize(-this.chartWidth * this.timeRes.length, 0)
-        //     .tickFormat(yFormat);
-
-        
-
-        // this.svg = this.div.append('svg')
-        //     .attr("width",  this.chartWidth)
-        //     .attr("height", this.chartHeight)
-        //     .append("g")
-        //     .attr("transform", "translate(" + this.margins.left + "," + this.margins.top + ")");
-
-        // this.svg.selectAll(".x.axis")
-        //     .data(this.timeRes)
-        //     .enter().append("g")
-        //     .attr("class", "x axis")
-        //     .attr("transform", function(d: any, i: any) {
-        //         var pos = isSearch?0:i;
-        //         return "translate(" + (pos * that.chartWidth / that.timeRes.length) + "," + 0 + ")";
-        //     })
-        //     .each(function(d: any) {
-        //         that.xScale.domain(that.xRange);
-        //         d3.select(this).call(that.xAxis);
-        //     });
-
-        // this.svg.selectAll(".y.axis")
-        //     .data(["func"])
-        //     .enter()
-        //     .append("g")
-        //     .attr("class", "y axis")
-        //     .attr("transform", function(d: any, i: any) {
-        //         var pos = isSearch?0:i;
-        //         return "translate("+ (pos*(that.chartWidth / that.timeRes.length)) +", 0)";
-        //     })
-        //     .each(function() {
-        //         that.yScale.domain(that.yRange);
-        //         d3.select(this).call(that.yAxis);
-        //     });
-
-        // this.svg.selectAll('.cell')
-        //     .data(this.timeRes)
-        //     .enter()
-        //     .append('g')
-        //     .attr('class', 'cell')
-        //     .attr('transform', function(d: any, i: any) {
-        //         var pos = isSearch?0:i;
-        //         return "translate(" + (pos*(that.chartWidth / that.timeRes.length)) + ", 0)";
-        //     })
-        //     .each(function(d: any) {
-        //         var cell = d3.select(this);
-        //         var data = that.data[d];
-
-        //         cell.append("rect")
-        //             .attr("class", "frame")
-        //             .attr("x", 0)
-        //             .attr("y", 0)
-        //             .attr("width",  that.chartWidth / that.timeRes.length)
-        //             .attr("height", that.chartHeight );
-
-        //         var circles = cell.selectAll("circle")
-        //             .data(data);
-
-        //         circles.enter().append("circle")
-        //                 .attr("cx", function(d: any) { return that.xScale(d.x); })
-        //                 .attr("cy", function(d: any) { return that.yScale(d.y); })
-        //                 .attr("r", 4)
-        //                 .style("fill", function(d: any) { return "blue"; });
-
-        //         circles.exit().remove();
-        //     });
     }
 
     changeResolution(tRes: string)
