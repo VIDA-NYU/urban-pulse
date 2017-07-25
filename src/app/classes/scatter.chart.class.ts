@@ -72,7 +72,7 @@ export class ScatterChart
             this.element = element;
 
             // get time keys
-            this.timeRes = dataService.getTimeRes();
+            this.timeRes = dataService.getResolution();
         
             // format data
             this._buildData(json);

@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 // my services
 import { DataService } from './data.class';
 import { FilterService } from './filter.class';
+import { ParametersService } from './params.class'
 
 export class PulseChart
 {
@@ -73,15 +74,14 @@ export class PulseChart
     // filter service
     private filterSvc: any;
     
-    constructor(element: ElementRef, private dataService : DataService, private filterService: FilterService, currentRes: string)
+    constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService)
     {
         // filter service
         this.filterSvc = filterService;
-
         // get current cities
         this.cities = dataService.getCities();
-        // selected resolution
-        this.res = currentRes;
+        // get current resolution
+        this.res = paramsService.getTimeRes();
 
         // get the data
         dataService.getFeatures().subscribe((json:any)=>
@@ -90,7 +90,7 @@ export class PulseChart
             this.element = element;
 
             // get time keys
-            this.timeRes = dataService.getTimeRes();
+            this.timeRes = dataService.getResolution();
         
             // format data
             this._buildData(json);
@@ -116,6 +116,11 @@ export class PulseChart
 
             this._buildData(sel);
             this.updateChart();
+        } );
+
+        paramsService.getTimeResChangeEmitter().subscribe( (res: any) => 
+        {
+            this.changeResolution(res);
         } );
 
         // Adds event listener resize when the window changes size.

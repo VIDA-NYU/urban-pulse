@@ -9,7 +9,7 @@ import { BrowserModule }           from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // angular material
-import { MaterialModule }  from '@angular/material';
+import { MaterialModule } from '@angular/material';
 
 // my components
 import { MapComponent }   from './components/map/map.component';
@@ -17,8 +17,9 @@ import { VisComponent }   from './components/vis/vis.component';
 import { MainComponent }  from './components/main/main.component';
 
 // my services
-import { DataService }  from './classes/data.class';
-import { FilterService } from './classes/filter.class'
+import { DataService }       from './classes/data.class';
+import { FilterService }     from './classes/filter.class'
+import { ParametersService } from './classes/params.class'
 
 @NgModule({
   imports: 
@@ -39,7 +40,8 @@ import { FilterService } from './classes/filter.class'
   providers:
   [
     DataService,
-    FilterService
+    FilterService,
+    ParametersService
   ],
   bootstrap: [ MainComponent ]
 })

@@ -20,9 +20,9 @@ export class DataService
 {
     // data
     private data: any = null;
-    private timeRes: any = null;
     private cities: any = ['nyc', 'nyc'];
-
+    private resolutions: any = null;
+    
     // observable
     private obs: Observable<any>;
 
@@ -69,8 +69,8 @@ export class DataService
                 });
 
                 // resolutions
-                this.timeRes = Object.keys(feat[feat.length - 1]["resolutions"]);
-                this.timeRes.splice(this.timeRes.indexOf("ALL"), 1);
+                this.resolutions = Object.keys(feat[feat.length - 1]["resolutions"]);
+                this.resolutions.splice(this.resolutions.indexOf("ALL"), 1);
                 
                 // adds the feature id
                 this.data = feat.map(function(f: any, index: number)
@@ -79,7 +79,7 @@ export class DataService
                     f.id = index;
 
                     // for each resolution
-                    that.timeRes.forEach(function(tRes: string)
+                    that.resolutions.forEach(function(tRes: string)
                     {
                         // rank computation
                         var fnRank  = f.resolutions[tRes].fnRank;
@@ -113,9 +113,9 @@ export class DataService
         return this.data;
     }
 
-    getTimeRes()
+    getResolution()
     {
-        return this.timeRes;
+        return this.resolutions;
     }
 
     getCities() 
