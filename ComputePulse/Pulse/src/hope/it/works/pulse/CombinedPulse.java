@@ -267,7 +267,7 @@ public class CombinedPulse {
 				locs.clear();
 				for(int v: set) {
 					int xin = v % xres;
-					int yin = v % yres;
+					int yin = v / yres;
 					double x = lbx + xin * (rtx - lbx) / xres;
 					double y = lby + yin * (rty - lby) / yres;
 					locs.add(y);
@@ -347,7 +347,7 @@ public class CombinedPulse {
 				json += "\"gridIndex\": [";
 				for(int v: set) {
 					int xin = v % xres;
-					int yin = v % yres;
+					int yin = v / xres;
 					double x = lbx + xin * (rtx - lbx) / xres;
 					double y = lby + yin * (rty - lby) / yres;
 					locs.add(y);
@@ -435,7 +435,7 @@ public class CombinedPulse {
 		UrbanPulse.resolution = resolution;
 		CombinedPulse com = new CombinedPulse(dataFolder, dataName);
 		com.readPulse(resolution, filter);
-		// com.printFeatures(dataFolder + dataName + filter + "-features.txt");
+		com.printFeatures(dataFolder + dataName + filter + "-features.txt");
 		com.printFeaturesJSON(dataFolder + dataName + filter + "-features.json");
 		return true;
 	}
