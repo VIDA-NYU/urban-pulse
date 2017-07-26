@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, URLSearchParams } from '@angular/http';
 
 // import d3js
 import * as d3 from 'd3';
@@ -36,11 +36,33 @@ export class DataService
     // observable
     private obs: Observable<any>;
 
-    constructor(private http: Http) { }
+    constructor(private http: Http)
+    {
+    }
+
+    getPaths()
+    {
+        let paramId = '?data';
+        let params = new URLSearchParams(window.location.search);
+        let someParam = params.get(paramId);
+        if(!someParam) {
+            alert('Data path not supplied');
+        }
+        someParam = someParam.split(',');
+        if(someParam.length < 2) {
+            alert('Data path not supplied');
+        }
+        let paths = {
+            'map1': someParam[0],
+            'map2': someParam[1]
+        };
+        return paths;
+    }
 
     getScalar() 
     {
-        return this.http.get('./data/nyc/flickr_ALL_0-day.scalars').map((res:any) => {
+        let paths = this.getPaths();
+        return this.http.get('./' + paths['map1'] + '_ALL_0-day.scalars').map((res:any) => {
             var textByLine = res.text().split('\n');
             var json = {};
             json['gridSize'] = textByLine[0].split(',').map(function(x: string){return parseInt(x)});
@@ -65,7 +87,8 @@ export class DataService
         else 
         {
             // Otherwise get the data
-            this.obs = this.http.get('./data/nyc/flickr-features.json')
+            let paths = this.getPaths();
+            this.obs = this.http.get('./' + paths['map1']+ '-features.json')
             .map( response => {
                 // Clear the observable
                 this.obs = null;

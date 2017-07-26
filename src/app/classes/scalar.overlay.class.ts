@@ -88,11 +88,10 @@ export class ScalarOverlay extends google.maps.OverlayView
 
     draw()
     {
-        if (!this.map || !this.bounds) return;
+        if (!this.map || !this.bounds || !this.div) return;
         if(this.img && !this.div.hasChildNodes()) {
             this.div.appendChild(this.img);
         }
-
 
         let projection = this.getProjection();
 
