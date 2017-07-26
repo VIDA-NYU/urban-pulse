@@ -74,9 +74,8 @@ export class PulseChart
     {
         // get current resolution
         this.res = paramsService.getTimeRes();
-
-        // get the data
-        dataService.getFeatures().subscribe((json:any)=>
+        
+        dataService.getMultipleFeatures().subscribe((json:any)=>
         { 
             // html element reference
             this.element = element;

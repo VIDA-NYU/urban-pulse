@@ -61,7 +61,7 @@ export class ScatterChart
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
     {
         // get the data
-        this.dataService.getFeatures().subscribe((json: any) => 
+        this.dataService.getMultipleFeatures().subscribe((json: any) => 
         {
             // html element reference 
             this.element = element;

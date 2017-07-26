@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 
 // RXJS Imports
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/forkJoin';
+
 import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/map';
 
@@ -21,11 +23,16 @@ export class DataService
     // data
     private data: any = null;
     // observable
-    private obs: Observable<any>;
+    private dataObs: Observable<any>;
+
+    // scalars
+    private scalars: any = null;
+    // observable
+    private scalarsObs: Observable<any>;
 
     // parameters
     private cities: any = ['map1', 'map2'];
-    private resolutions: any = null;
+    private resolutions: any = ['HOUR', 'DAYOFWEEK', 'MONTH'];
 
     private colorScales: any = {
         'map1': d3.scaleLinear().range(<any[]>['#fee6ce', '#fdae6b', '#e6550d']).domain([0,1]),
@@ -72,124 +79,138 @@ export class DataService
         return paths;
     }
 
-    getScalar() 
-    {
-        let paths = this.getPaths();
-        return this.http.get('./' + paths['map1'] + '_ALL_0-day.scalars').map((res:any) => {
-            var textByLine = res.text().split('\n');
-            var json = {};
-            json['gridSize'] = textByLine[0].split(',').map(function(x: string){return parseInt(x)});
-            json['latLng'] = textByLine[1].split(',').map(function(x: string){return parseFloat(x)});
-            json['values'] = textByLine.slice(3).map(function(x: string){return parseFloat(x)});
-            json['range'] = [d3.min(json['values']), d3.max(json['values'])];
-            return json;
-        });
-    }
-    
-    getFeatures() 
+    getMultipleScalars()
     {
         // this scope
         var that = this;
 
-        if(this.data){
-            return Observable.of(this.data);
-        }
-        else if(this.obs){
-            return this.obs;
-        }
-        else 
+        // data paths
+        var paths = this.getPaths();
+
+        // current resolution
+        var cRes = "HOUR";
+        var cTime = 0;
+        var group = "";
+
+        // get the observables
+        if(this.data)
         {
-            // Otherwise get the data
-            let paths = this.getPaths();
-            this.obs = this.http.get('./' + paths['map1']+ '-features.json')
-            .map( response => {
-                // Clear the observable
-                this.obs = null;
+            return Observable.of(this.scalars);
+        }
+        else if(this.scalarsObs)
+        {
+            return this.scalarsObs;
+        }
+        else
+        {
+            console.log("Http Call: Getting scalar data.");
+            
+            // observables
+            var obs1 = this.http.get('./' + paths['map1']+ '_' + cRes + '_' + cTime + group + '.scalars').map( (res: any) => res.text() );
+            var obs2 = this.http.get('./' + paths['map2']+ '_' + cRes + '_' + cTime + group + '.scalars').map( (res: any) => res.text() );
 
-                // Otherwise set the data
-                var feat = response.json().features;
+            this.scalarsObs = Observable.forkJoin(obs1, obs2)
+            .map(response => 
+            {
+                that.scalars = [];
 
-                // resolutions
-                this.resolutions = Object.keys(feat[feat.length - 1]["resolutions"]);
-                this.resolutions.splice(this.resolutions.indexOf("ALL"), 1);
+                for(let id=0; id<response.length; id++)
+                {
+                    var textByLine = response[id].split('\n');
+                    var json = {};
+                    json['gridSize'] = textByLine[0].split(',').map(function(x: string){return parseInt(x)});
+                    json['latLng'] = textByLine[1].split(',').map(function(x: string){return parseFloat(x)});
+                    json['values'] = textByLine.slice(3).map(function(x: string){return parseFloat(x)});
+                    json['range'] = [d3.min(json['values']), d3.max(json['values'])];
+
+                    that.scalars.push(json);                            
+                }
+
+                return this.scalars;
+            }).share();
+
+            return this.scalarsObs;
+        }
+    }
+
+    getMultipleFeatures()
+    {
+        // this scope
+        var that = this;
+        // data paths
+        var paths = this.getPaths();
+
+        // get the observables
+        if(this.data)
+        {
+            return Observable.of(this.data)
+        }
+        else if(this.dataObs)
+        {
+            return this.dataObs;
+        }
+        else
+        {
+            console.log("Http Call: Getting feature data.");
+
+            // observables
+            var obs1 = this.http.get('./' + paths['map1']+ '-features.json').map( (res: any) => res.json() );
+            var obs2 = this.http.get('./' + paths['map2']+ '-features.json').map( (res: any) => res.json() );
+
+            this.dataObs = Observable.forkJoin(obs1, obs2)
+            .map(response => 
+            {
+                // resets the index
+                var index = 0;
+                that.data = [];
                 
-                // adds the feature id (map1 features)
-                var data01 = feat.map(function(feature: any, index: number)
+                // responses iteration
+                for(let id=0; id<response.length; id++)
                 {
-                    // make a copy
-                    var f = _.cloneDeep(feature);
+                    // Otherwise set the data
+                    var feat = response[id].features;
 
-                    // feature id
-                    f.id = index;
-                    // map
-                    f.cityId = 'map1';
-                    
-                    // for each resolution
-                    that.resolutions.forEach(function(tRes: string)
+                    feat.forEach(function(f: any)
                     {
-                        // rank computation
-                        var fnRank  = f.resolutions[tRes].fnRank;
-                        var maxRank = f.resolutions[tRes].maxRank;
-                        var sigRank = f.resolutions[tRes].sigRank;
-                        
-                        // x and y values for the scatter plot
-                        var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
-                        var y = f.rank;
+                        // feature id
+                        f.id = index;
+                        // city id
+                        f.cityId = that.cities[id];
 
-                        // add plot coords
-                        f.resolutions[tRes].x = x;
-                        f.resolutions[tRes].y = y;
-                    })
+                        // for each resolution
+                        that.resolutions.forEach(function(tRes: string)
+                        {
+                            // rank computation
+                            var fnRank  = f.resolutions[tRes].fnRank;
+                            var maxRank = f.resolutions[tRes].maxRank;
+                            var sigRank = f.resolutions[tRes].sigRank;
+                            
+                            // x and y values for the scatter plot
+                            var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
+                            var y = f.rank;
 
-                    return f;
-                });
+                            // add plot coords
+                            f.resolutions[tRes].x = x;
+                            f.resolutions[tRes].y = y;
 
-                // adds the feature id (map2 features)
-                var data02 = feat.map(function(feature: any, index: number)
-                {
-                    // make a copy
-                    var f = _.cloneDeep(feature);
+                            // index update
+                            index += 1;
+                        });
 
-                    // feature id
-                    f.id = data01.length + index;
-                    // map
-                    f.cityId = 'map2';
-
-                    // for each resolution
-                    that.resolutions.forEach(function(tRes: string)
-                    {
-                        // rank computation
-                        var fnRank  = f.resolutions[tRes].fnRank;
-                        var maxRank = f.resolutions[tRes].maxRank;
-                        var sigRank = f.resolutions[tRes].sigRank;
-                        
-                        // x and y values for the scatter plot
-                        var x = Math.sqrt(maxRank * maxRank + fnRank * fnRank + sigRank * sigRank);
-                        var y = f.rank;
-
-                        // add plot coords
-                        f.resolutions[tRes].x = 1.1*x;
-                        f.resolutions[tRes].y = 1.1*y;
-                    })
-
-                    return f;
-                });
-
-                // concat data
-                this.data = data01.concat(data02);
+                        that.data.push(f);
+                    });            
+                }
 
                 // sort features
                 this.data = this.data.sort(function (x: any, y: any) {
                     return d3.descending(x.rank, y.rank);
                 });
-                
-                // And return the response
-                return this.data
-            })
-            .share();
 
-            // Return the observable to be subscribed to
-            return this.obs;
+                // return the response
+                return this.data;
+            }).share();
+
+            return this.dataObs;
         }
     }
 
