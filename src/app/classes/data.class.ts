@@ -63,11 +63,6 @@ export class DataService
                 // Otherwise set the data
                 var feat = response.json().features;
 
-                // sort features
-                feat = feat.sort(function (x: any, y: any) {
-                    return d3.descending(x.rank, y.rank);
-                });
-
                 // resolutions
                 this.resolutions = Object.keys(feat[feat.length - 1]["resolutions"]);
                 this.resolutions.splice(this.resolutions.indexOf("ALL"), 1);
@@ -134,8 +129,14 @@ export class DataService
                     return f;
                 });
 
+                // concat data
                 this.data = data01.concat(data02);
 
+                // sort features
+                this.data = this.data.sort(function (x: any, y: any) {
+                    return d3.descending(x.rank, y.rank);
+                });
+                
                 // And return the response
                 return this.data
             })

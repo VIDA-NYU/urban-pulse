@@ -37,7 +37,10 @@ export class FilterService
                 var sigMaxTime = x.resolutions[constraint['res']]["sigMaxTime"];
                 var type = (maxTime[constraint['val']]?(sigMaxTime[constraint['val']]?2:1):0);
     
-                return type === constraint['type'];
+                if(constraint['type'] == 1 && type  >= 1) return true;
+                if(constraint['type'] == 2 && type === 2) return true;
+
+                return false;
             })
         });
 
