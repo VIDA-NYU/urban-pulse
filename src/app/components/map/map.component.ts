@@ -33,6 +33,7 @@ export class MapComponent implements AfterViewInit {
             center: { lat: 40.7324607, lng: -73.9887512 },
             scrollwheel: true,
             zoom: 14,
+            maxZoom: 15,
             streetViewControl: false,
             mapTypeControl: false,
             clickableIcons: false,

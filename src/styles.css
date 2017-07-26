@@ -224,3 +224,12 @@ md-toolbar md-toolbar-row {
 .pulses .sax{
   fill: #006d2c;
 }
+
+.marker circle {
+  fill: orange;
+  stroke: black;
+  stroke-width: 0.5px;
+  fill-opacity: 0.5;
+  stroke-opacity: 1.0;
+  /*stroke-dasharray: 5;*/
+}

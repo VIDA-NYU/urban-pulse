@@ -1,10 +1,13 @@
 
+// import d3js
+import * as d3 from 'd3';
 
 export class ScalarOverlay extends google.maps.OverlayView 
 {
     private map: google.maps.Map;
     private bounds: google.maps.LatLngBounds;
     private div: any;
+    private colorscale: any = d3.scaleLinear().range(<any[]>['#fee6ce', '#fdae6b', '#e6550d']).domain([0,1]);
 
     constructor(map: google.maps.Map) 
     {
@@ -48,12 +51,18 @@ export class ScalarOverlay extends google.maps.OverlayView
         for(let x = 0; x < width; x++) {
             for(let y = 0; y < height; y++) {
                 let posv = ((height - y) * width + x);
-                let val = (values[posv] - range[0]) / (range[1] - range[0]);
                 let posb = (y * width + x);
-                buffer[4*posb] =  255.0 * val * 10;
-                buffer[4*posb+1] = 0;
-                buffer[4*posb+2] = 0;
-                buffer[4*posb+3] = 255.0 * val * 10;
+
+                let val = (values[posv] - range[0]) / (range[1] - range[0]);
+                val *= 20.0;
+                let color = d3.rgb(this.colorscale(val));
+
+                // console.log(val, color);
+
+                buffer[4*posb] =  color.r;
+                buffer[4*posb+1] = color.g;
+                buffer[4*posb+2] = color.b;
+                buffer[4*posb+3] = 255.0 * val;
             }
         }
         let canvas = document.createElement('canvas');
