@@ -42,6 +42,8 @@ export class ScalarOverlay extends google.maps.OverlayView
             new google.maps.LatLng(json['latLng'][0], json['latLng'][1]),
             new google.maps.LatLng(json['latLng'][2], json['latLng'][3])
         );
+        // this.map.setCenter(this.bounds.getCenter());
+        this.map.fitBounds(this.bounds);
 
         let width = json['gridSize'][0];
         let height = json['gridSize'][1];
