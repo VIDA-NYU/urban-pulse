@@ -46,7 +46,7 @@ export class DataService
     	return someParam;
     }
 
-    getPaths(paramId: string)
+    getPaths()
     {
     	// data1
     	let param1 = this.getParam('data1');
