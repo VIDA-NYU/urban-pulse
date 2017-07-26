@@ -46,21 +46,35 @@ export class DataService
     
     constructor(private http: Http){}
 
-    getPaths()
+    getParam(paramId: string)
     {
-        let paramId = '?data';
-        let params = new URLSearchParams(window.location.search);
-        let someParam = params.get(paramId);
-        if(!someParam) {
-            alert('Data path not supplied');
-        }
-        let paramsTk = someParam.split(',');
-        if(paramsTk.length < 2) {
-            alert('Data path not supplied');
-        }
-        let paths = {
-            'map1': paramsTk[0],
-            'map2': paramsTk[1]
+    	let params = new URLSearchParams(window.location.search.substring(1));
+    	let someParam = params.get(paramId);
+    	return someParam;
+    }
+
+    getPaths(paramId: string)
+    {
+    	// data1
+    	let param1 = this.getParam('data1');
+    	let param2 = this.getParam('data2');
+
+    	if(!param1 || !param2) {
+    		alert('Data parameters not supplied');
+    		return;
+    	}
+
+    	let param1tk = param1.split(/[;,]+/);
+    	let param2tk = param2.split(/[;,]+/);
+
+    	if(param1tk.length < 2 || param2tk.length < 2) {
+    		alert('Data parameters not supplied');
+    		return;
+    	}
+
+    	let paths = {
+            'map1': param1tk[0]+'/'+param1tk[1],
+            'map2': param2tk[0]+'/'+param2tk[1],
         };
         return paths;
     }
