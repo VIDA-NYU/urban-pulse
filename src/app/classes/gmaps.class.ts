@@ -22,6 +22,7 @@ export class GMapsLayer
         let that = this;
 
         this.map = new google.maps.Map(mapHtmlElement, options);
+        this.cityId = cityId;
         this.scalarOverlay = new ScalarOverlay(this.map, this.dataService.getColorScale(cityId));
         this.pulseOverlay = new SvgOverlay(this.map, this.dataService.getColor(cityId));
 
@@ -122,7 +123,13 @@ export class GMapsLayer
         
         for(let i=0; i<features.length; i++) 
         {
+
+            let cityId = features[i]['cityId'];
+            if(cityId != this.cityId)
+                continue;
+
             let latlngs = features[i]['latLng'];
+
             for(let j=0; j<latlngs.length; j++) 
             {
                 let lat = latlngs[j][0];

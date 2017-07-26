@@ -86,7 +86,7 @@ export class DataService
                     // feature id
                     f.id = index;
                     // map
-                    f.map = 'map2';
+                    f.cityId = 'map1';
                     
                     // for each resolution
                     that.resolutions.forEach(function(tRes: string)
@@ -117,7 +117,7 @@ export class DataService
                     // feature id
                     f.id = data01.length + index;
                     // map
-                    f.map = 'map1';
+                    f.cityId = 'map2';
 
                     // for each resolution
                     that.resolutions.forEach(function(tRes: string)
