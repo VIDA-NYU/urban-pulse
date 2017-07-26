@@ -9,13 +9,16 @@ export class SvgOverlay extends google.maps.OverlayView
     private div: any;
     private data: any[];
     private latlngs: any[];
+    private color: any;
     private size: number = 100; // size in meters
 
-    constructor(map: google.maps.Map) 
+    constructor(map: google.maps.Map, color: any) 
     {
         super();
         this.map = map;
         this.setMap(this.map);
+
+        this.color = color;
 
         this.data = [];
         this.latlngs = [];
@@ -127,7 +130,8 @@ export class SvgOverlay extends google.maps.OverlayView
             .attr("cy", function(d: any){
                 let scale = that.getScale(d[0], that.map.getZoom());
                 return 2 * that.size / scale;
-            });
+            })
+            .style("fill", this.color);
         
     }
 

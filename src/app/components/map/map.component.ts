@@ -6,10 +6,6 @@ import { GMapsLayer } from '../../classes/gmaps.class';
 import { DataService } from '../../classes/data.class';
 import { FilterService } from '../../classes/filter.class';
 
-    // <md-select placeholder="Data selection" [(ngModel)]="mapSelection" (change)="_addData()" style="width: 98%;  margin: 18px 4px 4px 4px;">
-    //     <md-option *ngFor="let option of mapOptions" [value]="option">{{ option }}</md-option>
-    // </md-select>
-
 @Component({
     selector: 'pulse-map',
     template:
@@ -26,8 +22,6 @@ export class MapComponent implements AfterViewInit {
     private map1: GMapsLayer;
     private map2: GMapsLayer;
 
-    private mapOptions: string[] = ["[Nyc Winter, Nyc Summer] (Flickr Data)", "[Nyc, Sf] (Flickr Data)"];
-    private mapSelection: string;
     private gmapsOptions: any = 
         {
             center: { lat: 40.7324607, lng: -73.9887512 },
@@ -40,6 +34,8 @@ export class MapComponent implements AfterViewInit {
             styles: getMapStyle()
         }
 
+    private cities: string[] = ["map1", "map2"];
+
     constructor(private dataService : DataService, private filterService : FilterService) {}
 
     ngAfterViewInit() 
@@ -50,10 +46,10 @@ export class MapComponent implements AfterViewInit {
 
     private _createMap() {
         this.map1 = new GMapsLayer(this.dataService, this.filterService);
-        this.map1.initMap(this.mapTopRef.nativeElement, this.gmapsOptions);
+        this.map1.initMap(this.mapTopRef.nativeElement, this.gmapsOptions, this.cities[0]);
 
         this.map2 = new GMapsLayer(this.dataService, this.filterService);
-        this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions);
+        this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions, this.cities[1]);
     }
 
     private _loadLayer() 

@@ -22,6 +22,16 @@ export class DataService
     private data: any = null;
     private cities: any = ['map1', 'map2'];
     private resolutions: any = null;
+
+    private colorScales: any = {
+        'map1': d3.scaleLinear().range(<any[]>['#fee6ce', '#fdae6b', '#e6550d']).domain([0,1]),
+        'map2': d3.scaleLinear().range(<any[]>['#deebf7', '#9ecae1', '#3182bd']).domain([0,1])
+    };
+
+    private colors: any = {
+        'map1': 'orange',
+        'map2': 'blue'
+    };
     
     // observable
     private obs: Observable<any>;
@@ -160,5 +170,15 @@ export class DataService
     getCities() 
     {
     	return this.cities;
+    }
+
+    getColor(cityId: string)
+    {
+        return this.colors[cityId];
+    }
+
+    getColorScale(cityId: string)
+    {
+        return this.colorScales[cityId];
     }
 }

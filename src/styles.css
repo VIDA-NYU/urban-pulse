@@ -226,7 +226,7 @@ md-toolbar md-toolbar-row {
 }
 
 .marker circle {
-  fill: orange;
+  /*fill: orange;*/
   stroke: black;
   stroke-width: 0.5px;
   fill-opacity: 0.5;

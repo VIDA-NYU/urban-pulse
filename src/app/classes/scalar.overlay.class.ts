@@ -7,13 +7,15 @@ export class ScalarOverlay extends google.maps.OverlayView
     private map: google.maps.Map;
     private bounds: google.maps.LatLngBounds;
     private div: any;
-    private colorscale: any = d3.scaleLinear().range(<any[]>['#fee6ce', '#fdae6b', '#e6550d']).domain([0,1]);
+    private colorScale: any;
 
-    constructor(map: google.maps.Map) 
+    constructor(map: google.maps.Map, colorScale: any) 
     {
         super();
         this.map = map;
         this.setMap(this.map);
+
+        this.colorScale = colorScale;
     }
 
     onAdd()
@@ -55,7 +57,7 @@ export class ScalarOverlay extends google.maps.OverlayView
 
                 let val = (values[posv] - range[0]) / (range[1] - range[0]);
                 val *= 20.0;
-                let color = d3.rgb(this.colorscale(val));
+                let color = d3.rgb(this.colorScale(val));
 
                 // console.log(val, color);
 

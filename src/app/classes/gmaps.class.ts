@@ -17,13 +17,13 @@ export class GMapsLayer
 
     constructor(private dataService: DataService, private filterService: FilterService) { }
 
-    initMap(mapHtmlElement: HTMLElement, options: google.maps.MapOptions)
+    initMap(mapHtmlElement: HTMLElement, options: google.maps.MapOptions, cityId: string)
     {
         let that = this;
 
         this.map = new google.maps.Map(mapHtmlElement, options);
-        this.scalarOverlay = new ScalarOverlay(this.map);
-        this.pulseOverlay = new SvgOverlay(this.map);
+        this.scalarOverlay = new ScalarOverlay(this.map, this.dataService.getColorScale(cityId));
+        this.pulseOverlay = new SvgOverlay(this.map, this.dataService.getColor(cityId));
 
         this.drawing = new google.maps.drawing.DrawingManager(<google.maps.drawing.DrawingManagerOptions>{
             drawingMode: null,
