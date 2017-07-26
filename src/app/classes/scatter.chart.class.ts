@@ -148,7 +148,7 @@ export class ScatterChart
                     .style("fill", function (d: any) { return that.dataService.getColor(d.cityId); });
 
                 high.exit().remove();
-            }
+            });
 
     }
 

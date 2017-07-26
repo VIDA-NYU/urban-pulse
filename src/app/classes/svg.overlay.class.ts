@@ -46,15 +46,18 @@ export class SvgOverlay extends google.maps.OverlayView
 
             d3.select(that.div).selectAll('circle')
                 .attr('r', function(d: any){
-                    let scale = that.getScale(d[0], that.map.getZoom());
+                    let latlng = d.latLng;
+                    let scale = that.getScale(latlng[0], that.map.getZoom());
                     return that.size / scale;
                 })
                 .attr("cx", function(d: any){
-                    let scale = that.getScale(d[0], that.map.getZoom());
+                    let latlng = d.latLng;
+                    let scale = that.getScale(latlng[0], that.map.getZoom());
                     return 2 * that.size / scale;
                 })
                 .attr("cy", function(d: any){
-                    let scale = that.getScale(d[0], that.map.getZoom());
+                    let latlng = d.latLng;
+                    let scale = that.getScale(latlng[0], that.map.getZoom());
                     return 2 * that.size / scale;
                 })
         })
@@ -73,10 +76,14 @@ export class SvgOverlay extends google.maps.OverlayView
     setData(data: any)
     {
         this.data = data;
+        this.latlngs = [];
         for(let i=0; i<this.data.length; i++) 
         {
-            var latlngs = this.data[i]['latLng'];
-            this.latlngs = this.latlngs.concat(latlngs);
+            var id = this.data[i]['id'];
+            for(let j=0; j<this.data[i]['latLng'].length; j++) {
+                var latlng = this.data[i]['latLng'][j];
+                this.latlngs.push({'id': id, 'latLng': latlng});
+            }
         }
         this.draw();
     }
@@ -119,8 +126,9 @@ export class SvgOverlay extends google.maps.OverlayView
 
         // lat lng to pixel
         function transform(d: any) {
-            let p = projection.fromLatLngToDivPixel(new google.maps.LatLng(d[0], d[1]));
-            let scale = that.getScale(d[0], that.map.getZoom());
+            let latlng = d.latLng;
+            let p = projection.fromLatLngToDivPixel(new google.maps.LatLng(latlng[0], latlng[1]));
+            let scale = that.getScale(latlng[0], that.map.getZoom());
             let width = parseInt(d3.select(this).style('width'));
             let height = parseInt(d3.select(this).style('height'));
 
@@ -144,15 +152,18 @@ export class SvgOverlay extends google.maps.OverlayView
 
         marker.append('circle')
             .attr('r', function(d: any){
-                let scale = that.getScale(d[0], that.map.getZoom());
+                let latlng = d.latLng;
+                let scale = that.getScale(latlng[0], that.map.getZoom());
                 return that.size / scale;
             })
             .attr("cx", function(d: any){
-                let scale = that.getScale(d[0], that.map.getZoom());
+                let latlng = d.latLng;
+                let scale = that.getScale(latlng[0], that.map.getZoom());
                 return 2 * that.size / scale;
             })
             .attr("cy", function(d: any){
-                let scale = that.getScale(d[0], that.map.getZoom());
+                let latlng = d.latLng;
+                let scale = that.getScale(latlng[0], that.map.getZoom());
                 return 2 * that.size / scale;
             })
             .style("fill", this.color);        
