@@ -25,6 +25,10 @@ export class FilterService
     // constructor
     constructor() {}
 
+    //-----------------------------
+
+    // filter consolidation -------
+
     private combinePulseFilters()
     {
         var result = this.scatterSelection.slice();
@@ -56,6 +60,8 @@ export class FilterService
         
         return result;
     }
+
+    //-----------------------------
 
     // Scatter plot brush ---------
 

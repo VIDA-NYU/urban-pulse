@@ -489,7 +489,22 @@ export class PulseChart
 
         // remove circles
         pCircles.exit().remove();
-    }
+
+        // mouse capture rectangle
+        enter.append('rect')
+        .style('visibility', 'hidden')
+        .style('pointer-events', 'all')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', that.elemWidth)
+        .attr('height', that.elemHeight)
+        .on("mouseover", function(d:any){
+            console.log("in",d);
+        })
+        .on("mouseout", function(d:any){
+            console.log("out",d);
+        });
+}
 
     private _getBeatTypes(feature: any) 
     {
