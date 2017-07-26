@@ -156,9 +156,9 @@ export class FilterService
         return _.find(this.mapSelection, x => x['id'] === elem['id']);
     }
     
-    clearMapSelection() 
+    clearMapSelection(cityId: string) 
     {
-        this.mapSelection = [];
+        this.mapSelection = _.filter(this.mapSelection, function(o: any) { return o.cityId !== cityId; });
     }
 
     emitMapSelectionChanged()

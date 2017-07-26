@@ -14,6 +14,7 @@ export class GMapsLayer
     private selectedShape: any;
     private scalarOverlay: ScalarOverlay;
     private pulseOverlay: SvgOverlay;
+    private cityId: string;
 
     constructor(private dataService: DataService, private filterService: FilterService) { }
 
@@ -57,7 +58,7 @@ export class GMapsLayer
             google.maps.event.addListener(shape, 'rightclick', function(e: any) 
             {
                 shape.setMap(null);
-                that.filterService.clearMapSelection();
+                that.filterService.clearMapSelection(that.cityId);
                 
                 // clear update data
                 that.filterService.clearScatterSelection(that.dataService.getData());
@@ -113,17 +114,15 @@ export class GMapsLayer
         let that = this;
         let shape = e.overlay;
         that.selectedShape = shape;
-        that.filterService.clearMapSelection();
         that.drawing.setDrawingMode(null);
 
         let selectedFeatures = [];
         let features = that.pulseOverlay.getData();
         
-        that.filterService.clearMapSelection();
+        that.filterService.clearMapSelection(that.cityId);
         
         for(let i=0; i<features.length; i++) 
         {
-
             let cityId = features[i]['cityId'];
             if(cityId != this.cityId)
                 continue;
