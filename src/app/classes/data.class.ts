@@ -48,13 +48,13 @@ export class DataService
         if(!someParam) {
             alert('Data path not supplied');
         }
-        someParam = someParam.split(',');
-        if(someParam.length < 2) {
+        let paramsTk = someParam.split(',');
+        if(paramsTk.length < 2) {
             alert('Data path not supplied');
         }
         let paths = {
-            'map1': someParam[0],
-            'map2': someParam[1]
+            'map1': paramsTk[0],
+            'map2': paramsTk[1]
         };
         return paths;
     }
