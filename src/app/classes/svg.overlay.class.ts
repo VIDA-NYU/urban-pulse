@@ -75,6 +75,16 @@ export class SvgOverlay extends google.maps.OverlayView
 
     setData(data: any)
     {
+        if(typeof this.div !== 'undefined') {
+            this.div.parentNode.removeChild(this.div);
+            this.div = document.createElement('div');
+            this.div.style.borderStyle = 'none';
+            this.div.style.borderWidth = '0px';
+            this.div.style.position = 'absolute';
+
+            var panes = this.getPanes();
+            panes.overlayLayer.appendChild(this.div);  
+        }
         this.data = data;
         this.latlngs = [];
         for(let i=0; i<this.data.length; i++) 
