@@ -34,9 +34,12 @@ export class MapComponent implements AfterViewInit {
             styles: getMapStyle()
         }
 
-    private cities: string[] = ["map1", "map2"];
+    private cities: string[];
 
-    constructor(private dataService : DataService, private filterService : FilterService) {}
+    constructor(private dataService : DataService, private filterService : FilterService) 
+    {
+        this.cities = dataService.getCities();
+    }
 
     ngAfterViewInit() 
     {

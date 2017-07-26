@@ -58,7 +58,6 @@ export class PulseChart
     private yScale: any;
 
     // color scales
-    private colorLines = d3.scaleOrdinal(d3.schemeCategory10);
     private colorCircles = d3.scaleOrdinal().range(['#FFFFFF','#C7E9C0','#006D2C']);
     
     // dataset
@@ -355,7 +354,6 @@ export class PulseChart
     _buildColorScales()
     {
         // color scales
-        this.colorLines.domain(this.cities);
         this.colorCircles.domain(<any>[0,1,2]);
     }
 
@@ -403,7 +401,7 @@ export class PulseChart
             .select(".feature")
             .select("path")
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
-            .style("stroke", function(d: any) { return that.colorLines(d.cityId); });
+            .style("stroke", function(d: any) { return that.dataService.getColor(d.cityId); });
 
         // appends the lines
         enter
@@ -412,7 +410,7 @@ export class PulseChart
             .append("path")
             .attr("class", "line")
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
-            .style("stroke", function(d: any) { return that.colorLines(d.cityId); });
+            .style("stroke", function(d: any) { return that.dataService.getColor(d.cityId); });
 
         // ---------
 
@@ -504,7 +502,7 @@ export class PulseChart
         .on("mouseout", function(d:any){
             console.log("out",d);
         });
-}
+    }
 
     private _getBeatTypes(feature: any) 
     {
