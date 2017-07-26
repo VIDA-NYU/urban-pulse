@@ -394,6 +394,20 @@ export class PulseChart
         // panels remove
         panels.exit().remove();
 
+        // ---------
+
+        // updates the y axis
+        panels
+            .select(".y.axis")
+            .call(this.yAxis);        
+
+        // appends the y axis
+        enter
+            .append("g")
+            .attr("class", "y axis")
+            .attr("transform", function() { return "translate(0,0)"; })
+            .call(this.yAxis);
+
         //---------
 
         // updates the lines
@@ -412,19 +426,6 @@ export class PulseChart
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
             .style("stroke", function(d: any) { return that.dataService.getColor(d.cityId); });
 
-        // ---------
-
-        // updates the y axis
-        panels
-            .select(".y.axis")
-            .call(this.yAxis);        
-
-        // appends the y axis
-        enter
-            .append("g")
-            .attr("class", "y axis")
-            .attr("transform", function() { return "translate(0,0)"; })
-            .call(this.yAxis);
 
         // ---------
 
