@@ -6,6 +6,9 @@ import { GMapsLayer } from '../../classes/gmaps.class';
 import { DataService } from '../../classes/data.class';
 import { FilterService } from '../../classes/filter.class';
 
+// lodash
+import * as _ from 'lodash';
+
 @Component({
     selector: 'pulse-map',
     template:
@@ -65,8 +68,17 @@ export class MapComponent implements AfterViewInit {
 
         this.dataService.getFeatures().subscribe((json: any) => 
         {
-            if (this.map1) this.map1.setFeaturesData(json);
-            if (this.map2) this.map2.setFeaturesData(json);
+            var data01: any = [];
+            var data02: any = [];
+
+            _.forEach(json, function(d)
+            {
+                if(d.cityId === 'map1') data01.push(d);
+                if(d.cityId === 'map2') data02.push(d);            
+            });
+
+            if (this.map1) this.map1.setFeaturesData(data01);
+            if (this.map2) this.map2.setFeaturesData(data02);
         });
     }
 }

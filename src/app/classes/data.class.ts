@@ -20,6 +20,10 @@ export class DataService
 {
     // data
     private data: any = null;
+    // observable
+    private obs: Observable<any>;
+
+    // parameters
     private cities: any = ['map1', 'map2'];
     private resolutions: any = null;
 
@@ -33,12 +37,7 @@ export class DataService
         'map2': 'blue'
     };
     
-    // observable
-    private obs: Observable<any>;
-
-    constructor(private http: Http)
-    {
-    }
+    constructor(private http: Http){}
 
     getPaths()
     {

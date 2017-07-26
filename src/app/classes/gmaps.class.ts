@@ -16,7 +16,13 @@ export class GMapsLayer
     private pulseOverlay: SvgOverlay;
     private cityId: string;
 
-    constructor(private dataService: DataService, private filterService: FilterService) { }
+    constructor(private dataService: DataService, private filterService: FilterService) 
+    { 
+        this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
+        {
+            this.pulseOverlay.highlight(data);
+        });
+    }
 
     initMap(mapHtmlElement: HTMLElement, options: google.maps.MapOptions, cityId: string)
     {
@@ -123,10 +129,6 @@ export class GMapsLayer
         
         for(let i=0; i<features.length; i++) 
         {
-            let cityId = features[i]['cityId'];
-            if(cityId != this.cityId)
-                continue;
-
             let latlngs = features[i]['latLng'];
 
             for(let j=0; j<latlngs.length; j++) 

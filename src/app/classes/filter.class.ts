@@ -18,6 +18,9 @@ export class FilterService
     private pulseTimeSelection: any = [];
     private pulseTimeSelectionChange: EventEmitter<any> = new EventEmitter();
 
+    // scatter mouse over emitter
+    private pulseMouseOverChange: EventEmitter<any> = new EventEmitter();
+    
     // map selection and emitter
     private mapSelection: any = [];
     private mapSelectionChange: EventEmitter<any> = new EventEmitter();
@@ -132,6 +135,18 @@ export class FilterService
         this.pulseTimeSelectionChange.emit(finalSelection);
     }
     
+    //---
+
+    getPulseMouseOverChangeEmitter()
+    {
+        return this.pulseMouseOverChange;
+    }
+
+    emitPulseMouseOverChanged(sel: any)
+    {
+        this.pulseMouseOverChange.emit(sel);        
+    }
+
     //-----------------------------
 
     // Map brush ---------
@@ -169,4 +184,6 @@ export class FilterService
     }
 
     //-----------------------------    
+
+    
 }

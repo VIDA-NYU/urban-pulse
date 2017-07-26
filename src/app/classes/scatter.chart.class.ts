@@ -84,6 +84,11 @@ export class ScatterChart
             this.updateChart();
         });
 
+        this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
+        {
+            this.highlight(data);
+        });
+
         // Adds event listener resize when the window changes size.
         window.addEventListener("resize", () => { this.updateChart() });
     }
@@ -106,6 +111,45 @@ export class ScatterChart
         this._buildChart();
         // build brush
         this._buildBrush();
+    }
+
+    highlight(data: any)
+    {
+        // this scope
+        var that = this;
+        
+        // has highlighted element
+        var notDefined = (typeof data === 'undefined');
+        var highElems = (notDefined)?[]:[data];
+
+        // add highlighted circle
+        this.cht.selectAll('.cell')
+            .each(function (res: any) 
+            {
+                // time resolution
+                var tRes = res;
+
+                // get cell and data
+                var cell = d3.select(this);
+
+                var high = cell.selectAll(".highlight")
+                    .data(highElems);
+
+                var highEnter = high
+                    .enter()
+                    .append("circle");
+
+                high
+                    .merge(highEnter)
+                    .classed("highlight", true)
+                    .attr("cx", function (d: any) { return that.xScale(d.resolutions[tRes].x); })
+                    .attr("cy", function (d: any) { return that.yScale(d.resolutions[tRes].y); })
+                    .attr("r", 4)
+                    .style("fill", function (d: any) { return that.dataService.getColor(d.cityId); });
+
+                high.exit().remove();
+            }
+
     }
 
     private _buildDomElems()

@@ -68,13 +68,13 @@ export class SvgOverlay extends google.maps.OverlayView
         this.div.parentNode.removeChild(this.div);
         this.data = [];
         this.latlngs = [];
-
     }
 
     setData(data: any)
     {
         this.data = data;
-        for(let i=0; i<this.data.length; i++) {
+        for(let i=0; i<this.data.length; i++) 
+        {
             var latlngs = this.data[i]['latLng'];
             this.latlngs = this.latlngs.concat(latlngs);
         }
@@ -86,14 +86,38 @@ export class SvgOverlay extends google.maps.OverlayView
         return this.data;
     }
 
+    highlight(sel: any)
+    {
+        if(!this.map || !this.div) return;
+        
+        // this scope
+        var that = this;
+        
+        // has highlighted element
+        var notDefined = (typeof sel === 'undefined');
+
+        // gets the map div
+        var map = d3.select(this.div);
+
+        // highlight
+        map.selectAll('circle')
+            .classed("highlight", function(d: any)
+            {
+                if(notDefined) return false;
+                return sel.id === d.id; 
+            })
+    }
+
     draw()
     {
         if(!this.map || !this.div) return;
 
+        // this scope
         var that = this;
-
+        // current projection
         let projection = this.getProjection();
 
+        // lat lng to pixel
         function transform(d: any) {
             let p = projection.fromLatLngToDivPixel(new google.maps.LatLng(d[0], d[1]));
             let scale = that.getScale(d[0], that.map.getZoom());
@@ -131,8 +155,7 @@ export class SvgOverlay extends google.maps.OverlayView
                 let scale = that.getScale(d[0], that.map.getZoom());
                 return 2 * that.size / scale;
             })
-            .style("fill", this.color);
-        
+            .style("fill", this.color);        
     }
 
 }

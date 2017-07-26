@@ -489,20 +489,26 @@ export class PulseChart
         // remove circles
         pCircles.exit().remove();
 
-        // mouse capture rectangle
-        enter.append('rect')
-        .style('visibility', 'hidden')
-        .style('pointer-events', 'all')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', that.elemWidth)
-        .attr('height', that.elemHeight)
-        .on("mouseover", function(d:any){
-            console.log("in",d);
-        })
-        .on("mouseout", function(d:any){
-            console.log("out",d);
-        });
+        // panels mouse over
+        //--------
+
+        var rects = panels.select('rect');
+        var rEnter = enter
+            .append('rect');
+
+        rects.merge(rEnter)
+            .style('visibility', 'hidden')
+            .style('pointer-events', 'all')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', that.elemWidth)
+            .attr('height', that.elemHeight)
+            .on("mouseover", function(d:any){
+                that.filterService.emitPulseMouseOverChanged(d);
+            })
+            .on("mouseout", function(d:any){
+                that.filterService.emitPulseMouseOverChanged(undefined);
+            });
     }
 
     private _getBeatTypes(feature: any) 
