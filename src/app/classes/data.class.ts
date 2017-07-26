@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
 
+// my imports
+import { ParametersService } from './params.class'
+
 // import d3js
 import * as d3 from 'd3';
 
@@ -44,7 +47,7 @@ export class DataService
         'map2': 'blue'
     };
     
-    constructor(private http: Http){}
+    constructor(private http: Http, private paramsService: ParametersService){}
 
     getParam(paramId: string)
     {
@@ -88,7 +91,7 @@ export class DataService
         var paths = this.getPaths();
 
         // current resolution
-        var cRes = "HOUR";
+        var cRes = this.paramsService.timeRes;
         var cTime = 0;
         var group = "";
 
