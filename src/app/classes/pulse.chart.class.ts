@@ -403,7 +403,7 @@ export class PulseChart
             .select(".feature")
             .select("path")
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
-            .style("stroke", function(d: any) { return that.colorLines(d.map); });
+            .style("stroke", function(d: any) { return that.colorLines(d.cityId); });
 
         // appends the lines
         enter
@@ -412,7 +412,7 @@ export class PulseChart
             .append("path")
             .attr("class", "line")
             .attr("d", function(d: any) { return line(d.resolutions[that.res][that.series]); })
-            .style("stroke", function(d: any) { return that.colorLines(d.map); });
+            .style("stroke", function(d: any) { return that.colorLines(d.cityId); });
 
         // ---------
 

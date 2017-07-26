@@ -7,6 +7,7 @@ export class ScalarOverlay extends google.maps.OverlayView
     private map: google.maps.Map;
     private bounds: google.maps.LatLngBounds;
     private div: any;
+    private img: any;
     private colorScale: any;
 
     constructor(map: google.maps.Map, colorScale: any) 
@@ -26,7 +27,7 @@ export class ScalarOverlay extends google.maps.OverlayView
         this.div.style.position = 'absolute';
 
         var panes = this.getPanes();
-        panes.overlayLayer.appendChild(this.div);    
+        panes.overlayLayer.appendChild(this.div);
     }
 
     onRemove()
@@ -76,19 +77,21 @@ export class ScalarOverlay extends google.maps.OverlayView
         ctx.putImageData(idata, 0, 0);
 
         let dataUri = canvas.toDataURL();
-        let img = document.createElement('img');
-        img.src = dataUri;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.position = 'absolute';
+        this.img = document.createElement('img');
+        this.img.src = dataUri;
+        this.img.style.width = '100%';
+        this.img.style.height = '100%';
+        this.img.style.position = 'absolute';
 
-        this.div.appendChild(img); 
         this.draw();
     }
 
     draw()
     {
         if (!this.map || !this.bounds) return;
+        if(this.img && !this.div.hasChildNodes()) {
+            this.div.appendChild(this.img);
+        }
 
 
         let projection = this.getProjection();
