@@ -336,7 +336,7 @@ export class ScatterChart
                     .attr("cx", function (d: any) { return that.xScale(d.resolutions[tRes].x); })
                     .attr("cy", function (d: any) { return that.yScale(d.resolutions[tRes].y); })
                     .attr("r", 4)
-                    .style("fill", function (d: any) { return that.colorPoints(d); });
+                    .style("fill", function (d: any) { return that.colorPoints(d.map); });
 
                 // exit
                 circles.exit().remove();

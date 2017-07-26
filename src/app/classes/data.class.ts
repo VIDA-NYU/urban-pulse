@@ -81,7 +81,7 @@ export class DataService
                     // feature id
                     f.id = index;
                     // map
-                    f.map = 'map1';
+                    f.map = 'map2';
                     
                     // for each resolution
                     that.resolutions.forEach(function(tRes: string)
@@ -112,7 +112,7 @@ export class DataService
                     // feature id
                     f.id = data01.length + index;
                     // map
-                    f.map = 'map2';
+                    f.map = 'map1';
 
                     // for each resolution
                     that.resolutions.forEach(function(tRes: string)
@@ -127,8 +127,8 @@ export class DataService
                         var y = f.rank;
 
                         // add plot coords
-                        f.resolutions[tRes].x = x;
-                        f.resolutions[tRes].y = y;
+                        f.resolutions[tRes].x = 1.1*x;
+                        f.resolutions[tRes].y = 1.1*y;
                     })
 
                     return f;
