@@ -154,6 +154,11 @@ export class GMapsLayer
         that.filterService.emitMapSelectionChanged();
     }
 
+    scalarVisibility(val: boolean)
+    {
+        this.scalarOverlay.visibility(val)
+    }
+
     setCenter(latLng: google.maps.LatLng) 
     {
         if (this.map != null && latLng != null) 

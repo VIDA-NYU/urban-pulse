@@ -12,12 +12,14 @@ import { ParametersService } from '../../classes/params.class'
       <md-toolbar>
         {{appTitle}}
         <span class="hFill"></span>
-          <md-radio-group [(ngModel)]="this.paramsService.timeRes" (ngModelChange)="this.paramsService.emitTimeResChanged()">
-            <md-radio-button value="HOUR">Hour</md-radio-button>
-            <md-radio-button value="DAYOFWEEK">DayOfWeek</md-radio-button>
-            <md-radio-button value="MONTH">Month</md-radio-button>
-          </md-radio-group>
-          </md-toolbar>
+        <md-checkbox [(ngModel)]="this.paramsService.showScalarFunction"  (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()" aria-label="Show">Scalar Function</md-checkbox>
+        <span class="space"></span>
+        <md-radio-group [(ngModel)]="this.paramsService.timeRes" (ngModelChange)="this.paramsService.emitTimeResChanged()">
+          <md-radio-button value="HOUR">Hour</md-radio-button>
+          <md-radio-button value="DAYOFWEEK">DayOfWeek</md-radio-button>
+          <md-radio-button value="MONTH">Month</md-radio-button>
+        </md-radio-group>
+      </md-toolbar>
       <pulse-map class="mapColumn"></pulse-map>
       <pulse-vis class="visColumn"></pulse-vis>
   </div>`

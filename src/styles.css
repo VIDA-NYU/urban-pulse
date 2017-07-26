@@ -25,6 +25,10 @@ md-toolbar md-toolbar-row {
   flex: 1 1 auto;
 }
 
+.space{
+  width: 10px;
+}
+
 .mapColumn {
 	top: 32px;
 	bottom: 0px;

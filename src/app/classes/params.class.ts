@@ -13,6 +13,9 @@ export class ParametersService
     public  timeRes: string = 'HOUR';
     private timeResChange: EventEmitter<any> = new EventEmitter();
     
+    public  showScalarFunction: boolean = true;
+    private showScalarFunctionChange: EventEmitter<any> = new EventEmitter();
+
     getTimeRes()
     {
         return this.timeRes;
@@ -26,6 +29,23 @@ export class ParametersService
     emitTimeResChanged()
     {
         this.timeResChange.emit(this.timeRes);
+    }
+
+    //--------
+
+    getShowScalarFunction()
+    {
+        return this.showScalarFunction;
+    }
+
+    getShowScalarFunctionEmitter()
+    {
+        return this.showScalarFunctionChange;
+    }
+
+    emitShowScalarFunctionChanged()
+    {
+        this.showScalarFunctionChange.emit(this.showScalarFunction);
     }
     
 }

@@ -5,6 +5,7 @@ import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { GMapsLayer } from '../../classes/gmaps.class';
 import { DataService } from '../../classes/data.class';
 import { FilterService } from '../../classes/filter.class';
+import { ParametersService } from '../../classes/params.class';
 
 // lodash
 import * as _ from 'lodash';
@@ -39,9 +40,14 @@ export class MapComponent implements AfterViewInit {
 
     private cities: string[];
 
-    constructor(private dataService : DataService, private filterService : FilterService) 
+    constructor(private dataService : DataService, private filterService : FilterService, private paramsService : ParametersService) 
     {
         this.cities = dataService.getCities();
+
+        this.paramsService.getShowScalarFunctionEmitter().subscribe( (res: any) => 
+        {
+            this._scalarVisibility(res);
+        } );
     }
 
     ngAfterViewInit() 
@@ -80,6 +86,12 @@ export class MapComponent implements AfterViewInit {
             if (this.map1) this.map1.setFeaturesData(data01);
             if (this.map2) this.map2.setFeaturesData(data02);
         });
+    }
+
+    private _scalarVisibility(val: boolean)
+    {
+        this.map1.scalarVisibility(val);
+        this.map2.scalarVisibility(val);
     }
 }
 

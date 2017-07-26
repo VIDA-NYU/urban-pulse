@@ -33,9 +33,7 @@ export class ScalarOverlay extends google.maps.OverlayView
     onRemove()
     {
         if (!this.map) return; 
-
         this.div.parentNode.removeChild(this.div);
-
     }
 
     setData(json: any)
@@ -101,7 +99,10 @@ export class ScalarOverlay extends google.maps.OverlayView
         this.div.style.top = ne.y + 'px';
         this.div.style.width = (ne.x - sw.x) + 'px';
         this.div.style.height = (sw.y - ne.y) + 'px';
-        
     }
 
+    visibility(val: boolean)
+    {
+        this.div.style.visibility = val ? "visible" : "hidden";
+    }
 }
