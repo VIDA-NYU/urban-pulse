@@ -14,6 +14,7 @@ export class GMapsLayer
     private selectedShape: any;
     private scalarOverlay: ScalarOverlay;
     private pulseOverlay: SvgOverlay;
+    private cityId: string;
 
     constructor(private dataService: DataService, private filterService: FilterService) { }
 
