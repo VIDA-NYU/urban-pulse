@@ -72,10 +72,12 @@ export class DataService
                 this.resolutions = Object.keys(feat[feat.length - 1]["resolutions"]);
                 this.resolutions.splice(this.resolutions.indexOf("ALL"), 1);
                 
-                // adds the feature id
-                var data01 = feat.slice(); 
-                data01 = data01.map(function(f: any, index: number)
+                // adds the feature id (map1 features)
+                var data01 = feat.map(function(feature: any, index: number)
                 {
+                    // make a copy
+                    var f = _.cloneDeep(feature);
+
                     // feature id
                     f.id = index;
                     // map
@@ -101,9 +103,12 @@ export class DataService
                     return f;
                 });
 
-                var data02 = feat.slice(); 
-                data02 = data02.map(function(f: any, index: number)
+                // adds the feature id (map2 features)
+                var data02 = feat.map(function(feature: any, index: number)
                 {
+                    // make a copy
+                    var f = _.cloneDeep(feature);
+
                     // feature id
                     f.id = data01.length + index;
                     // map
