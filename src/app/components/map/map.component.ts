@@ -44,6 +44,16 @@ export class MapComponent implements AfterViewInit {
     {
         this.cities = dataService.getCities();
 
+        this.paramsService.getTimeResChangeEmitter().subscribe( (res:any) => 
+        {
+            this._loadLayer();
+        });
+
+        this.paramsService.getGroupByChangeEmitter().subscribe( (res:any) => 
+        {
+            this._loadLayer();
+        });
+        
         this.paramsService.getShowScalarFunctionEmitter().subscribe( (res: any) => 
         {
             this._scalarVisibility(res);
@@ -69,7 +79,7 @@ export class MapComponent implements AfterViewInit {
         this.dataService.getMultipleScalars().subscribe((json: any) => 
         {
             if(json.length != 2) return;
-            
+
             if (this.map1) this.map1.setScalarData(json[0]);
             if (this.map2) this.map2.setScalarData(json[1]);
         });

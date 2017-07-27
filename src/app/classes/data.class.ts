@@ -82,6 +82,12 @@ export class DataService
         return paths;
     }
 
+    resetScalarsObservable()
+    {
+        this.scalarsObs = null;
+        this.scalars = null;
+    }
+
     getMultipleScalars()
     {
         // this scope
@@ -91,12 +97,13 @@ export class DataService
         var paths = this.getPaths();
 
         // current resolution
-        var cRes = this.paramsService.timeRes;
+        var cRes = this.paramsService.getTimeRes();
         var cTime = 0;
-        var group = "";
+        var group = this.paramsService.getGroupBy();
+        group = (group === 'none') ? "" : "-"+group;
 
         // get the observables
-        if(this.data)
+        if(this.scalars)
         {
             return Observable.of(this.scalars);
         }
@@ -136,12 +143,21 @@ export class DataService
         }
     }
 
+    resetFeaturesObservable()
+    {
+        this.dataObs = null;
+        this.data = null;
+    }
+    
     getMultipleFeatures()
     {
         // this scope
         var that = this;
         // data paths
         var paths = this.getPaths();
+        // groupBy
+        var group = this.paramsService.getGroupBy();
+        group = (group === 'none') ? "" : "-"+group;
 
         // get the observables
         if(this.data)
@@ -155,10 +171,11 @@ export class DataService
         else
         {
             console.log("Http Call: Getting feature data.");
+            console.log( './' + paths['map1'] + group + '-features.json' );
 
             // observables
-            var obs1 = this.http.get('./' + paths['map1']+ '-features.json').map( (res: any) => res.json() );
-            var obs2 = this.http.get('./' + paths['map2']+ '-features.json').map( (res: any) => res.json() );
+            var obs1 = this.http.get('./' + paths['map1']+ group + '-features.json').map( (res: any) => res.json() );
+            var obs2 = this.http.get('./' + paths['map2']+ group + '-features.json').map( (res: any) => res.json() );
 
             this.dataObs = Observable.forkJoin(obs1, obs2)
             .map(response => 
@@ -183,6 +200,9 @@ export class DataService
                         // for each resolution
                         that.resolutions.forEach(function(tRes: string)
                         {
+                            // skip unavailable resolutions
+                            if( !(tRes in f.resolutions) ) return;
+
                             // rank computation
                             var fnRank  = f.resolutions[tRes].fnRank;
                             var maxRank = f.resolutions[tRes].maxRank;

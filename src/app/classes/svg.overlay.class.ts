@@ -80,7 +80,8 @@ export class SvgOverlay extends google.maps.OverlayView
         for(let i=0; i<this.data.length; i++) 
         {
             var id = this.data[i]['id'];
-            for(let j=0; j<this.data[i]['latLng'].length; j++) {
+            for(let j=0; j<this.data[i]['latLng'].length; j++) 
+            {
                 var latlng = this.data[i]['latLng'][j];
                 this.latlngs.push({'id': id, 'latLng': latlng});
             }

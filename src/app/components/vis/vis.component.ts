@@ -46,7 +46,7 @@ export class VisComponent implements AfterViewInit {
 
   private _createCharts() 
   {
-    this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService);
+    this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService, this.paramsService);
     this.pulses = new PulseChart(this.pulsesRef, this.dataService, this.interactionService, this.paramsService);
   }
 }

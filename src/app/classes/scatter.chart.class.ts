@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 // my services
 import { DataService } from './data.class';
 import { FilterService } from './filter.class';
+import { ParametersService } from './params.class';
 
 export class ScatterChart 
 {
@@ -58,7 +59,7 @@ export class ScatterChart
     private isSearch: boolean = false;
     private cities: any;
     
-    constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService) 
+    constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService) 
     {
         // get the data
         this.dataService.getMultipleFeatures().subscribe((json: any) => 
@@ -77,6 +78,15 @@ export class ScatterChart
             // update the chart
             this.updateChart();
         });
+
+        this.paramsService.getGroupByChangeEmitter().subscribe( (res:any) => 
+        {
+            this.dataService.getMultipleFeatures().subscribe((data: any) => 
+            {
+                this._buildData(data);
+                this.updateChart();
+            });
+        });        
 
         this.filterService.getMapSelectionChangeEmitter().subscribe( (data: any)=>
         {
@@ -129,6 +139,9 @@ export class ScatterChart
                 // time resolution
                 var tRes = res;
 
+                // skip unavailable resolutions
+                if( !(tRes in that.data[0].resolutions) ) return;
+                
                 // get cell and data
                 var cell = d3.select(this);
 
@@ -208,6 +221,9 @@ export class ScatterChart
             // for each resolution
             that.timeRes.forEach(function(tRes: string)
             {
+                // skip unavailable resolutions
+                if( !(tRes in f.resolutions) ) return;
+
                 // add plot coords
                 var x = f.resolutions[tRes].x;
                 var y = f.resolutions[tRes].y;
@@ -332,7 +348,7 @@ export class ScatterChart
                 var data = that.data;
                 // current resolution
                 var tRes = d;
-                
+
                 // matrix frame join
                 var frames = cell.selectAll('.frame')
                     .data(['frame']);
@@ -353,6 +369,9 @@ export class ScatterChart
                 
                 // exit
                 frames.exit().remove();
+
+                if( !(tRes in data[0].resolutions) )
+                    data = [];
 
                 // circles join
                 var circles = cell.selectAll("circle")
@@ -410,10 +429,14 @@ export class ScatterChart
             // current resolution
             var tRes = <string>elem.datum();
 
+            // no data on chart
+            if( !(tRes in that.data[0].resolutions) ) 
+                return; 
+    
             // selected circles
             d3.select(this).selectAll("circle")
                 .classed("selected", function(d: any)
-                {
+                {    
                     if( (selection[0][0] <= that.xScale(d.resolutions[tRes].x) && selection[1][0] >= that.xScale(d.resolutions[tRes].x)) &&
                         (selection[0][1] <= that.yScale(d.resolutions[tRes].y) && selection[1][1] >= that.yScale(d.resolutions[tRes].y)) )
                     {
@@ -460,6 +483,10 @@ export class ScatterChart
 
         // call on each cell
         var cells = this.cht.selectAll('.cell')
-            .call(this.brush);
+            .each(function(d: any)
+            {
+                var cell = d3.select(this);
+                cell.call(that.brush);
+            });
     }
 }
