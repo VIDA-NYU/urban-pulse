@@ -525,5 +525,6 @@ export class PulseChart
         }
         
         return beats;
-    }    
+    }
+
 }

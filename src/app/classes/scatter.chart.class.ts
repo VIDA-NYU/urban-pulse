@@ -191,6 +191,9 @@ export class ScatterChart
         this.data = feat;
         // clear selection
         this.filterService.clearScatterSelection(this.data);
+
+        this.isSearch = true;
+        this._search(feat, feat);
     }
 
     private _buildRange() 
@@ -209,8 +212,14 @@ export class ScatterChart
         // mapping
         this.data.forEach(function (f: any) 
         {
+            let timeRes = [];
+            if(that.isSearch)
+                timeRes = ['search'];
+            else
+                timeRes = that.timeRes;
+
             // for each resolution
-            that.timeRes.forEach(function(tRes: string)
+            timeRes.forEach(function(tRes: string)
             {
                 // skip unavailable resolutions
                 if( !(tRes in f.resolutions) ) return;
@@ -516,5 +525,83 @@ export class ScatterChart
 
             that.filterService.emitScatterSelectionChanged();
         });
+    }
+
+    private _search(sourceFeatures: any[], features: any[])
+    {
+        let that = this;
+        let distances = {};
+
+        let count = 0;
+        features.forEach(function(f: any) {
+
+            // find distances
+            var cdist = 0;
+            var closest = -1;
+            sourceFeatures.forEach(function(sf: any) {
+                if(f.cityId == sf.cityId)
+                    return;
+
+
+                var dist = that._getDistance(f, sf);
+
+                if(closest == -1) {
+                    closest = sf.id;
+                    cdist = dist;
+                }
+                else {
+                    if(dist < cdist) {
+                        closest = sf.id;
+                        cdist = dist;
+                    }
+                }
+            });
+
+            if(closest != -1) {
+                f.resolutions['search'] = {'x': cdist, 'y': closest}
+            }
+
+        });
+    }
+
+
+    private _getDistance(feature1: any, feature2: any)
+    {
+        let distance = 0;
+        this.timeRes.forEach(function(r: any) {
+
+            //
+            let beat1 = feature1.resolutions[r].maxTime;
+            let beat2 = feature2.resolutions[r].maxTime;
+
+            let dd = 0;
+            for(let i=0; i<beat1.length; i++) {
+                dd += ((beat1[i] - beat2[i]) * (beat1[i] - beat2[i]));
+            }
+            distance += dd;
+
+            //
+            let sbeat1 = feature1.resolutions[r].sigMaxTime;
+            let sbeat2 = feature2.resolutions[r].sigMaxTime;
+
+            dd = 0;
+            for(let i=0; i<sbeat1.length; i++) {
+                dd += ((sbeat1[i] - sbeat2[i]) * (sbeat1[i] - sbeat2[i]));
+            }
+            distance += dd;
+
+            //
+            let fbeat1 = feature1.resolutions[r].scalars;
+            let fbeat2 = feature2.resolutions[r].scalars;
+
+            dd = 0;
+            for(let i=0; i<fbeat1.length; i++) {
+                dd += ((fbeat1[i] - fbeat2[i]) * (fbeat1[i] - fbeat2[i]));
+            }
+            distance += dd;
+
+        });
+
+        return Math.sqrt(distance);
     }
 }
