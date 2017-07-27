@@ -94,13 +94,16 @@ export class ScatterChart
         this.paramsService.getSearchIdEmitter().subscribe( (searchId: string)=>
         {
             if(searchId === "none") {
-                this.isSearch = false
+                this.isSearch = false;
+                this.data = this.dataService.getData();
+                this.searchId = searchId;
             }
             else {
                 this.isSearch = true;
                 this.searchId = searchId;
+                this._buildSearch();
             }
-            this._buildSearch();
+            
             this.updateChart();
         });
 
@@ -225,7 +228,7 @@ export class ScatterChart
         {
             let timeRes = [];
             if(that.isSearch)
-                timeRes = ['search'];
+                timeRes = ['SEARCH'];
             else
                 timeRes = that.timeRes;
 
@@ -454,6 +457,7 @@ export class ScatterChart
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", -5)";
             })
             .each(function(d:any){
+
                 // get cell and data
                 var cell = d3.select(this);
 
@@ -560,7 +564,8 @@ export class ScatterChart
             }
         });
 
-        this._search(sourceFeatures, features);
+        this.data = this._search(sourceFeatures, features);
+        console.log(this.data);
     }
 
 
@@ -570,6 +575,7 @@ export class ScatterChart
         let distances = {};
 
         let count = 0;
+        let searchFeatures = <any>[];
         features.forEach(function(f: any) {
 
             // find distances
@@ -578,7 +584,6 @@ export class ScatterChart
             sourceFeatures.forEach(function(sf: any) {
                 if(f.cityId == sf.cityId)
                     return;
-
 
                 var dist = that._getDistance(f, sf);
 
@@ -595,10 +600,15 @@ export class ScatterChart
             });
 
             if(closest != -1) {
-                f.resolutions['search'] = {'x': cdist, 'y': closest};
+                f.resolutions['SEARCH'] = {'x': cdist, 'y': closest};
+                searchFeatures.push(f);
             }
 
         });
+
+        console.log(searchFeatures);
+
+        return searchFeatures;
     }
 
 
@@ -628,8 +638,8 @@ export class ScatterChart
             distance += dd;
 
             //
-            let fbeat1 = feature1.resolutions[r].scalars;
-            let fbeat2 = feature2.resolutions[r].scalars;
+            let fbeat1 = feature1.resolutions[r].fn;
+            let fbeat2 = feature2.resolutions[r].fn;
 
             dd = 0;
             for(let i=0; i<fbeat1.length; i++) {
