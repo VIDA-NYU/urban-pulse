@@ -22,6 +22,11 @@ export class GMapsLayer
         {
             this.pulseOverlay.highlight(data);
         });
+
+        this.filterService.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
+        {
+            this.pulseOverlay.setData(sel);
+        } );
     }
 
     initMap(mapHtmlElement: HTMLElement, options: google.maps.MapOptions, cityId: string)

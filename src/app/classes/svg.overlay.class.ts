@@ -75,16 +75,31 @@ export class SvgOverlay extends google.maps.OverlayView
 
     setData(data: any)
     {
+        if(typeof this.div !== 'undefined') {
+            this.div.parentNode.removeChild(this.div);
+            this.div = document.createElement('div');
+            this.div.style.borderStyle = 'none';
+            this.div.style.borderWidth = '0px';
+            this.div.style.position = 'absolute';
+
+            var panes = this.getPanes();
+            panes.overlayLayer.appendChild(this.div);  
+        }
         this.data = data;
         this.latlngs = [];
         for(let i=0; i<this.data.length; i++) 
         {
             var id = this.data[i]['id'];
+
+            // find center of bound
+            let bound = new google.maps.LatLngBounds();
             for(let j=0; j<this.data[i]['latLng'].length; j++) 
             {
-                var latlng = this.data[i]['latLng'][j];
-                this.latlngs.push({'id': id, 'latLng': latlng});
+                let latlng = this.data[i]['latLng'][j];
+                bound.extend(new google.maps.LatLng(latlng[0], latlng[1]));
             }
+            let center = bound.getCenter();
+            this.latlngs.push({'id': id, 'latLng': [center.lat(), center.lng()]});
         }
         this.draw();
     }
