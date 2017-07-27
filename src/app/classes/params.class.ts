@@ -20,7 +20,7 @@ export class ParametersService
     public timeSel: number = 1;
     private timeSelChange: EventEmitter<any> = new EventEmitter();
 
-    public  searchId: string = "NONE";
+    public  searchId: string = "none";
     private searchIdChange: EventEmitter<any> = new EventEmitter();
     
     getTimeRes()

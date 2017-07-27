@@ -57,6 +57,7 @@ export class ScatterChart
     // chart parameters
     private nCharts: number;
     private isSearch: boolean = false;
+    private searchId: string;
     private cities: any;
     
     constructor(element: ElementRef, private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService) 
@@ -88,6 +89,19 @@ export class ScatterChart
         this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
         {
             this.highlight(data);
+        });
+
+        this.paramsService.getSearchIdEmitter().subscribe( (searchId: string)=>
+        {
+            if(searchId === "none") {
+                this.isSearch = false
+            }
+            else {
+                this.isSearch = true;
+                this.searchId = searchId;
+            }
+            this._buildSearch();
+            this.updateChart();
         });
 
         // Adds event listener resize when the window changes size.
@@ -191,9 +205,6 @@ export class ScatterChart
         this.data = feat;
         // clear selection
         this.filterService.clearScatterSelection(this.data);
-
-        this.isSearch = true;
-        this._search(feat, feat);
     }
 
     private _buildRange() 
@@ -331,7 +342,7 @@ export class ScatterChart
             .attr('fill', 'black')
             .attr('text-anchor', 'middle')
             .text( () => { return this.isSearch ? "PULSE ID" : "RANK"; } );
-}
+    }
     
     private _buildChart()
     {
@@ -527,6 +538,22 @@ export class ScatterChart
         });
     }
 
+    private _buildSearch()
+    {
+        let that = this;
+        let sourceFeatures = <any>[];
+        let features = this.dataService.getData();
+
+        this.data.forEach(function(f: any) {
+            if(f.cityId === that.searchId) {
+                sourceFeatures.push(f);
+            }
+        });
+
+        this._search(sourceFeatures, features);
+    }
+
+
     private _search(sourceFeatures: any[], features: any[])
     {
         let that = this;
@@ -558,7 +585,7 @@ export class ScatterChart
             });
 
             if(closest != -1) {
-                f.resolutions['search'] = {'x': cdist, 'y': closest}
+                f.resolutions['search'] = {'x': cdist, 'y': closest};
             }
 
         });

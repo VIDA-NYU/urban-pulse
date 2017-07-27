@@ -16,9 +16,9 @@ import { ParametersService } from '../../classes/params.class'
         
         <!-- Search --->
         <md-radio-group [(ngModel)]="this.paramsService.searchId" (ngModelChange)="emitSearchIdChanged()">
-          <md-radio-button value="NONE">None</md-radio-button>
-          <md-radio-button value="MAP1">Map1</md-radio-button>
-          <md-radio-button value="MAP2">Map2</md-radio-button>
+          <md-radio-button value="none">None</md-radio-button>
+          <md-radio-button value="map1">Map1</md-radio-button>
+          <md-radio-button value="map2">Map2</md-radio-button>
         </md-radio-group>
 
         <span class="space"></span>
