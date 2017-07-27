@@ -15,7 +15,7 @@ import { ParametersService } from './params.class';
 export class ScatterChart 
 {
     // margins setup
-    private margins: any = { top: 5, right: 20, bottom: 40, left: 20 };
+    private margins: any = { top: 10, right: 20, bottom: 40, left: 30 };
     private spaceBetween: number = 10;
 
     // entire chart size
@@ -267,12 +267,12 @@ export class ScatterChart
         // enter
         var xEnter = xaxis
             .enter()
-            .append("g");
+            .append("g")
+            .attr("class", "x axis");
 
         // merge
         xaxis
             .merge(xEnter)
-            .attr("class", "x axis")
             .attr("transform", (d: any, i: any) => {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
@@ -291,12 +291,12 @@ export class ScatterChart
         // enter
         var yEnter = yaxis
             .enter()
-            .append("g");
+            .append("g")
+            .attr("class", "y axis");
 
         // merge
         yaxis
             .merge(yEnter)
-            .attr("class", "y axis")
             .attr("transform", (d: any, i: any) => {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
@@ -307,7 +307,22 @@ export class ScatterChart
 
         // exit
         yaxis.exit().remove();
-    }
+
+        // text label for the y axis
+        console.log(yaxis);
+
+        yaxis
+            .merge(yEnter)
+            .append("text")
+            .attr('y', -0.75*this.margins.left)
+            .attr('x', -this.elemHeight / 2)
+            .attr("transform", "rotate(-90)")
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', '10px')
+            .attr('fill', 'black')
+            .attr('text-anchor', 'middle')
+            .text( () => { return this.isSearch ? "PULSE ID" : "RANK"; } );
+}
     
     private _buildChart()
     {
@@ -321,12 +336,12 @@ export class ScatterChart
         // enter
         var cellsEnter = cells
             .enter()
-            .append('g');
-        
+            .append('g')
+            .attr('class', 'cell');
+            
         // merge
         cells
             .merge(cellsEnter)
-            .attr('class', 'cell')
             .attr('transform', function (d: any, i: any) {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", 0)";
@@ -389,6 +404,49 @@ export class ScatterChart
 
         // exit
         cells.exit().remove();
+
+        //------
+
+        // update
+        var titles = this.cht.selectAll('.chartTitle')
+        .data(this.isSearch ? ['search'] : this.timeRes);
+    
+        // enter
+        var titlesEnter = titles
+            .enter()
+            .append('g')
+            .attr('class', 'chartTitle');
+            
+        // merge
+        titles
+            .merge(titlesEnter)
+            .attr('transform', function (d: any, i: any) {
+                var pos = this.isSearch ? 0 : i;
+                return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", -5)";
+            })
+            .each(function(d:any){
+                // get cell and data
+                var cell = d3.select(this);
+
+                var text = cell
+                    .selectAll('text')
+                    .data([cell.datum()]);
+
+                var textEnter = text.enter().append("text");
+
+                text
+                    .merge(textEnter)
+                    .attr('x', that.elemWidth / 2)
+                    .attr('y',  '0px')
+                    .attr('text-anchor', 'middle')
+                    .attr('font-family', 'sans-serif')
+                    .attr('font-size', '10px')
+                    .attr('fill', 'black')
+                    .text( (d: string) => { return this.isSearch ? 'SEARCH (DISTANCE)' : 'RANK ('+d+')'; });
+
+                text.exit().remove();
+            });
+
     }
 
     private _buildBrush()
