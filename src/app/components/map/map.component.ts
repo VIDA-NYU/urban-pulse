@@ -54,7 +54,18 @@ export class MapComponent implements AfterViewInit {
                 if (this.map2) this.map2.setScalarData(json[1]);
             });
         });
-        
+
+        this.paramsService.getTimeSelEmitter().subscribe( (res:any) => 
+        {
+            this.dataService.getMultipleScalars().subscribe((json: any) => 
+            {
+                if(json.length != 2) return;
+    
+                if (this.map1) this.map1.setScalarData(json[0]);
+                if (this.map2) this.map2.setScalarData(json[1]);
+            });
+        });
+
         this.paramsService.getShowScalarFunctionEmitter().subscribe( (res: any) => 
         {
             this._scalarVisibility(res);

@@ -101,7 +101,7 @@ export class DataService
 
         // current resolution
         var cRes  = this.paramsService.getTimeRes();
-        var cTime = 0;
+        var cTime = this.paramsService.getTimeSel();
         var group1 = paths['group1'] === 'none' ? "" : "-"+paths['group1'];
         var group2 = paths['group2'] === 'none' ? "" : "-"+paths['group2'];
         
@@ -198,7 +198,7 @@ export class DataService
                         f.id = index;
                         // index update
                         index += 1;
-                        
+
                         // city id
                         f.cityId = that.cities[id];
 

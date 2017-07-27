@@ -16,6 +16,10 @@ export class ParametersService
     public  showScalarFunction: boolean = true;
     private showScalarFunctionChange: EventEmitter<any> = new EventEmitter();
     
+    public timeMax: number = 24;
+    public timeSel: number = 1;
+    private timeSelChange: EventEmitter<any> = new EventEmitter();
+    
     getTimeRes()
     {
         return this.timeRes;
@@ -28,6 +32,19 @@ export class ParametersService
 
     emitTimeResChanged()
     {
+        switch (this.timeRes) 
+        {
+            case "HOUR":
+                this.timeMax = 24;
+            break;        
+            case "DAYOFWEEK":
+                this.timeMax = 7;
+            break;        
+            case "MONTH":
+                this.timeMax = 12;
+            break;        
+        } 
+
         this.timeResChange.emit(this.timeRes);
     }
 
@@ -48,4 +65,20 @@ export class ParametersService
         this.showScalarFunctionChange.emit(this.showScalarFunction);
     }
 
+    //--------
+
+    getTimeSel()
+    {
+        return this.timeSel;
+    }
+
+    getTimeSelEmitter()
+    {
+        return this.timeSelChange;
+    }
+
+    emitTimeSelChanged()
+    {
+        this.timeSelChange.emit(this.timeSel);
+    }
 }

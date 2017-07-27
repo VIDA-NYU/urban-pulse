@@ -17,6 +17,10 @@ import { ParametersService } from '../../classes/params.class'
         <md-checkbox [(ngModel)]="this.paramsService.showScalarFunction" (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()" aria-label="Show">Scalar Function</md-checkbox>
 
         <span class="space"></span>
+        
+        <md-slider min="1" [max]="this.paramsService.timeMax" step="1" [(ngModel)]="this.paramsService.timeSel" (ngModelChange)="this.emitTimeSelChanged()"></md-slider>
+        
+        <span class="space"></span>
 
         <md-radio-group [(ngModel)]="this.paramsService.timeRes" (ngModelChange)="emitTimeResChanged()">
           <md-radio-button value="HOUR">Hour</md-radio-button>
@@ -43,5 +47,14 @@ export class MainComponent
 
     // emit signal
     this.paramsService.emitTimeResChanged();    
+  }
+
+  emitTimeSelChanged()
+  {
+    // reset observables
+    this.dataService.resetScalarsObservable();
+
+    // emit signal
+    this.paramsService.emitTimeSelChanged();    
   }
 }
