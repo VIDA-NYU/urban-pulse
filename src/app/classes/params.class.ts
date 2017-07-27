@@ -15,12 +15,7 @@ export class ParametersService
     
     public  showScalarFunction: boolean = true;
     private showScalarFunctionChange: EventEmitter<any> = new EventEmitter();
-
-    public  groupBy: string = 'none'; 
-    public  groupByOptions: any = ['none', 'day','night', 'fall', 'spring', 'summer', 'winter', 'week', 'weekend'];
-
-    private groupByChange: EventEmitter<any> = new EventEmitter();
-
+    
     getTimeRes()
     {
         return this.timeRes;
@@ -53,20 +48,4 @@ export class ParametersService
         this.showScalarFunctionChange.emit(this.showScalarFunction);
     }
 
-    //---------
-
-    getGroupBy()
-    {
-        return this.groupBy;
-    }
-
-    getGroupByChangeEmitter()
-    {
-        return this.groupByChange;
-    }
-
-    emitGroupByChanged()
-    {
-        this.groupByChange.emit(this.groupBy);
-    }    
 }

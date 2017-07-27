@@ -78,7 +78,10 @@ export class DataService
     	let paths = {
             'map1': param1tk[0]+'/'+param1tk[1],
             'map2': param2tk[0]+'/'+param2tk[1],
+            'group1': param1tk[2],
+            'group2': param2tk[2]
         };
+        
         return paths;
     }
 
@@ -97,11 +100,11 @@ export class DataService
         var paths = this.getPaths();
 
         // current resolution
-        var cRes = this.paramsService.getTimeRes();
+        var cRes  = this.paramsService.getTimeRes();
         var cTime = 0;
-        var group = this.paramsService.getGroupBy();
-        group = (group === 'none') ? "" : "-"+group;
-
+        var group1 = paths['group1'] === 'none' ? "" : "-"+paths['group1'];
+        var group2 = paths['group2'] === 'none' ? "" : "-"+paths['group2'];
+        
         // get the observables
         if(this.scalars)
         {
@@ -116,8 +119,8 @@ export class DataService
             console.log("Http Call: Getting scalar data.");
             
             // observables
-            var obs1 = this.http.get('./' + paths['map1']+ '_' + cRes + '_' + cTime + group + '.scalars').map( (res: any) => res.text() );
-            var obs2 = this.http.get('./' + paths['map2']+ '_' + cRes + '_' + cTime + group + '.scalars').map( (res: any) => res.text() );
+            var obs1 = this.http.get('./' + paths['map1']+ '_' + cRes + '_' + cTime + group1 + '.scalars').map( (res: any) => res.text() );
+            var obs2 = this.http.get('./' + paths['map2']+ '_' + cRes + '_' + cTime + group2 + '.scalars').map( (res: any) => res.text() );
 
             this.scalarsObs = Observable.forkJoin(obs1, obs2)
             .map(response => 
@@ -156,8 +159,8 @@ export class DataService
         // data paths
         var paths = this.getPaths();
         // groupBy
-        var group = this.paramsService.getGroupBy();
-        group = (group === 'none') ? "" : "-"+group;
+        var group1 = paths['group1'] === 'none' ? "" : "-"+paths['group1'];
+        var group2 = paths['group2'] === 'none' ? "" : "-"+paths['group2'];
 
         // get the observables
         if(this.data)
@@ -171,11 +174,10 @@ export class DataService
         else
         {
             console.log("Http Call: Getting feature data.");
-            console.log( './' + paths['map1'] + group + '-features.json' );
 
             // observables
-            var obs1 = this.http.get('./' + paths['map1']+ group + '-features.json').map( (res: any) => res.json() );
-            var obs2 = this.http.get('./' + paths['map2']+ group + '-features.json').map( (res: any) => res.json() );
+            var obs1 = this.http.get('./' + paths['map1']+ group1 + '-features.json').map( (res: any) => res.json() );
+            var obs2 = this.http.get('./' + paths['map2']+ group2 + '-features.json').map( (res: any) => res.json() );
 
             this.dataObs = Observable.forkJoin(obs1, obs2)
             .map(response => 
@@ -194,6 +196,9 @@ export class DataService
                     {
                         // feature id
                         f.id = index;
+                        // index update
+                        index += 1;
+                        
                         // city id
                         f.cityId = that.cities[id];
 
@@ -215,9 +220,6 @@ export class DataService
                             // add plot coords
                             f.resolutions[tRes].x = x;
                             f.resolutions[tRes].y = y;
-
-                            // index update
-                            index += 1;
                         });
 
                         that.data.push(f);

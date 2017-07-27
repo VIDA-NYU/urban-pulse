@@ -79,19 +79,10 @@ export class ScatterChart
             this.updateChart();
         });
 
-        this.paramsService.getGroupByChangeEmitter().subscribe( (res:any) => 
-        {
-            this.dataService.getMultipleFeatures().subscribe((data: any) => 
-            {
-                this._buildData(data);
-                this.updateChart();
-            });
-        });        
-
         this.filterService.getMapSelectionChangeEmitter().subscribe( (data: any)=>
         {
             this._buildData(data);
-            this.updateChart();
+            this._buildChart();
         });
 
         this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
@@ -117,10 +108,10 @@ export class ScatterChart
         // build the axis
         this._buildAxis();
 
-        // creates the chart
-        this._buildChart();
         // build brush
         this._buildBrush();
+        // creates the chart
+        this._buildChart();
     }
 
     highlight(data: any)
@@ -388,10 +379,12 @@ export class ScatterChart
                     .attr("cx", function (d: any) { return that.xScale(d.resolutions[tRes].x); })
                     .attr("cy", function (d: any) { return that.yScale(d.resolutions[tRes].y); })
                     .attr("r", 4)
+                    .attr("opacity", 1.0)
                     .style("fill", function (d: any) { return that.dataService.getColor(d.cityId); });
 
                 // exit
                 circles.exit().remove();
+                cell.call(that.brush);                
             });
 
         // exit
@@ -434,35 +427,21 @@ export class ScatterChart
                 return; 
     
             // selected circles
-            d3.select(this).selectAll("circle")
-                .classed("selected", function(d: any)
+            that.cht.selectAll("circle")
+                .attr("opacity", function(d: any)
                 {    
                     if( (selection[0][0] <= that.xScale(d.resolutions[tRes].x) && selection[1][0] >= that.xScale(d.resolutions[tRes].x)) &&
                         (selection[0][1] <= that.yScale(d.resolutions[tRes].y) && selection[1][1] >= that.yScale(d.resolutions[tRes].y)) )
                     {
                         that.filterService.addToScatterSelection(d);
-                        return true;
+                        return 1.0;
                     }
                     else
                     {
                         that.filterService.delFromScatterSelection(d);                        
-                        return false;
+                        return 0.1;
                     }
                 });
-            
-            // unselected circles
-            that.cht.selectAll("circle")
-                .attr('opacity', function(d: any)
-                {
-                    if( that.filterService.findOnScatterSelection(d) ){
-                        d3.select(this).classed('selected', true);
-                        return 1.0;                            
-                    }
-                    else{
-                        d3.select(this).classed('selected', false);
-                        return 0.2;
-                    }
-                })
         });
         
         // on move
@@ -472,7 +451,6 @@ export class ScatterChart
             if(!d3.event.selection)
             {
                 that.cht.selectAll("circle")
-                    .classed("selected", false)
                     .attr('opacity', 1.0);
 
                 that.filterService.clearScatterSelection(that.data);
@@ -480,13 +458,5 @@ export class ScatterChart
 
             that.filterService.emitScatterSelectionChanged();
         });
-
-        // call on each cell
-        var cells = this.cht.selectAll('.cell')
-            .each(function(d: any)
-            {
-                var cell = d3.select(this);
-                cell.call(that.brush);
-            });
     }
 }

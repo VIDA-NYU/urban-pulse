@@ -113,17 +113,11 @@ export class PulseChart
 
         this.paramsService.getTimeResChangeEmitter().subscribe( (res: any) => 
         {
+            if(this.data.length === 0) return;
+            if( !(res in this.data[0].resolutions) ) return;
+
             this.changeResolution(res);
         });
-
-        this.paramsService.getGroupByChangeEmitter().subscribe( (res:any) => 
-        {
-            this.dataService.getMultipleFeatures().subscribe((data: any) => 
-            {
-                this._buildData(data);
-                this.updateChart();
-            });
-        });        
         
         // Adds event listener resize when the window changes size.
         window.addEventListener("resize", () => { this.updateChart() });

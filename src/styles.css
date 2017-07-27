@@ -113,11 +113,6 @@ md-toolbar md-toolbar-row {
   stroke-width: 3px;
 }
 
-.scatter circle.selected{
-  stroke: #DB4C4C;
-  stroke-width: 1px;
-}
-
 .scatter circle.highlight{
   stroke: #BB4C4C;
   stroke-width: 3px;
@@ -245,7 +240,7 @@ md-toolbar md-toolbar-row {
 
 .marker circle.highlight{
   stroke: #BB4C4C;
-  stroke-width: 2px;  
+  stroke-width: 3px;  
   fill-opacity: 0.5;
   stroke-opacity: 1.0;
 }

@@ -14,14 +14,6 @@ import { ParametersService } from '../../classes/params.class'
         {{appTitle}}
         <span class="hFill"></span>
         
-        <md-select [(ngModel)]="this.paramsService.groupBy" (ngModelChange)="emitGroupByChanged()">
-          <md-option *ngFor="let opts of this.paramsService.groupByOptions" [value]="opts">
-            {{ opts }}
-          </md-option>
-        </md-select>
-
-        <span class="space"></span>
-
         <md-checkbox [(ngModel)]="this.paramsService.showScalarFunction" (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()" aria-label="Show">Scalar Function</md-checkbox>
 
         <span class="space"></span>
@@ -44,21 +36,10 @@ export class MainComponent
   
   constructor(private dataService: DataService, private paramsService: ParametersService){}
 
-  emitGroupByChanged()
-  {
-    // reset observables
-    this.dataService.resetScalarsObservable();
-    this.dataService.resetFeaturesObservable();
-
-    // emit signal
-    this.paramsService.emitGroupByChanged();
-  }
-
   emitTimeResChanged()
   {
     // reset observables
     this.dataService.resetScalarsObservable();
-    this.dataService.resetFeaturesObservable();
 
     // emit signal
     this.paramsService.emitTimeResChanged();    

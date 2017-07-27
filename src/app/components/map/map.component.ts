@@ -43,15 +43,16 @@ export class MapComponent implements AfterViewInit {
     constructor(private dataService : DataService, private filterService : FilterService, private paramsService : ParametersService) 
     {
         this.cities = dataService.getCities();
-
+        
         this.paramsService.getTimeResChangeEmitter().subscribe( (res:any) => 
         {
-            this._loadLayer();
-        });
-
-        this.paramsService.getGroupByChangeEmitter().subscribe( (res:any) => 
-        {
-            this._loadLayer();
+            this.dataService.getMultipleScalars().subscribe((json: any) => 
+            {
+                if(json.length != 2) return;
+    
+                if (this.map1) this.map1.setScalarData(json[0]);
+                if (this.map2) this.map2.setScalarData(json[1]);
+            });
         });
         
         this.paramsService.getShowScalarFunctionEmitter().subscribe( (res: any) => 

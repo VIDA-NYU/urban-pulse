@@ -6,6 +6,9 @@ import { SvgOverlay } from './svg.overlay.class';
 import { DataService } from './data.class';
 import { FilterService } from './filter.class';
 
+// lodash
+import * as _ from 'lodash';
+
 @Injectable()
 export class GMapsLayer 
 {
@@ -25,6 +28,7 @@ export class GMapsLayer
 
         this.filterService.getScatterSelectionChangeEmitter().subscribe( (sel: any) => 
         {
+            sel = _.filter(sel, (x: any) => x.cityId === this.cityId);
             this.pulseOverlay.setData(sel);
         } );
     }
@@ -69,10 +73,11 @@ export class GMapsLayer
             google.maps.event.addListener(shape, 'rightclick', function(e: any) 
             {
                 shape.setMap(null);
-                that.filterService.clearMapSelection(that.cityId);
-                
+                // clear map
+                that.filterService.clearMapSelection(that.cityId);                
                 // clear update data
                 that.filterService.clearScatterSelection(that.dataService.getData());
+                
                 // clear 
                 that.filterService.emitMapSelectionChanged();
             });
