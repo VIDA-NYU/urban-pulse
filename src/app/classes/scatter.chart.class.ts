@@ -262,7 +262,7 @@ export class ScatterChart
 
         // data join
         var xaxis = this.cht.selectAll(".x.axis")
-            .data(this.isSearch ? ['search'] : this.timeRes);
+            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
 
         // enter
         var xEnter = xaxis
@@ -331,7 +331,7 @@ export class ScatterChart
 
         // update
         var cells = this.cht.selectAll('.cell')
-            .data(this.isSearch ? ['search'] : this.timeRes);
+            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
         
         // enter
         var cellsEnter = cells
@@ -409,7 +409,7 @@ export class ScatterChart
 
         // update
         var titles = this.cht.selectAll('.chartTitle')
-        .data(this.isSearch ? ['search'] : this.timeRes);
+        .data(this.isSearch ? ['SEARCH'] : this.timeRes);
     
         // enter
         var titlesEnter = titles
@@ -442,7 +442,7 @@ export class ScatterChart
                     .attr('font-family', 'sans-serif')
                     .attr('font-size', '10px')
                     .attr('fill', 'black')
-                    .text( (d: string) => { return this.isSearch ? 'SEARCH (DISTANCE)' : 'RANK ('+d+')'; });
+                    .text( (d: string) => { return that.isSearch ? 'SEARCH (DISTANCE)' : 'RANK ('+d+')'; });
 
                 text.exit().remove();
             });

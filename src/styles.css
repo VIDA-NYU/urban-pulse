@@ -26,6 +26,9 @@ md-toolbar md-toolbar-row {
 }
 
 .space{
+  width: 20px;
+}
+.halfSpace{
   width: 10px;
 }
 

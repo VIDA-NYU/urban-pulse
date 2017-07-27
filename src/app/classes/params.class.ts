@@ -19,6 +19,9 @@ export class ParametersService
     public timeMax: number = 24;
     public timeSel: number = 1;
     private timeSelChange: EventEmitter<any> = new EventEmitter();
+
+    public  searchId: string = "NONE";
+    private searchIdChange: EventEmitter<any> = new EventEmitter();
     
     getTimeRes()
     {
@@ -80,5 +83,22 @@ export class ParametersService
     emitTimeSelChanged()
     {
         this.timeSelChange.emit(this.timeSel);
+    }
+
+    //--------
+
+    getSearchId()
+    {
+        return this.searchId;
+    }
+
+    getSearchIdEmitter()
+    {
+        return this.searchIdChange;
+    }
+
+    emitSearchIdChanged()
+    {
+        this.searchIdChange.emit(this.searchId);
     }
 }

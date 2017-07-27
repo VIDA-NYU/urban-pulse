@@ -14,14 +14,26 @@ import { ParametersService } from '../../classes/params.class'
         {{appTitle}}
         <span class="hFill"></span>
         
-        <md-checkbox [(ngModel)]="this.paramsService.showScalarFunction" (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()" aria-label="Show">Scalar Function</md-checkbox>
+        <!-- Search --->
+        <md-radio-group [(ngModel)]="this.paramsService.searchId" (ngModelChange)="emitSearchIdChanged()">
+          <md-radio-button value="NONE">None</md-radio-button>
+          <md-radio-button value="MAP1">Map1</md-radio-button>
+          <md-radio-button value="MAP2">Map2</md-radio-button>
+        </md-radio-group>
 
         <span class="space"></span>
+
+        <!-- Show Scalar Function --->
+        <md-checkbox [(ngModel)]="this.paramsService.showScalarFunction" (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()" aria-label="Show">Scalar Function</md-checkbox>
+
+        <span class="halfSpace"></span>
         
+        <!-- Selected Scalar Time --->
         <md-slider min="1" [max]="this.paramsService.timeMax" step="1" [(ngModel)]="this.paramsService.timeSel" (ngModelChange)="this.emitTimeSelChanged()"></md-slider>
         
         <span class="space"></span>
 
+        <!-- Selected Time Resolution --->
         <md-radio-group [(ngModel)]="this.paramsService.timeRes" (ngModelChange)="emitTimeResChanged()">
           <md-radio-button value="HOUR">Hour</md-radio-button>
           <md-radio-button value="DAYOFWEEK">DayOfWeek</md-radio-button>
@@ -39,6 +51,12 @@ export class MainComponent
   appTitle: string = "Urban Pulse (Web Version)";
   
   constructor(private dataService: DataService, private paramsService: ParametersService){}
+
+  emitSearchIdChanged()
+  {
+    // emit signal
+    this.paramsService.emitSearchIdChanged();    
+  }
 
   emitTimeResChanged()
   {
