@@ -208,7 +208,7 @@ export class ScatterChart
     }
 
     private _buildRange() 
-    {
+    {        
         // no data available
         if(this.data.length == 0) return;
 
@@ -247,6 +247,8 @@ export class ScatterChart
                 that.yRange[1] = Math.max(that.yRange[1], y);
             })
         });
+
+        console.log(this.xRange);        
     }
 
     private _buildAxis()
@@ -287,12 +289,12 @@ export class ScatterChart
         // enter
         var xEnter = xaxis
             .enter()
-            .append("g")
-            .attr("class", "x axis");
+            .append("g");
 
         // merge
         xaxis
             .merge(xEnter)
+            .attr("class", "x axis")
             .attr("transform", (d: any, i: any) => {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
@@ -311,12 +313,12 @@ export class ScatterChart
         // enter
         var yEnter = yaxis
             .enter()
-            .append("g")
-            .attr("class", "y axis");
+            .append("g");
 
         // merge
         yaxis
             .merge(yEnter)
+            .attr("class", "y axis")
             .attr("transform", (d: any, i: any) => {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
@@ -327,13 +329,18 @@ export class ScatterChart
 
         // exit
         yaxis.exit().remove();
+        
+        var yLabel = yaxis
+            .selectAll(".YLabel")
+            .data(["yLabel"]);
 
-        // text label for the y axis
-        console.log(yaxis);
-
-        yaxis
-            .merge(yEnter)
-            .append("text")
+        var yLabelEnter = yLabel
+            .enter()
+            .append('text');
+        
+        yLabel  
+            .merge(yLabelEnter)
+            .attr("class", "yLabel")
             .attr('y', -0.75*this.margins.left)
             .attr('x', -this.elemHeight / 2)
             .attr("transform", "rotate(-90)")
@@ -342,6 +349,8 @@ export class ScatterChart
             .attr('fill', 'black')
             .attr('text-anchor', 'middle')
             .text( () => { return this.isSearch ? "PULSE ID" : "RANK"; } );
+
+        yLabel.exit().remove();
     }
     
     private _buildChart()
@@ -356,12 +365,12 @@ export class ScatterChart
         // enter
         var cellsEnter = cells
             .enter()
-            .append('g')
-            .attr('class', 'cell');
+            .append('g');
             
         // merge
         cells
             .merge(cellsEnter)
+            .attr('class', 'cell')
             .attr('transform', function (d: any, i: any) {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", 0)";
@@ -434,12 +443,12 @@ export class ScatterChart
         // enter
         var titlesEnter = titles
             .enter()
-            .append('g')
-            .attr('class', 'chartTitle');
+            .append('g');
             
         // merge
         titles
             .merge(titlesEnter)
+            .attr('class', 'chartTitle')
             .attr('transform', function (d: any, i: any) {
                 var pos = this.isSearch ? 0 : i;
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", -5)";
@@ -467,6 +476,7 @@ export class ScatterChart
                 text.exit().remove();
             });
 
+        titles.exit().remove();
     }
 
     private _buildBrush()
