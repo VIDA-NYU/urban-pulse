@@ -25,6 +25,9 @@ export class FilterService
     private mapSelection: any = [];
     private mapSelectionChange: EventEmitter<any> = new EventEmitter();
 
+    // scatter selection and emitter
+    private searchSelectionChange: EventEmitter<any> = new EventEmitter();
+
     // constructor
     constructor() {}
 
@@ -185,5 +188,15 @@ export class FilterService
 
     //-----------------------------    
 
-    
+    // Search Selection  ---------
+
+    getSearchSelectionChangeEmitter() 
+    {
+        return this.searchSelectionChange;
+    }
+
+    emitSearchSelectionChanged(sel: any)
+    {
+        this.mapSelectionChange.emit(sel);
+    }
 }

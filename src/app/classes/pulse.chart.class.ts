@@ -99,6 +99,12 @@ export class PulseChart
             this.updateChart();
         } );
 
+        this.filterService.getSearchSelectionChangeEmitter().subscribe( (sel: any) => 
+        {
+            this._buildData(sel);
+            this.updateChart();
+        } );
+
         this.filterService.getPulseTimeSelectionChangeEmitter().subscribe( (sel: any) => 
         {
             this._buildData(sel);

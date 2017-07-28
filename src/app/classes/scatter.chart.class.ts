@@ -105,6 +105,7 @@ export class ScatterChart
             }
             
             this.updateChart();
+            this.filterService.emitSearchSelectionChanged(this.data);
         });
 
         // Adds event listener resize when the window changes size.
