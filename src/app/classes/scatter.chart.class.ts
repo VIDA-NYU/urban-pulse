@@ -250,8 +250,6 @@ export class ScatterChart
                 that.yRange[1] = Math.max(that.yRange[1], y);
             })
         });
-
-        console.log(this.xRange);        
     }
 
     private _buildAxis()
@@ -261,27 +259,36 @@ export class ScatterChart
 
         // scale definition
         this.xScale = d3.scaleLinear().domain(this.xRange).range([0,  this.elemWidth]);
-        this.yScale = d3.scaleLinear().domain(this.yRange).range([this.elemHeight, 0]);
+        
+        if(this.isSearch)
+            this.yScale = d3.scalePoint().domain(this.yRange).range([this.elemHeight, 0]).padding(0.5);
+        else
+            this.yScale = d3.scaleLinear().domain(this.yRange).range([this.elemHeight, 0]);
 
         // axis
         this.xAxis = d3.axisBottom(this.xScale);
         this.yAxis = d3.axisLeft(this.yScale);
 
+        // number of elements
+        var nElems = 5;
+        if(this.isSearch) nElems = Object.keys(_.groupBy(this.data, (d: any) => { return d.resolutions['SEARCH'] })).length;
+
         // number of ticks
-        var numTicks = this.isSearch ? 5 : 5;
+        var xNumTicks = 7;
+        var yNumTicks = this.isSearch ? Math.min(5, nElems) : 5;
         
         // x axis
         this.xAxis
-            .ticks(numTicks)
+            .ticks(xNumTicks)
             .tickSize(this.elemHeight)
             .tickFormat(d3.format(".1f"));
 
         // y format 
-        var yFormat = !this.isSearch ? d3.format(".1f") : d3.format(".1f");
+        var yFormat = !this.isSearch ? d3.format(".1f") : d3.format(".1d");
         
         // y axis
         this.yAxis
-            .ticks(numTicks)
+            .ticks(yNumTicks)
             .tickSize(-this.chartWidth + this.margins.right + this.margins.left, 0)
             .tickFormat(yFormat);
 
@@ -310,7 +317,8 @@ export class ScatterChart
         xaxis.exit().remove();
 
         // join
-        var yaxis = this.cht.selectAll(".y.axis")
+        var yaxis = this
+            .cht.selectAll(".y.axis")
             .data(["func"]);
         
         // enter
@@ -333,8 +341,9 @@ export class ScatterChart
         // exit
         yaxis.exit().remove();
         
-        var yLabel = yaxis
-            .selectAll(".YLabel")
+        var yLabel = this.cht
+            .selectAll(".y.axis")
+            .selectAll(".yLabel")
             .data(["yLabel"]);
 
         var yLabelEnter = yLabel
@@ -344,7 +353,7 @@ export class ScatterChart
         yLabel  
             .merge(yLabelEnter)
             .attr("class", "yLabel")
-            .attr('y', -0.75*this.margins.left)
+            .attr('y', -0.85*this.margins.left)
             .attr('x', -this.elemHeight / 2)
             .attr("transform", "rotate(-90)")
             .attr('font-family', 'sans-serif')
@@ -440,8 +449,9 @@ export class ScatterChart
         //------
 
         // update
-        var titles = this.cht.selectAll('.chartTitle')
-        .data(this.isSearch ? ['SEARCH'] : this.timeRes);
+        var titles = this
+            .cht.selectAll('.chartTitle')
+            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
     
         // enter
         var titlesEnter = titles
@@ -565,9 +575,7 @@ export class ScatterChart
         });
 
         this.data = this._search(sourceFeatures, features);
-        console.log(this.data);
     }
-
 
     private _search(sourceFeatures: any[], features: any[])
     {
@@ -605,8 +613,6 @@ export class ScatterChart
             }
 
         });
-
-        console.log(searchFeatures);
 
         return searchFeatures;
     }
