@@ -67,17 +67,34 @@ export class GMapsLayer
         this.drawing.setMap(this.map);
 
         google.maps.event.addListener(this.drawing, 'overlaycomplete', function(e: any) {
+
+            // delete old shape
+            if(that.selectedShape) {
+                that.selectedShape.setMap(null);
+                that.selectedShape.setVisible(false);
+                that.selectedShape.setDraggable(false);
+                that.selectedShape.setEditable(false);
+            }
+
             let shape = e.overlay;
             that.filter(e);
+            if(that.drawing.getDrawingMode()) {
+                that.drawing.setDrawingMode(null);
+            }
+
+            that.selectedShape = shape;
 
             google.maps.event.addListener(shape, 'rightclick', function(e: any) 
             {
+                that.selectedShape = null;
                 shape.setMap(null);
+                shape.setVisible(false);
+                shape.setDraggable(false);
+                shape.setEditable(false);
                 // clear map
                 that.filterService.clearMapSelection(that.cityId);                
                 // clear update data
                 that.filterService.clearScatterSelection(that.dataService.getData());
-                
                 // clear 
                 that.filterService.emitMapSelectionChanged();
             });
@@ -130,7 +147,7 @@ export class GMapsLayer
         let that = this;
         let shape = e.overlay;
         that.selectedShape = shape;
-        that.drawing.setDrawingMode(null);
+        // that.drawing.setDrawingMode(null);
 
         let selectedFeatures = [];
         let features = that.pulseOverlay.getData();
