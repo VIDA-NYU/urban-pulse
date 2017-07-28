@@ -219,9 +219,12 @@ export class ScatterChart
         var that = this;
 
         // ranges definition
-        // ranges definition
         this.xRange = [Infinity, -Infinity];
-        this.yRange = [Infinity, -Infinity];
+
+        if(this.isSearch)
+            this.yRange = [];
+        else
+            this.yRange = [Infinity, -Infinity];
 
         // mapping
         this.data.forEach(function (f: any) 
@@ -246,8 +249,15 @@ export class ScatterChart
                 that.xRange[1] = Math.max(that.xRange[1], x);
 
                 // update y range
-                that.yRange[0] = Math.min(that.yRange[0], y);
-                that.yRange[1] = Math.max(that.yRange[1], y);
+                if(tRes === 'SEARCH')
+                {
+                    that.yRange.push(y);                    
+                }
+                else
+                {
+                    that.yRange[0] = Math.min(that.yRange[0], y);
+                    that.yRange[1] = Math.max(that.yRange[1], y);
+                }
             })
         });
     }
@@ -269,17 +279,12 @@ export class ScatterChart
         this.xAxis = d3.axisBottom(this.xScale);
         this.yAxis = d3.axisLeft(this.yScale);
 
-        // number of elements
-        var nElems = 5;
-        if(this.isSearch) nElems = Object.keys(_.groupBy(this.data, (d: any) => { return d.resolutions['SEARCH'] })).length;
-
         // number of ticks
-        var xNumTicks = 7;
-        var yNumTicks = this.isSearch ? Math.min(5, nElems) : 5;
+        var nTicks = 5;
         
         // x axis
         this.xAxis
-            .ticks(xNumTicks)
+            .ticks(nTicks)
             .tickSize(this.elemHeight)
             .tickFormat(d3.format(".1f"));
 
@@ -288,7 +293,7 @@ export class ScatterChart
         
         // y axis
         this.yAxis
-            .ticks(yNumTicks)
+            .ticks(nTicks)
             .tickSize(-this.chartWidth + this.margins.right + this.margins.left, 0)
             .tickFormat(yFormat);
 
