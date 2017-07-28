@@ -269,19 +269,23 @@ export class ScatterChart
         var that = this;
 
         // scale definition
-        this.xScale = d3.scaleLinear().domain(this.xRange).range([0,  this.elemWidth]);
-        
         if(this.isSearch)
-            this.yScale = d3.scalePoint().domain(this.yRange).range([this.elemHeight, 0]).padding(0.5);
+        {
+            this.xScale = d3.scaleLinear().domain(this.xRange).range([2*this.spaceBetween,  this.elemWidth-2*this.spaceBetween]);
+            this.yScale = d3.scalePoint().domain(this.yRange).range([this.elemHeight-this.spaceBetween/2, this.spaceBetween/2]).padding(0.5);
+        }
         else
-            this.yScale = d3.scaleLinear().domain(this.yRange).range([this.elemHeight, 0]);
+        {
+            this.xScale = d3.scaleLinear().domain(this.xRange).range([this.spaceBetween,  this.elemWidth-this.spaceBetween]);
+            this.yScale = d3.scaleLinear().domain(this.yRange).range([this.elemHeight-this.spaceBetween/2, this.spaceBetween/2]);            
+        }
 
         // axis
         this.xAxis = d3.axisBottom(this.xScale);
         this.yAxis = d3.axisLeft(this.yScale);
 
         // number of ticks
-        var nTicks = 5;
+        var nTicks = this.isSearch ? 10 : 5;
         
         // x axis
         this.xAxis
@@ -595,7 +599,8 @@ export class ScatterChart
             // find distances
             var cdist = 0;
             var closest = -1;
-            sourceFeatures.forEach(function(sf: any) {
+            sourceFeatures.forEach(function(sf: any) 
+            {
                 if(f.cityId == sf.cityId)
                     return;
 
@@ -617,10 +622,14 @@ export class ScatterChart
                 f.resolutions['SEARCH'] = {'x': cdist, 'y': closest};
                 searchFeatures.push(f);
             }
-
         });
 
-        return searchFeatures;
+        sourceFeatures.forEach(function(f: any) 
+        {
+            f.resolutions['SEARCH'] = {'x': 0, 'y': f.id };
+        });
+
+        return searchFeatures.concat(sourceFeatures);
     }
 
 
