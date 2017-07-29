@@ -56,7 +56,6 @@ export class ScatterChart
     
     // chart parameters
     private nCharts: number;
-    private isSearch: boolean = false;
     private searchId: string;
     private cities: any;
     
@@ -94,12 +93,12 @@ export class ScatterChart
         this.paramsService.getSearchIdEmitter().subscribe( (searchId: string)=>
         {
             if(searchId === "none") {
-                this.isSearch = false;
+                this.paramsService.isSearch = false;
                 this.data = this.dataService.getData();
                 this.searchId = searchId;
             }
             else {
-                this.isSearch = true;
+                this.paramsService.isSearch = true;
                 this.searchId = searchId;
                 this._buildSearch();
             }
@@ -115,7 +114,7 @@ export class ScatterChart
     updateChart()
     {
         // number of charts
-        this.nCharts = this.isSearch ? 1 : this.timeRes.length;
+        this.nCharts = this.paramsService.getIsSearch() ? 1 : this.timeRes.length;
 
         // dom elements
         this._buildDomElems();
@@ -222,7 +221,7 @@ export class ScatterChart
         // ranges definition
         this.xRange = [Infinity, -Infinity];
 
-        if(this.isSearch)
+        if(this.paramsService.getIsSearch())
             this.yRange = [];
         else
             this.yRange = [Infinity, -Infinity];
@@ -231,7 +230,7 @@ export class ScatterChart
         this.data.forEach(function (f: any) 
         {
             let timeRes = [];
-            if(that.isSearch)
+            if(that.paramsService.getIsSearch())
                 timeRes = ['SEARCH'];
             else
                 timeRes = that.timeRes;
@@ -269,7 +268,7 @@ export class ScatterChart
         var that = this;
 
         // scale definition
-        if(this.isSearch)
+        if(this.paramsService.getIsSearch())
         {
             this.xScale = d3.scaleLinear().domain(this.xRange).range([2*this.spaceBetween,  this.elemWidth-2*this.spaceBetween]);
             this.yScale = d3.scalePoint().domain(this.yRange).range([this.elemHeight-this.spaceBetween/2, this.spaceBetween/2]).padding(0.5);
@@ -285,7 +284,7 @@ export class ScatterChart
         this.yAxis = d3.axisLeft(this.yScale);
 
         // number of ticks
-        var nTicks = this.isSearch ? 10 : 5;
+        var nTicks = this.paramsService.getIsSearch() ? 10 : 5;
         
         // x axis
         this.xAxis
@@ -294,7 +293,7 @@ export class ScatterChart
             .tickFormat(d3.format(".1f"));
 
         // y format 
-        var yFormat = !this.isSearch ? d3.format(".1f") : d3.format(".1d");
+        var yFormat = !this.paramsService.getIsSearch() ? d3.format(".1f") : d3.format(".1d");
         
         // y axis
         this.yAxis
@@ -304,7 +303,7 @@ export class ScatterChart
 
         // data join
         var xaxis = this.cht.selectAll(".x.axis")
-            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
+            .data(this.paramsService.getIsSearch() ? ['SEARCH'] : this.timeRes);
 
         // enter
         var xEnter = xaxis
@@ -316,7 +315,7 @@ export class ScatterChart
             .merge(xEnter)
             .attr("class", "x axis")
             .attr("transform", (d: any, i: any) => {
-                var pos = this.isSearch ? 0 : i;
+                var pos = this.paramsService.getIsSearch() ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
             })
             .each(function() {
@@ -341,7 +340,7 @@ export class ScatterChart
             .merge(yEnter)
             .attr("class", "y axis")
             .attr("transform", (d: any, i: any) => {
-                var pos = this.isSearch ? 0 : i;
+                var pos = this.paramsService.getIsSearch() ? 0 : i;
                 return "translate(" + (pos * (this.elemWidth + this.spaceBetween)) + ", 0)";
             })
             .each(function() {
@@ -370,7 +369,7 @@ export class ScatterChart
             .attr('font-size', '10px')
             .attr('fill', 'black')
             .attr('text-anchor', 'middle')
-            .text( () => { return this.isSearch ? "PULSE ID" : "RANK"; } );
+            .text( () => { return this.paramsService.getIsSearch() ? "PULSE ID" : "RANK"; } );
 
         yLabel.exit().remove();
     }
@@ -382,7 +381,7 @@ export class ScatterChart
 
         // update
         var cells = this.cht.selectAll('.cell')
-            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
+            .data(this.paramsService.getIsSearch() ? ['SEARCH'] : this.timeRes);
         
         // enter
         var cellsEnter = cells
@@ -394,7 +393,7 @@ export class ScatterChart
             .merge(cellsEnter)
             .attr('class', 'cell')
             .attr('transform', function (d: any, i: any) {
-                var pos = this.isSearch ? 0 : i;
+                var pos = that.paramsService.getIsSearch() ? 0 : i;
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", 0)";
             })
             .each(function (d: any) 
@@ -461,7 +460,7 @@ export class ScatterChart
         // update
         var titles = this
             .cht.selectAll('.chartTitle')
-            .data(this.isSearch ? ['SEARCH'] : this.timeRes);
+            .data(this.paramsService.getIsSearch() ? ['SEARCH'] : this.timeRes);
     
         // enter
         var titlesEnter = titles
@@ -473,7 +472,7 @@ export class ScatterChart
             .merge(titlesEnter)
             .attr('class', 'chartTitle')
             .attr('transform', function (d: any, i: any) {
-                var pos = this.isSearch ? 0 : i;
+                var pos = that.paramsService.getIsSearch() ? 0 : i;
                 return "translate(" + (pos * (that.elemWidth + that.spaceBetween)) + ", -5)";
             })
             .each(function(d:any){
@@ -495,7 +494,7 @@ export class ScatterChart
                     .attr('font-family', 'sans-serif')
                     .attr('font-size', '10px')
                     .attr('fill', 'black')
-                    .text( (d: string) => { return that.isSearch ? 'SEARCH (DISTANCE)' : 'RANK ('+d+')'; });
+                    .text( (d: string) => { return that.paramsService.getIsSearch() ? 'SEARCH (DISTANCE)' : 'RANK ('+d+')'; });
 
                 text.exit().remove();
             });

@@ -5,6 +5,7 @@ import { SvgOverlay } from './svg.overlay.class';
 
 import { DataService } from './data.class';
 import { FilterService } from './filter.class';
+import { ParametersService } from './params.class';
 
 // lodash
 import * as _ from 'lodash';
@@ -19,7 +20,7 @@ export class GMapsLayer
     private pulseOverlay: SvgOverlay;
     private cityId: string;
 
-    constructor(private dataService: DataService, private filterService: FilterService) 
+    constructor(private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService) 
     { 
         this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
         {
@@ -91,12 +92,18 @@ export class GMapsLayer
                 shape.setVisible(false);
                 shape.setDraggable(false);
                 shape.setEditable(false);
+
+                that.paramsService.isSearch = false;
+                that.paramsService.searchId = "none";
+                that.paramsService.emitSearchIdChanged();
+
                 // clear map
                 that.filterService.clearMapSelection(that.cityId);                
                 // clear update data
                 that.filterService.clearScatterSelection(that.dataService.getData());
                 // clear 
                 that.filterService.emitMapSelectionChanged();
+
             });
 
             google.maps.event.addListener(shape, 'drag', function() {

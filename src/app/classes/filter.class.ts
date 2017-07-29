@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, NgZone } from '@angular/core';
 
 // import d3js
 import * as d3 from 'd3';
@@ -27,6 +26,8 @@ export class FilterService
 
     // scatter selection and emitter
     private searchSelectionChange: EventEmitter<any> = new EventEmitter();
+
+    private isSearch: boolean = false;
 
     // constructor
     constructor() {}

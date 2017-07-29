@@ -1,5 +1,5 @@
 // angular components
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 
 // my components
 import { MapComponent } from '../map/map.component'
@@ -50,12 +50,19 @@ export class MainComponent
   // app title
   appTitle: string = "Urban Pulse (Web Version)";
   
-  constructor(private dataService: DataService, private paramsService: ParametersService){}
+  constructor(private dataService: DataService, private paramsService: ParametersService, private zone: NgZone)
+  {
+    this.paramsService.getSearchIdEmitter().subscribe( (searchId: any)=>
+    {
+        // update dom
+        this.zone.run(() => null)
+    });
+  }
 
   emitSearchIdChanged()
   {
     // emit signal
-    this.paramsService.emitSearchIdChanged();    
+    this.paramsService.emitSearchIdChanged();
   }
 
   emitTimeResChanged()

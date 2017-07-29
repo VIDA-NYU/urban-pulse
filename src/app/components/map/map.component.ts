@@ -79,10 +79,10 @@ export class MapComponent implements AfterViewInit {
     }
 
     private _createMap() {
-        this.map1 = new GMapsLayer(this.dataService, this.filterService);
+        this.map1 = new GMapsLayer(this.dataService, this.filterService, this.paramsService);
         this.map1.initMap(this.mapTopRef.nativeElement, this.gmapsOptions, this.cities[0]);
 
-        this.map2 = new GMapsLayer(this.dataService, this.filterService);
+        this.map2 = new GMapsLayer(this.dataService, this.filterService, this.paramsService);
         this.map2.initMap(this.mapBotRef.nativeElement, this.gmapsOptions, this.cities[1]);
     }
 

@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, NgZone } from '@angular/core';
 
 // import d3js
 import * as d3 from 'd3';
@@ -22,6 +21,10 @@ export class ParametersService
 
     public  searchId: string = "none";
     private searchIdChange: EventEmitter<any> = new EventEmitter();
+
+    public isSearch: boolean = false;
+
+    constructor(private zone: NgZone) {}
     
     getTimeRes()
     {
@@ -100,5 +103,10 @@ export class ParametersService
     emitSearchIdChanged()
     {
         this.searchIdChange.emit(this.searchId);
+    }
+
+    getIsSearch()
+    {
+        return this.isSearch;
     }
 }
