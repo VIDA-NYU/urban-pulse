@@ -1,0 +1,249 @@
+@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+    padding: 0px;
+    margin: 0px;
+    font-family: Roboto, sans-serif;
+}
+
+md-toolbar {
+ 	min-height: 32px !important;
+}
+
+md-toolbar md-toolbar-row {
+ 	height: 32px !important;
+ 	font-size: 16px;
+}
+
+.app{
+    width: 100vw;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.hFill{
+  flex: 1 1 auto;
+}
+
+.space{
+  width: 20px;
+}
+.halfSpace{
+  width: 10px;
+}
+
+.mapColumn {
+	top: 32px;
+	bottom: 0px;
+	width: 40%;
+	position: absolute;
+}
+
+.map {
+	width: 100%;
+	height: 50%;
+	margin: 0px;
+}
+
+.visColumn {
+	top: 32px;
+	bottom: 0px;
+	left: 40%;
+	width: 60%;
+	position: absolute;
+}
+
+.scatterRow {
+	width: 100%;
+	height: 30%;
+}
+
+.scatter {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	float: left;
+}
+
+.scatter svg {
+  font: 10px sans-serif;
+  padding: 10px;
+}
+
+.scatter .axis,
+.scatter .frame {
+  /*shape-rendering: crispEdges;*/
+}
+
+.scatter .axis line {
+  stroke: #ddd;
+}
+
+.scatter .axis path {
+  display: none;
+}
+
+.scatter .cell text {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.scatter .frame {
+  fill: none;
+  stroke: #aaa;
+}
+
+.scatter .title {
+  font: 12px sans-serif;
+}
+
+.scatter circle {
+  fill-opacity: .7;
+}
+
+.scatter circle.hidden {
+  fill: #ccc !important;
+}
+
+.scatter .extent {
+  fill: #000;
+  fill-opacity: .125;
+  stroke: #fff;
+}
+
+.scatter circle.hover {
+  stroke: #333;
+  stroke-width: 3px;
+}
+
+.scatter circle.highlight{
+  stroke: #BB4C4C;
+  stroke-width: 3px;
+}
+
+.pulsesRow {
+	width: 100%;
+	height: 60%;
+}
+
+.pulses {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	float: left;
+}
+
+.yScroll {
+    width: 100%;
+    height: 87%;
+    margin: 0px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.pulses #timeSelector{
+    height: 37px;
+}
+
+.pulses svg {
+  font: 10px sans-serif;
+  padding: 10px;
+}
+
+.pulses .axis,
+.pulses .frame {
+  /*shape-rendering: crispEdges;*/
+}
+
+.pulses .axis line {
+  stroke: #ddd;
+}
+
+.pulses .axis path {
+  display: none;
+}
+
+.pulses .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.pulses .circle{
+  stroke: #ddd;
+  stroke-width: 1.0px;
+}
+
+.pulses .focus circle {
+  fill: #ddd;
+  stroke: #555;
+}
+
+.pulses .bg {
+    fill: "#fff";
+    stroke: "#fff";
+    opacity: 0;
+}
+
+.pulses .flabel {
+  cursor: pointer; cursor: hand;
+}
+
+.pulses .flabel rect{
+    fill: #eee;
+    stroke: #ddd;
+    stroke-width: 1px;
+
+    opacity: 0.8;
+}
+
+.pulses .flabel text {
+  font: 12px sans-serif;
+  z-index: 12;
+}
+
+.pulses .flabel .hover {
+  stroke: #333;
+  stroke-width: 2px;
+  opacity:0.8
+}
+
+.pulses .flabel .selected{
+  stroke: #DB4C4C;
+  stroke-width: 2px;
+  opacity:0.8
+}
+
+.pulses .tick{
+    cursor: pointer; cursor: hand;
+}
+
+.pulses .ftype{
+    stroke: #ddd;
+    stroke-width: 1.0px;
+    fill: #fff;
+}
+
+.pulses .max{
+  fill: #c7e9c0;
+}
+
+.pulses .sax{
+  fill: #006d2c;
+}
+
+.marker circle {
+  /*fill: orange;*/
+  stroke: black;
+  stroke-width: 0.5px;
+  fill-opacity: 0.5;
+  stroke-opacity: 1.0;
+  /*stroke-dasharray: 5;*/
+}
+
+.marker circle.highlight{
+  stroke: #BB4C4C;
+  stroke-width: 3px;  
+  fill-opacity: 0.5;
+  stroke-opacity: 1.0;
+}
