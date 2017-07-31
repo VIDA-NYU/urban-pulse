@@ -1,8 +1,11 @@
 # Urban Pulse
 
-introduction...
+Urban Pulse is a framework that uses computational topology techniques to capture the *pulse* of cities. This is accomplished by first modeling the urban data as a collection of time-varying scalar functions over different temporal resolutions, where the scalar function represents the distribution of the corresponding acitivy over the city. The topology of this collection is then used to identify the locations of prominent pulses in a city. The framework includes a visual interface that can be used to explore pulses within and across multiple cities.
 
-[demo](http://vgc.poly.edu/projects/urban-pulse/)
+The framework was first presented in the paper:
+Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva, "Urban Pulse: Capturing the Rhythm of Cities", IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.
+
+A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
 
 ## Installing prerequisites
 
@@ -10,7 +13,7 @@ The following are prerequisites for all systems:
 
 1. Qt 5.8 (or later version)
 2. C++11 compatible compiler
-3. Java SE Development Kit 8
+3. Java SE Development Kit 8 and Apache Ant.
 3. Node.js
 
 ### Linux (Ubuntu, Linux Mint)
@@ -21,13 +24,15 @@ The following are prerequisites for all systems:
 	sudo apt-get install gcc-4.8 g++-4.8
 	```
 	
-3. Install Java SE Development Kit 8:
+3. Install Java SE Development Kit 8 and Apache Ant:
 
 	```
 	sudo add-apt-repository ppa:webupd8team/java -y
 	sudo apt-get update
 	sudo apt-get install oracle-java8-installer
+	sudo apt-get install ant
 	```
+
 Automatically set up the Java 8 environment variables:
 
 	```
@@ -49,10 +54,11 @@ Automatically set up the Java 8 environment variables:
 	brew install gcc@4.8
 	```
 
-4. Install Java SE Development Kit 8:
+4. Install Java SE Development Kit 8 and Ant:
 
 	```
 	brew cask install java
+	brew install ant
 	```
 
 5. Install Node.js:
@@ -65,14 +71,22 @@ Automatically set up the Java 8 environment variables:
 ### Windows 7, 8, 10
 1. Download Qt 5.5 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it. When selecting the Qt version to install, make sure to also select MingW for installation.
 2. Download Java SE Development Kit 8 [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and install it.
-3. Make sure GCC is installed through MingW.
-3. Download Node.js LTS at [nodejs.org/en/download/](https://nodejs.org/en/download/) and install it.
+4. Download Apache Ant [here](http://ant.apache.org/manual/install.html) 
+4. Make sure GCC is installed through MingW.
+5. Download Node.js LTS at [nodejs.org/en/download/](https://nodejs.org/en/download/) and install it.
 
 ## Compiling the latest release
 
-Open a command line interface and follow the steps:
+We first need to create a .jar file containing the computational topology functions. Open a command line interface and follow the steps:
+
 ```
 cd ComputePulse
+ant build
+```
+
+This will create a TopoFeatures.jar file inside the `ComputePulse/build` folder. Next, we need to compile the C++ code. In the same `ComputePulse` folder, type:
+
+```
 qmake ComputePulse.pro
 ```
 
@@ -87,6 +101,8 @@ To compile on Ubuntu, Linux Mint or macOS:
 ```
 make
 ```
+Two new executables, `Scalars` and `Pulse` will be created in the `ComputePulse/build` folder.
+
 
 
 ## Running Urban Pulse

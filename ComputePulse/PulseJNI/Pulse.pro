@@ -20,6 +20,8 @@ SOURCES += \
     GeneratePulse.cpp \
     Pulse.cpp
 
+DESTDIR = ../build
+
 INCLUDEPATH += ../common/
 
 # The following define makes your compiler emit warnings if you use
