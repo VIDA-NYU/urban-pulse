@@ -3,6 +3,7 @@
 Urban Pulse is a framework that uses computational topology techniques to capture the *pulse* of cities. This is accomplished by first modeling the urban data as a collection of time-varying scalar functions over different temporal resolutions, where the scalar function represents the distribution of the corresponding acitivy over the city. The topology of this collection is then used to identify the locations of prominent pulses in a city. The framework includes a visual interface that can be used to explore pulses within and across multiple cities.
 
 The framework was first presented in the paper:
+
 Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva, "Urban Pulse: Capturing the Rhythm of Cities", IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.
 
 A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
@@ -47,7 +48,7 @@ Automatically set up the Java 8 environment variables:
 	
 ### macOS
 1. Download Homebrew, a package manager for macOS, at [brew.sh](https://brew.sh/) and install it.
-2. Download Qt 5.5 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it.
+2. Download Qt 5.8 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it.
 3. Install GCC through [XCode](https://developer.apple.com/xcode/) or brew:
 
 	```
@@ -69,7 +70,7 @@ Automatically set up the Java 8 environment variables:
 	
 
 ### Windows 7, 8, 10
-1. Download Qt 5.5 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it. When selecting the Qt version to install, make sure to also select MingW for installation.
+1. Download Qt 5.8 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it. When selecting the Qt version to install, make sure to also select MingW for installation.
 2. Download Java SE Development Kit 8 [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and install it.
 4. Download Apache Ant [here](http://ant.apache.org/manual/install.html) 
 4. Make sure GCC is installed through MingW.
@@ -155,11 +156,9 @@ The argument `data1`indicates that the computed pulse files are located in the f
 
 If instead we want to only consider measurements that fall inside a given temporal filter, we can use the following filters:
 
-```
-1. winter,spring,summer,fall
-2. day,night
-3. week, weekend
-```
+1. `winter`, `spring`, `summer` or `fall` for filtering based on season.
+2. `day` or `night` for filtering based on time of day.
+3. `week` or `weekend` for filtering based on day of week.
 
 Note that the data folder must be inside `vis/src` because `ng serve` will only serve files that are inside it.
 
