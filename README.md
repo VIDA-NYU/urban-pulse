@@ -4,7 +4,9 @@ Urban Pulse is a framework that uses computational topology techniques to captur
 
 The framework was first presented in the paper:
 
-Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva, "Urban Pulse: Capturing the Rhythm of Cities", IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.
+"Urban Pulse: Capturing the Rhythm of Cities"
+Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva
+IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.
 
 A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
 
