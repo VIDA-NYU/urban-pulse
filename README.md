@@ -137,6 +137,14 @@ http://localhost:4200/?data1=data/nyc,flickr,none&data2=data/sf,flickr,none
 ```
 The argument `data1`indicates that the computed pulse files are located in the folder `data/nyc` (i.e. `vis/src/data/nyc`), named `flickr` and we want to visualize the pulses without any temporal filter. The argument `data2` follows the same idea.
 
+If instead we want to only consider measurements that fall inside a given temporal filter, we can use the following filters:
+
+```
+1. winter,spring,summer,fall
+2. day,night
+3. week, weekend
+```
+
 Note that the data folder must be inside `vis/src` because `ng serve` will only serve files that are inside it.
 
 The image below shows the interface of Urban Pulse:
