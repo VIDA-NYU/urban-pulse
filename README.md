@@ -2,13 +2,26 @@
 
 Urban Pulse is a framework that uses computational topology techniques to capture the *pulse* of cities. This is accomplished by first modeling the urban data as a collection of time-varying scalar functions over different temporal resolutions, where the scalar function represents the distribution of the corresponding acitivy over the city. The topology of this collection is then used to identify the locations of prominent pulses in a city. The framework includes a visual interface that can be used to explore pulses within and across multiple cities.
 
-The framework was first presented in the paper:
+The framework was first presented in the [paper](https://arxiv.org/abs/1608.06949):
 
-"Urban Pulse: Capturing the Rhythm of Cities"  
+**Urban Pulse: Capturing the Rhythm of Cities**   
 Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva  
-IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800. 
+*IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.*
 
 A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
+
+A video is available [here](https://www.youtube.com/watch?v=J70-Ns0cFnQ).
+
+## Table of contents
+
+   * [Installing prerequisites](#installing-prerequisites)
+      * [Linux (Ubuntu, Linux Mint)](#linux-ubuntu-linux-mint)
+      * [macOS](#macos)
+      * [Windows 7, 8, 10](#windows-7-8-10)
+   * [Compiling the latest release](#compiling-the-latest-release)
+   * [Running Urban Pulse](#running-urban-pulse)
+      * [Computing the pulses](#computing-the-pulses)
+      * [Web client](#web-client)
 
 ## Installing prerequisites
 
@@ -27,12 +40,13 @@ The following are prerequisites for all systems:
 	sudo apt-get install gcc-4.8 g++-4.8
 	```
 	
-3. Install Java SE Development Kit 8 and Apache Ant:
+3. Install Java SE Development Kit 8, set up its environment variables and install Apache Ant:
 
 	```
 	sudo add-apt-repository ppa:webupd8team/java -y
 	sudo apt-get update
 	sudo apt-get install oracle-java8-installer
+	sudo apt-get install oracle-java8-set-default
 	sudo apt-get install ant
 	```
 
