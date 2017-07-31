@@ -35,6 +35,7 @@ Automatically set up the Java 8 environment variables:
 	```
 
 4. Install Node.js:
+
 	```
 	sudo apt-get install nodejs npm
 	```
@@ -139,3 +140,5 @@ The argument `data1`indicates that the computed pulse files are located in the f
 Note that the data folder must be inside `vis/src` because `ng serve` will only serve files that are inside it.
 
 explain interface...
+
+![alt text](https://raw.githubusercontent.com/ViDA-NYU/urban-pulse/master/urban-pulse.png)
