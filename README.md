@@ -151,6 +151,9 @@ The image below shows the interface of Urban Pulse:
 
 4. Selects a temporal resolution.
 
-5. Shows the pulses in three different temporal resolutions. If pulse similarity search mode is selected, displays a single plot with the similarity measures for all selected pulses.
+5. Shows the pulses in three different temporal resolutions. If pulse similarity search mode is selected, displays a single plot with the similarity measures for all selected pulses:
+
+![Pulses similarity](https://raw.githubusercontent.com/ViDA-NYU/urban-pulse/master/similarity.png?token=ACRuikgUAH4equkf75fcGSIabtvRZQDFks5ZiIllwA%3D%3D)
+
 
 6. Shows the beats for all selected pulses. The circles on the top allow for filtering of pulses with certain beat values.
