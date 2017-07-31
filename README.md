@@ -50,12 +50,6 @@ The following are prerequisites for all systems:
 	sudo apt-get install ant
 	```
 
-Automatically set up the Java 8 environment variables:
-
-	```
-	sudo apt-get install oracle-java8-set-default
-	```
-
 4. Install Node.js:
 
 	```
