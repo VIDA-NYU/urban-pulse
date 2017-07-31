@@ -22,6 +22,7 @@ export class GMapsLayer
 
     constructor(private dataService: DataService, private filterService: FilterService, private paramsService: ParametersService) 
     { 
+
         this.filterService.getPulseMouseOverChangeEmitter().subscribe( (data: any)=>
         {
             this.pulseOverlay.highlight(data);

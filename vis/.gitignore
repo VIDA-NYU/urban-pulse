@@ -1,12 +1,45 @@
-node_modules/
-.vscode/
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
-src/main.js
-src/app/*.js
-src/app/*.map
-src/app/components/*/*.js
-src/app/components/*/*.map
-src/app/classes/*.js
-src/app/classes/*.map
+# compiled output
+/dist
+/tmp
+/out-tsc
 
-src/data/
+# dependencies
+/node_modules
+
+# data
+src/data
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
