@@ -8,7 +8,7 @@ The framework was first presented in the [paper](http://vgc.poly.edu/~fmiranda/u
 Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva  
 *IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.*
 
-Urban Pulse has also been feature on [The Economist](http://www.economist.com/news/science-and-technology/21709002-places-people-have-pulsesif-only-you-know-how-measure-them-listen), [Architectural Digest](https://www.architecturaldigest.com/story/urban-pulse-uses-social-media-data-to-show-cities-in-a-new-light) and [Curbed](https://www.curbed.com/2017/9/22/16350214/urban-pulse-planning-design-cities-nyu).
+Urban Pulse has also been feature on [The Economist](http://www.economist.com/news/science-and-technology/21709002-places-people-have-pulsesif-only-you-know-how-measure-them-listen), [Architectural Digest](https://www.architecturaldigest.com/story/urban-pulse-uses-social-media-data-to-show-cities-in-a-new-light),  [Curbed](https://www.curbed.com/2017/9/22/16350214/urban-pulse-planning-design-cities-nyu) and [GCN](https://gcn.com/blogs/emerging-tech/2017/11/urban-pulse.aspx).
 
 A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
 
