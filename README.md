@@ -8,6 +8,16 @@ The framework was first presented in the [paper](http://vgc.poly.edu/~fmiranda/u
 Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc Wilson, Mondrian Hsieh and Cláudio T. Silva  
 *IEEE Transactions on Visualization and Computer Graphics, 23 (1), 2017, 791-800.*
 
+The team includes:
+
+* [Fabio Miranda](https://vgc.poly.edu/~fmiranda) (New York University)
+* [Harish Doraiswamy](https://www.harishd.com) (New York University)
+* [Marcos Lage](http://www.ic.uff.br/~mlage/) (Fluminense Federal University)
+* [Bruno Gonçalves](http://www.bgoncalves.com) (New York University)
+* [Kai Zhao](https://sites.google.com/site/zhaokaics/) (Georgia State University)
+* [Luc Wilson, Mondrian Hsieh](https://ui.kpf.com) (Kohn Pedersen Fox)
+* [Cláudio T. Silva](https://vgc.poly.edu/~csilva/) (New York University)
+
 Urban Pulse has also been feature on [The Economist](http://www.economist.com/news/science-and-technology/21709002-places-people-have-pulsesif-only-you-know-how-measure-them-listen), [Architectural Digest](https://www.architecturaldigest.com/story/urban-pulse-uses-social-media-data-to-show-cities-in-a-new-light),  [Curbed](https://www.curbed.com/2017/9/22/16350214/urban-pulse-planning-design-cities-nyu) and [GCN](https://gcn.com/blogs/emerging-tech/2017/11/urban-pulse.aspx).
 
 A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
