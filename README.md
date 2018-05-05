@@ -188,7 +188,7 @@ The image below shows the interface of Urban Pulse:
 
 ![Urban Pulse interface](https://raw.githubusercontent.com/ViDA-NYU/urban-pulse/master/urban-pulse.png?token=ACRuiiFRWaexsmy54mPTdD8Mv8exCfYYks5ZiIVnwA%3D%3D)
 
-1. The maps on the left show the computed pulses in each city. Pulses can be selected by brushing with one of the selection tools available on the top part of each map.
+1. The maps on the left show the computed pulses in each city. Pulses can be selected by brushing with one of the selection tools available on the top part of each map. To deselect a brush, right click on top of the brush.
 
 2. The pulse similarity search mode can be activated by choosing `Map1` or `Map2`.
 
