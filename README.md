@@ -10,7 +10,7 @@ Fabio Miranda, Harish Doraiswamy, Marcos Lage, Kai Zhao, Bruno Gonçalves, Luc W
 
 The team includes:
 
-* [Fabio Miranda](https://vgc.poly.edu/~fmiranda) (New York University)
+* [Fabio Miranda](https://fmiranda.me) (New York University)
 * [Harish Doraiswamy](https://www.harishd.com) (New York University)
 * [Marcos Lage](http://www.ic.uff.br/~mlage/) (Fluminense Federal University)
 * [Bruno Gonçalves](http://www.bgoncalves.com) (New York University)
