@@ -1,0 +1,47 @@
+<div class="app">
+  <mat-toolbar ngDefaultControl>
+    {{ appTitle }}
+    <span class="hFill"></span>
+
+    <!-- Search --->
+    <mat-radio-group ngDefaultControl [(ngModel)]="this.paramsService.searchId" (ngModelChange)="emitSearchIdChanged()">
+      <mat-radio-button value="none">None</mat-radio-button>
+      <mat-radio-button value="map1">Map1</mat-radio-button>
+      <mat-radio-button value="map2">Map2</mat-radio-button>
+    </mat-radio-group>
+
+    <span class="space"></span>
+
+    <!-- Show Scalar Function --->
+    <mat-checkbox
+      ngDefaultControl
+      [(ngModel)]="this.paramsService.showScalarFunction"
+      (ngModelChange)="this.paramsService.emitShowScalarFunctionChanged()"
+      aria-label="Show"
+      >Scalar Function</mat-checkbox
+    >
+
+    <span class="halfSpace"></span>
+
+    <!-- Selected Scalar Time --->
+    <mat-slider
+      ngDefaultControl
+      min="1"
+      [max]="this.paramsService.timeMax"
+      step="1"
+      [(ngModel)]="this.paramsService.timeSel"
+      (ngModelChange)="this.emitTimeSelChanged()"
+    ></mat-slider>
+
+    <span class="space"></span>
+
+    <!-- Selected Time Resolution --->
+    <mat-radio-group ngDefaultControl [(ngModel)]="this.paramsService.timeRes" (ngModelChange)="emitTimeResChanged()">
+      <mat-radio-button value="HOUR">Hour</mat-radio-button>
+      <mat-radio-button value="DAYOFWEEK">DayOfWeek</mat-radio-button>
+      <mat-radio-button value="MONTH">Month</mat-radio-button>
+    </mat-radio-group>
+  </mat-toolbar>
+  <pulse-map class="mapColumn"></pulse-map>
+  <pulse-vis class="visColumn"></pulse-vis>
+</div>

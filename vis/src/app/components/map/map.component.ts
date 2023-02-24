@@ -12,11 +12,7 @@ import * as _ from 'lodash';
 
 @Component({
     selector: 'pulse-map',
-    template:
-    `
-    <div #map1 class="map"></div>
-    <div #map2 class="map"></div>
-    `
+    templateUrl: './map.component.html'
 })
 export class MapComponent implements AfterViewInit {
 

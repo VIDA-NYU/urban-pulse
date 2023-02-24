@@ -12,40 +12,29 @@ import { ParametersService } from '../../classes/params.class';
 
 @Component({
   selector: 'pulse-vis',
-  template: `
-  <md-toolbar>
-    {{explorerTitle}}
-  </md-toolbar>
-  <div class="scatterRow">
-    <div #scatter class="scatter"></div>
-  </div>
-  <md-toolbar>
-    {{beatsTitle}}
-  </md-toolbar>
-  <div class="pulsesRow">
-    <div #pulses class="pulses"></div>
-  </div>
-  `
+  templateUrl: './vis.component.html',
 })
 export class VisComponent implements AfterViewInit {
   @ViewChild('scatter') scatterRef: ElementRef;
   @ViewChild('pulses') pulsesRef: ElementRef;
 
-  private explorerTitle: string = "Pulse Explorer";
-  private beatsTitle: string = "Pulse Beats";
+  private explorerTitle: string = 'Pulse Explorer';
+  private beatsTitle: string = 'Pulse Beats';
 
   private scatter: any;
   private pulses: any;
 
-  constructor(private dataService : DataService, private interactionService: FilterService, private paramsService: ParametersService) { }
+  constructor(
+    private dataService: DataService,
+    private interactionService: FilterService,
+    private paramsService: ParametersService,
+  ) {}
 
-  ngAfterViewInit() 
-  {
+  ngAfterViewInit() {
     this._createCharts();
   }
 
-  private _createCharts() 
-  {
+  private _createCharts() {
     this.scatter = new ScatterChart(this.scatterRef, this.dataService, this.interactionService, this.paramsService);
     this.pulses = new PulseChart(this.pulsesRef, this.dataService, this.interactionService, this.paramsService);
   }
