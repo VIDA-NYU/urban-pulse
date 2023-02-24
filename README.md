@@ -89,7 +89,10 @@ The following are prerequisites for all systems:
 	```
 	brew install nodejs npm
 	```
-	
+
+6. Please make sure to update the correct paths for macx in `ComputePulse/PulseJNI/Pulse.pro`
+	QMAKE_LFLAGS
+	QMAKE_CXXFLAGS
 
 ### Windows 7, 8, 10
 1. Download Qt 5.8 (or later version) at [qt.io/download-open-source](https://www.qt.io/download-open-source/) and install it. When selecting the Qt version to install, make sure to also select MingW for installation.

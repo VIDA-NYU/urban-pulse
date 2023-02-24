@@ -34,7 +34,7 @@ md-toolbar md-toolbar-row {
 }
 
 .mapColumn {
-	top: 32px;
+	top: 64px;
 	bottom: 0px;
 	width: 40%;
 	position: absolute;
@@ -47,7 +47,7 @@ md-toolbar md-toolbar-row {
 }
 
 .visColumn {
-	top: 32px;
+	top: 64px;
 	bottom: 0px;
 	left: 40%;
 	width: 59%;
