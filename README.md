@@ -20,7 +20,7 @@ The team includes:
 
 Urban Pulse has also been feature on [The Economist](http://www.economist.com/news/science-and-technology/21709002-places-people-have-pulsesif-only-you-know-how-measure-them-listen), [Architectural Digest](https://www.architecturaldigest.com/story/urban-pulse-uses-social-media-data-to-show-cities-in-a-new-light),  [Curbed](https://www.curbed.com/2017/9/22/16350214/urban-pulse-planning-design-cities-nyu) and [GCN](https://gcn.com/blogs/emerging-tech/2017/11/urban-pulse.aspx).
 
-A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/).
+A live demo can be accessed on [vgc.poly.edu/projects/urban-pulse/](http://vgc.poly.edu/projects/urban-pulse/). [Update 2025: The server is down; you'll need to run Urban Pulse locally.]
 
 A video is available [here](https://www.youtube.com/watch?v=J70-Ns0cFnQ).
 
@@ -189,7 +189,7 @@ Note that the data folder must be inside `vis/src` because `ng serve` will only 
 
 The image below shows the interface of Urban Pulse:
 
-![Urban Pulse interface](https://raw.githubusercontent.com/ViDA-NYU/urban-pulse/master/urban-pulse.png?token=ACRuiiFRWaexsmy54mPTdD8Mv8exCfYYks5ZiIVnwA%3D%3D)
+![Urban Pulse interface](urban-pulse.png)
 
 1. The maps on the left show the computed pulses in each city. Pulses can be selected by brushing with one of the selection tools available on the top part of each map. To deselect a brush, right click on top of the brush.
 
@@ -201,7 +201,7 @@ The image below shows the interface of Urban Pulse:
 
 5. Shows the pulses in three different temporal resolutions. If pulse similarity search mode is selected, displays a single plot with the similarity measures for all selected pulses:
 
-![Pulses similarity](https://raw.githubusercontent.com/ViDA-NYU/urban-pulse/master/similarity.png?token=ACRuikgUAH4equkf75fcGSIabtvRZQDFks5ZiIllwA%3D%3D)
+![Pulses similarity](similarity.png)
 
 
 6. Shows the beats for all selected pulses. The circles on the top allow for filtering of pulses with certain beat values.
